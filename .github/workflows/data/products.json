@@ -1,0 +1,50 @@
+[
+    {
+        "id": "rock-tea",
+        "name": "武夷岩茶",
+        "price": 288,
+        "promotions": {
+            "threshold_discounts": [
+                {
+                    "threshold": 500,
+                    "discount_amount": 60,
+                    "description": "满500减60"
+                },
+                {
+                    "threshold": 300,
+                    "discount_amount": 30,
+                    "description": "满300减30"
+                }
+            ]
+        },
+        "distributor_id": "lingang"
+    },
+    {
+        "id": "black-tea",
+        "name": "正山小种红茶",
+        "price": 198,
+        "promotions": {
+            "discount_percent": 5
+        }
+    },
+    {
+        "id": "telegram-dev",
+        "name": "Telegram开发教学",
+        "price": 198,
+        "promotions": {
+            "tier_pricing": [
+                {
+                    "min_quantity": 3,
+                    "discount_percent": 10,
+                    "description": "购买3个课程享9折"
+                },
+                {
+                    "min_quantity": 2,
+                    "discount_percent": 5,
+                    "description": "购买2个课程享95折"
+                }
+            ]
+        },
+        "merchant_id": "lingang"
+    }
+]

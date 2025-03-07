@@ -1,0 +1,167 @@
+name: Fork Tracker
+
+# 触发条件：
+# 1. 当仓库被fork时（通过repository_dispatch事件模拟，因为GitHub不直接支持fork事件）
+# 2. 当有新的star时（可以用来检测潜在的fork）
+# 3. 允许手动触发，用于测试或初始化
+on:
+  repository_dispatch:
+    types: [fork]
+  watch:
+    types: [started]
+  workflow_dispatch:
+    inputs:
+      initialize:
+        description: '是否初始化分销商数据'
+        required: false
+        default: 'false'
+
+jobs:
+  track-fork:
+    runs-on: ubuntu-latest
+    steps:
+      # 检出代码
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # 获取完整历史以便更好地处理
+
+      # 创建数据目录（如果不存在）
+      - name: Create data directory
+        run: |
+          mkdir -p data
+
+      # 获取当前的分销商数据
+      - name: Load current distributors data
+        id: load_data
+        run: |
+          if [ -f "data/distributors.json" ]; then
+            echo "Distributors data file exists"
+          else
+            # 如果文件不存在，创建一个空的JSON数组
+            echo "[]" > data/distributors.json
+            echo "Created empty distributors data file"
+          fi
+
+      # 如果是手动触发并选择初始化，则获取所有现有fork
+      - name: Initialize with all forks
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.initialize == 'true'
+        run: |
+          # 使用GitHub API获取所有fork
+          echo "Fetching all forks of the repository..."
+          
+          # 创建一个临时文件存储所有fork数据
+          echo "[]" > data/temp_forks.json
+          
+          # 获取fork列表（分页处理，每页100个）
+          PAGE=1
+          HAVE_MORE=true
+          
+          while $HAVE_MORE; do
+            RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              "https://api.github.com/repos/${{ github.repository }}/forks?per_page=100&page=$PAGE")
+            
+            # 提取fork数据并添加到临时文件
+            echo "$RESPONSE" | jq -c '.[]' | while read -r fork; do
+              USERNAME=$(echo "$fork" | jq -r '.owner.login')
+              CREATED_AT=$(echo "$fork" | jq -r '.created_at')
+              
+              # 检查用户是否已在分销商列表中
+              EXISTS=$(cat data/distributors.json | jq --arg user "$USERNAME" '.[] | select(.username == $user) | .username')
+              
+              if [ -z "$EXISTS" ]; then
+                # 添加新分销商，状态为pending（未生效），钱包地址为null
+                NOW=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+                NEW_ENTRY=$(jq -n \
+                  --arg username "$USERNAME" \
+                  --arg forked_at "$CREATED_AT" \
+                  --arg status "pending" \
+                  --arg last_checked "$NOW" \
+                  '{username: $username, forked_at: $forked_at, status: $status, last_checked: $last_checked, wallet: null}')
+                
+                # 将新条目添加到分销商数据中
+                cat data/distributors.json | jq --argjson entry "$NEW_ENTRY" '. += [$entry]' > data/temp.json
+                mv data/temp.json data/distributors.json
+                
+                echo "Added distributor: $USERNAME (forked at $CREATED_AT, status: pending)"
+              fi
+            done
+            
+            # 检查是否有更多页
+            ITEMS_COUNT=$(echo "$RESPONSE" | jq '. | length')
+            if [ "$ITEMS_COUNT" -lt 100 ]; then
+              HAVE_MORE=false
+            else
+              PAGE=$((PAGE + 1))
+            fi
+          done
+          
+          echo "Initialization complete. Current distributors count: $(cat data/distributors.json | jq '. | length')"
+
+      # 处理新的fork或star事件
+      - name: Process new fork or star
+        if: github.event_name != 'workflow_dispatch' || github.event.inputs.initialize != 'true'
+        run: |
+          # 获取触发事件的用户名
+          if [ "${{ github.event_name }}" == "watch" ]; then
+            # 如果是star事件
+            USERNAME="${{ github.event.sender.login }}"
+            
+            # 检查该用户是否fork了仓库
+            FORK_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              "https://api.github.com/repos/$USERNAME/${{ github.event.repository.name }}")
+            
+            if [ "$FORK_STATUS" != "200" ]; then
+              echo "User $USERNAME starred but did not fork the repository. Skipping."
+              exit 0
+            fi
+            
+            # 获取fork时间（可能不准确，使用当前时间作为近似）
+            FORKED_AT=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          elif [ "${{ github.event_name }}" == "repository_dispatch" ]; then
+            # 如果是fork事件（通过repository_dispatch模拟）
+            USERNAME="${{ github.event.client_payload.sender.login }}"
+            FORKED_AT="${{ github.event.client_payload.created_at }}"
+          else
+            echo "Unsupported event type. Skipping."
+            exit 0
+          fi
+          
+          # 检查用户是否已在分销商列表中
+          EXISTS=$(cat data/distributors.json | jq --arg user "$USERNAME" '.[] | select(.username == $user) | .username')
+          
+          if [ -z "$EXISTS" ]; then
+            # 添加新分销商，状态为pending（未生效），钱包地址为null
+            NOW=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+            NEW_ENTRY=$(jq -n \
+              --arg username "$USERNAME" \
+              --arg forked_at "$FORKED_AT" \
+              --arg status "pending" \
+              --arg last_checked "$NOW" \
+              '{username: $username, forked_at: $forked_at, status: $status, last_checked: $last_checked, wallet: null}')
+            
+            # 将新条目添加到分销商数据中
+            cat data/distributors.json | jq --argjson entry "$NEW_ENTRY" '. += [$entry]' > data/temp.json
+            mv data/temp.json data/distributors.json
+            
+            echo "Added new distributor: $USERNAME (status: pending)"
+          else
+            echo "Distributor $USERNAME already exists in the database."
+          fi
+
+      # 提交更新后的分销商数据
+      - name: Commit updated distributors data
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          
+          git add data/distributors.json
+          
+          # 只有当文件有变化时才提交
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update distributors data [skip ci]"
+            git push
+          fi 

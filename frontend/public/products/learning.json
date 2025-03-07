@@ -1,0 +1,37 @@
+[
+  {
+    "id": "telegram-dev",
+    "name": "Telegram开发教学",
+    "description": "专业的Telegram机器人和应用开发教学服务，由资深开发者一对一指导。学习如何创建、部署和管理Telegram机器人，掌握API调用和高级功能开发。",
+    "price": 198,
+    "currency": "USDT",
+    "images": ["/assets/products/telegram-dev.png"],
+    "features": [
+      "10次一对一在线指导",
+      "实战项目开发",
+      "源码讲解",
+      "部署与维护指导",
+      "6个月技术支持"
+    ],
+    "stock": 10,
+    "rating": 4.9,
+    "reviews": 18,
+    "tags": ["Telegram", "开发", "教学", "机器人"],
+    "promotions": {
+      "tier_pricing": [
+        {
+          "min_quantity": 2,
+          "discount_percent": 5,
+          "description": {"zh":"购买2个课程享95折","en":"Buy 2 courses get 5% off"}
+        },
+        {
+          "min_quantity": 3,
+          "discount_percent": 10,
+          "description": "购买3个课程享9折"
+        }
+      ]
+    },
+    "related_products": [],
+    "merchant_id": "lingang"
+  }
+]

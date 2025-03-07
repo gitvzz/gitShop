@@ -1,0 +1,323 @@
+[
+  {
+    "id": "smartphone-pro",
+    "name": {
+      "en": "Smartphone Pro",
+      "zh": "智能手机Pro"
+    },
+    "description": {
+      "en": "Latest flagship smartphone with advanced camera system, powerful processor and all-day battery life. Features a stunning 6.7-inch OLED display and 5G connectivity.",
+      "zh": "最新旗舰智能手机，配备先进的相机系统、强大的处理器和全天候电池续航。拥有惊艳的6.7英寸OLED显示屏和5G连接功能。"
+    },
+    "price": 999,
+    "currency": "USDT",
+    "images": [
+      {
+        "src": "https://images.unsplash.com/photo-1598327105666-5b89351aff97?q=80&w=2942&auto=format&fit=crop",
+        "alt": "Modern smartphone with dark screen on gradient background"
+      },
+      {
+        "src": "https://images.unsplash.com/photo-1605236453806-6ff36851218e?q=80&w=2274&auto=format&fit=crop",
+        "alt": "Smartphone showing home screen with apps"
+      }
+    ],
+    "requires_shipping": true,
+    "features": [
+      {
+        "en": "6.7-inch OLED Display",
+        "zh": "6.7英寸OLED显示屏"
+      },
+      {
+        "en": "Triple Camera System",
+        "zh": "三摄像头系统"
+      },
+      {
+        "en": "5G Connectivity",
+        "zh": "5G连接"
+      },
+      {
+        "en": "All-day Battery Life",
+        "zh": "全天候电池续航"
+      },
+      {
+        "en": "Water and Dust Resistant",
+        "zh": "防水防尘"
+      }
+    ],
+    "stock": 100,
+    "rating": 4.9,
+    "reviews": 128,
+    "tags": [
+      "智能手机",
+      "5G",
+      "旗舰"
+    ],
+    "promotions": {
+      "discount_percent": 5
+    },
+    "related_products": [
+      "wireless-earbuds",
+      "smartphone-case"
+    ]
+  },
+  {
+    "id": "wireless-earbuds",
+    "name": {
+      "en": "Wireless Earbuds",
+      "zh": "无线耳机"
+    },
+    "description": {
+      "en": "Premium wireless earbuds with active noise cancellation, crystal clear sound quality and 24-hour battery life with charging case. Perfect for music, calls and workouts.",
+      "zh": "高端无线耳机，配备主动降噪功能，水晶般清晰的音质，充电盒可提供24小时电池续航。完美适合音乐、通话和运动使用。"
+    },
+    "price": 199,
+    "currency": "USDT",
+    "images": [
+      {
+        "src": "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?q=80&w=2832&auto=format&fit=crop",
+        "alt": "White wireless earbuds with charging case"
+      },
+      {
+        "src": "https://images.unsplash.com/photo-1606220588913-b3aacb4d2f37?q=80&w=2940&auto=format&fit=crop",
+        "alt": "Wireless earbuds in ear"
+      }
+    ],
+    "requires_shipping": true,
+    "features": [
+      {
+        "en": "Active Noise Cancellation",
+        "zh": "主动降噪"
+      },
+      {
+        "en": "24-hour Battery Life",
+        "zh": "24小时电池续航"
+      },
+      {
+        "en": "Water Resistant",
+        "zh": "防水设计"
+      },
+      {
+        "en": "Touch Controls",
+        "zh": "触控操作"
+      }
+    ],
+    "stock": 200,
+    "rating": 4.7,
+    "reviews": 86,
+    "tags": [
+      "耳机",
+      "无线",
+      "降噪"
+    ],
+    "promotions": {
+      "tier_pricing": [
+        {
+          "min_quantity": 2,
+          "discount_percent": 10,
+          "description": {
+            "zh": "购买2个或以上享9折",
+            "en": "Buy 2 or more get 10% off"
+          }
+        }
+      ]
+    },
+    "related_products": [
+      "smartphone-pro",
+      "smartwatch"
+    ]
+  },
+  {
+    "id": "smartwatch",
+    "name": {
+      "en": "Smart Watch",
+      "zh": "智能手表"
+    },
+    "description": {
+      "en": "Advanced smartwatch with health monitoring, fitness tracking and smartphone notifications. Features a bright AMOLED display and up to 14 days of battery life.",
+      "zh": "先进的智能手表，具有健康监测、健身追踪和智能手机通知功能。配备明亮的AMOLED显示屏，电池续航可达14天。"
+    },
+    "price": 249,
+    "currency": "USDT",
+    "images": [
+      {
+        "src": "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?q=80&w=2872&auto=format&fit=crop",
+        "alt": "Smart watch on wrist"
+      },
+      {
+        "src": "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?q=80&w=2127&auto=format&fit=crop",
+        "alt": "Smart watch showing fitness tracking"
+      }
+    ],
+    "requires_shipping": true,
+    "features": [
+      {
+        "en": "Health Monitoring",
+        "zh": "健康监测"
+      },
+      {
+        "en": "Fitness Tracking",
+        "zh": "健身追踪"
+      },
+      {
+        "en": "14-day Battery Life",
+        "zh": "14天电池续航"
+      },
+      {
+        "en": "Water Resistant",
+        "zh": "防水设计"
+      },
+      {
+        "en": "Smartphone Notifications",
+        "zh": "智能手机通知"
+      }
+    ],
+    "stock": 150,
+    "rating": 4.6,
+    "reviews": 72,
+    "tags": [
+      "智能手表",
+      "健康",
+      "健身"
+    ],
+    "promotions": {
+      "threshold_discounts": [
+        {
+          "threshold": 500,
+          "discount_amount": 50,
+          "description": {
+            "zh": "满500减50",
+            "en": "Get $50 off when you spend $500"
+          }
+        }
+      ]
+    },
+    "related_products": [
+      "smartphone-pro",
+      "wireless-earbuds"
+    ]
+  },
+  {
+    "id": "portable-charger",
+    "name": {
+      "en": "Portable Power Bank",
+      "zh": "便携式充电宝"
+    },
+    "description": {
+      "en": "High-capacity 20000mAh portable power bank with fast charging technology. Charge multiple devices simultaneously with USB-C and USB-A ports. Perfect for travel and daily use.",
+      "zh": "大容量20000mAh便携式充电宝，配备快速充电技术。通过USB-C和USB-A端口同时为多个设备充电。完美适合旅行和日常使用。"
+    },
+    "price": 79,
+    "currency": "USDT",
+    "images": [
+      {
+        "src": "https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?q=80&w=2787&auto=format&fit=crop",
+        "alt": "Portable power bank with connected cable"
+      },
+      {
+        "src": "https://images.unsplash.com/photo-1618410320928-25228d811631?q=80&w=2940&auto=format&fit=crop",
+        "alt": "Power bank charging smartphone"
+      }
+    ],
+    "requires_shipping": true,
+    "features": [
+      {
+        "en": "20000mAh Capacity",
+        "zh": "20000mAh容量"
+      },
+      {
+        "en": "Fast Charging",
+        "zh": "快速充电"
+      },
+      {
+        "en": "Multiple Ports",
+        "zh": "多个端口"
+      },
+      {
+        "en": "Compact Design",
+        "zh": "紧凑设计"
+      }
+    ],
+    "stock": 300,
+    "rating": 4.5,
+    "reviews": 95,
+    "tags": [
+      "充电宝",
+      "便携",
+      "快充"
+    ],
+    "related_products": [
+      "smartphone-pro",
+      "wireless-earbuds"
+    ]
+  },
+  {
+    "id": "bluetooth-speaker",
+    "name": {
+      "en": "Bluetooth Speaker",
+      "zh": "蓝牙音箱"
+    },
+    "description": {
+      "en": "Portable Bluetooth speaker with 360° sound, deep bass and 12-hour battery life. Waterproof design makes it perfect for outdoor activities, beach trips and pool parties.",
+      "zh": "便携式蓝牙音箱，具有360°环绕声、深沉低音和12小时电池续航。防水设计使其完美适合户外活动、海滩旅行和泳池派对。"
+    },
+    "price": 129,
+    "currency": "USDT",
+    "images": [
+      {
+        "src": "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?q=80&w=2936&auto=format&fit=crop",
+        "alt": "Portable bluetooth speaker"
+      },
+      {
+        "src": "https://images.unsplash.com/photo-1589003077984-894e133dabab?q=80&w=2787&auto=format&fit=crop",
+        "alt": "Bluetooth speaker by the pool"
+      }
+    ],
+    "requires_shipping": true,
+    "features": [
+      {
+        "en": "360° Sound",
+        "zh": "360°环绕声"
+      },
+      {
+        "en": "12-hour Battery Life",
+        "zh": "12小时电池续航"
+      },
+      {
+        "en": "Waterproof Design",
+        "zh": "防水设计"
+      },
+      {
+        "en": "Bluetooth 5.0",
+        "zh": "蓝牙5.0"
+      },
+      {
+        "en": "Built-in Microphone",
+        "zh": "内置麦克风"
+      }
+    ],
+    "stock": 180,
+    "rating": 4.8,
+    "reviews": 64,
+    "tags": [
+      "音箱",
+      "蓝牙",
+      "防水"
+    ],
+    "promotions": {
+      "tier_pricing": [
+        {
+          "min_quantity": 2,
+          "discount_percent": 15,
+          "description": {
+            "zh": "购买2个或以上享85折",
+            "en": "Buy 2 or more get 15% off"
+          }
+        }
+      ]
+    },
+    "related_products": [
+      "smartphone-pro",
+      "portable-charger"
+    ]
+  }
+] 
