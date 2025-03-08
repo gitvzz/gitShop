@@ -96,9 +96,9 @@ jobs:
 
             // 加载商品数据库
             const productsDatabase = JSON.parse(fs.readFileSync('.github/workflows/data/products.json', 'utf8'));
-            console.log("productsDatabase",productsDatabase);
-            const decryptResult = await decryptOrder(result, process.env.PRIVATE_KEY, productsDatabase);
             
+            const decryptResult = await decryptOrder(result, process.env.PRIVATE_KEY, productsDatabase);
+            console.log("decryptResult",decryptResult);
             // 设置输出变量
             core.setOutput('success', decryptResult.success.toString());
             core.setOutput('result', JSON.stringify(decryptResult));
@@ -121,7 +121,7 @@ jobs:
             
             // 调用修改后的generateWallet函数，只传入username和mnemonic两个参数
             const walletResult = generateWallet(username, process.env.WALLET_MNEMONIC);
-            
+            console.log("walletResult",walletResult);
             core.setOutput('walletAddress', walletResult.walletAddress);
             core.setOutput('walletPath', walletResult.walletPath);
             
