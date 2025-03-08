@@ -282,7 +282,7 @@ import { useStore,type Product } from '@/store'
 import { useI18n } from 'vue-i18n'
 import Toast from '@/components/Toast.vue'
 import config from '@/config'
-
+import placeholderImage from '@/assets/placeholder.png';
 const route = useRoute()
 const router = useRouter()
 const store = useStore()
@@ -326,7 +326,7 @@ const relatedProducts = computed(() => {
 const currentImageIndex = ref(0);
 const currentImage = computed(() => {
   if (!product.value || !product.value.images || product.value.images.length === 0) {
-    return { src: '/images/placeholder.png', alt: 'Product image not available' };
+    return { src: placeholderImage, alt: 'Product image not available' };
   }
   return product.value.images[currentImageIndex.value];
 });
@@ -377,8 +377,8 @@ const buyNow = (product: Product) => {
 // 处理图片加载错误
 const handleImageError = (event: Event) => {
   const target = event.target as HTMLImageElement;
-  if (target && target.src !== '/images/placeholder.png') {
-    target.src = '/images/placeholder.png';
+  if (target && !target.src.endsWith(placeholderImage)) {
+    target.src = placeholderImage;
   }
 }
 

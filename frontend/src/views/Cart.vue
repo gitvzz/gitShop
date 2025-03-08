@@ -275,6 +275,7 @@ import { ref, computed, onMounted, watch, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useStore,type CartProduct } from '@/store'
 import ShippingInfoForm from '@/components/ShippingInfoForm.vue'
+import placeholderImage from '@/assets/placeholder.png';
 
 const { t } = useI18n()
 
@@ -432,8 +433,8 @@ onUnmounted(() => {
 // 处理图片加载错误
 const handleImageError = (event: Event) => {
   const target = event.target as HTMLImageElement;
-  if (target && target.src !== '/images/placeholder.png') {
-    target.src = '/images/placeholder.png';
+  if (target && !target.src.endsWith(placeholderImage)) {
+    target.src = placeholderImage;
   }
 }
 

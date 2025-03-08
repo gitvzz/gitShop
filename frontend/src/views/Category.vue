@@ -226,6 +226,7 @@
 import { ref, computed, watch } from 'vue'
 import { useStore } from '@/store'
 import { useRouter, useRoute } from 'vue-router'
+import placeholderImage from '@/assets/placeholder.png';
 
 const store = useStore()
 const router = useRouter()
@@ -335,8 +336,8 @@ const navigateToCategory = (catId: string) => {
 // 处理图片加载错误
 const handleImageError = (event: Event) => {
   const target = event.target as HTMLImageElement;
-  if (target && target.src !== '/images/placeholder.png') {
-    target.src = '/images/placeholder.png';
+  if (target && !target.src.endsWith(placeholderImage)) {
+    target.src = placeholderImage;
   }
 }
 
