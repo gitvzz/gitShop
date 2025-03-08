@@ -5,6 +5,12 @@ on:
     branches: [ main, dev ]
   workflow_dispatch:
 
+# 添加明确的权限配置
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -43,4 +49,5 @@ jobs:
         with:
           folder: dist
           branch: gh-pages
-          clean: true 
+          clean: true
+          token: ${{ secrets.GITHUB_TOKEN }} 
