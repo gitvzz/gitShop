@@ -44,6 +44,13 @@ jobs:
           cd frontend
           npm run build
       
+      - name: Debug 🔍
+        run: |
+          echo "列出构建输出目录内容"
+          ls -la
+          ls -la dist || echo "dist 目录不存在"
+          ls -la frontend/dist || echo "frontend/dist 目录不存在"
+      
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
