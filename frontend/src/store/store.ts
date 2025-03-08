@@ -154,9 +154,9 @@ export const useStore = defineStore('store', {
       }
       this.loading = true
       try {
-        const categoriesRes = await axios.get('products/index.json')
+        const categoriesRes = await axios.get('gitShop/products/index.json')
         for (const category of categoriesRes.data.items) {
-          const productsRes = await axios.get(`products/${category.id}.json`)
+          const productsRes = await axios.get(`gitShop/products/${category.id}.json`)
           if (productsRes.data) {
             const products = productsRes.data.map((product: Product) => {
               const images = (product.images || []).map(i => typeof i === 'string' ? { src: i, alt: product.name } : Object.assign({ alt: product.name }, i))
