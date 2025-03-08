@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 import config from '@/config';
 import { encrypt, md5, generateOrderId } from '@/utils';
-
+console.log(config)
 
 export type Locale = 'en' | 'zh'
 
