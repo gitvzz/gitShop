@@ -4,6 +4,12 @@ on:
   issues:
     types: [opened, edited]
 
+# 添加权限配置
+permissions:
+  issues: write
+  pull-requests: write
+  contents: read
+
 jobs:
   process_order:
     runs-on: ubuntu-latest
