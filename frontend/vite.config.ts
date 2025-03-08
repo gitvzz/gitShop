@@ -5,7 +5,6 @@ import { resolve } from 'path'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue()],
-  base: '/gitShop/',
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src')
@@ -16,7 +15,7 @@ export default defineConfig({
     open: true
   },
   build: {
-    outDir: 'dist',
+    outDir: '../dist',
     emptyOutDir: true,
     sourcemap: true
   }
