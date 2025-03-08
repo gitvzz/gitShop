@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, watch } from 'vue'
+import { defineComponent, computed, watch } from 'vue'
 
 export default defineComponent({
   name: 'Toast',

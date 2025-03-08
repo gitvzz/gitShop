@@ -199,7 +199,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, reactive, watch, onMounted, onUnmounted } from 'vue'
+import { defineComponent, ref, computed, reactive, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { parsePhoneNumberFromString, AsYouType, CountryCode } from 'libphonenumber-js'
 import { countries } from 'countries-list'

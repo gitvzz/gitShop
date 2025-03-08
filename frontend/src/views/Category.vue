@@ -301,11 +301,6 @@ const filteredAndSortedProducts = computed(() => {
   }
 })
 
-// 计算原始价格
-const calculateOriginalPrice = (product: any) => {
-  return (product.price / (1 - product.promotions?.discount_percent / 100)).toFixed(2)
-}
-
 // 应用筛选
 const applyFilters = () => {
   // 筛选已经通过计算属性自动应用
