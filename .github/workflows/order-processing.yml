@@ -98,7 +98,7 @@ jobs:
             const productsDatabase = JSON.parse(fs.readFileSync('.github/workflows/data/products.json', 'utf8'));
             
             const decryptResult = await decryptOrder(result, process.env.PRIVATE_KEY, productsDatabase);
-            
+            console.log("decryptResult",decryptResult);
             // 设置输出变量
             core.setOutput('success', decryptResult.success.toString());
             core.setOutput('result', JSON.stringify(decryptResult));
