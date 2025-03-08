@@ -89,7 +89,7 @@ jobs:
             const fs = require('fs');
             const decryptOrder = require('./.github/workflows/scripts/decrypt-order.js');
             const resultStr = '${{steps.check_order.outputs.result}}';
-            console.log("resultStr",resultStr);
+            
             // 移除可能的控制字符
             const cleanResultStr = resultStr.replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
             const result = JSON.parse(cleanResultStr);
@@ -98,7 +98,7 @@ jobs:
             const productsDatabase = JSON.parse(fs.readFileSync('.github/workflows/data/products.json', 'utf8'));
             
             const decryptResult = await decryptOrder(result, process.env.PRIVATE_KEY, productsDatabase);
-            console.log("decryptResult",decryptResult);
+            
             // 设置输出变量
             core.setOutput('success', decryptResult.success.toString());
             core.setOutput('result', JSON.stringify(decryptResult));
@@ -116,12 +116,10 @@ jobs:
             const generateWallet = require('./.github/workflows/scripts/generate-wallet.js');
             const decryptResult = JSON.parse('${{steps.decrypt_order.outputs.result}}');
             
-            // 获取用户名 - 从issue创建者获取
             const username = context.payload.issue.user.login;
             
-            // 调用修改后的generateWallet函数，只传入username和mnemonic两个参数
             const walletResult = generateWallet(username, process.env.WALLET_MNEMONIC);
-            console.log("walletResult",walletResult);
+            
             core.setOutput('walletAddress', walletResult.walletAddress);
             core.setOutput('walletPath', walletResult.walletPath);
             
