@@ -1,12 +1,12 @@
 /**
  * 处理非订单Issue或签名无效Issue
  * 
- * @param {object} github GitHub API客户端
  * @param {object} context GitHub Actions上下文
+ * @param {object} github GitHub API客户端
  * @param {object} result 检查订单的结果
  * @returns {Promise<void>}
  */
-module.exports = async (github, context, result) => {
+module.exports = async (context, github, result) => {
   let title, message;
   
   if (!result.isOrder) {
