@@ -1,9 +1,12 @@
 name: Deploy to GitHub Pages
 
 on:
-  push:
-    branches: [ main, dev ]
   workflow_dispatch:
+    inputs:
+      deploy_message:
+        description: '部署说明'
+        required: false
+        default: '手动触发部署'
 
 # 添加明确的权限配置
 permissions:
@@ -71,4 +74,5 @@ jobs:
             **/.env.*
             **/node_modules
             **/.git
-            **/.github 
+            **/.github
+          commit-message: "${{ github.event.inputs.deploy_message || '自动部署' }}" 
