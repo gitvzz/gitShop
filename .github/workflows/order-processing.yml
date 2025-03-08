@@ -33,11 +33,24 @@ jobs:
             const checkOrder = require('./.github/workflows/scripts/check-order.js');
             const result = await checkOrder(context);
             
-            // 设置输出变量
-            core.setOutput('isOrder', result.isOrder.toString());
-            core.setOutput('isValid', result.isValid.toString());
-            core.setOutput('signatureValid', result.signatureValid.toString());
-            core.setOutput('hasOrderLabel', context.payload.issue.labels.some(label => label.name === 'order').toString());
+            console.log('检查订单结果:', JSON.stringify(result, null, 2));
+            
+            // 安全地获取属性值并转换为字符串
+            const safeToString = (value) => {
+              return value !== undefined && value !== null ? value.toString() : 'false';
+            };
+            
+            // 设置输出变量，添加空值检查
+            core.setOutput('isOrder', safeToString(result.isOrder));
+            core.setOutput('isValid', safeToString(result.isValid));
+            core.setOutput('signatureValid', safeToString(result.signatureValid));
+            
+            // 检查 issue 是否存在并且有 labels 属性
+            const hasOrderLabel = context.payload.issue && 
+                                 context.payload.issue.labels && 
+                                 Array.isArray(context.payload.issue.labels) && 
+                                 context.payload.issue.labels.some(label => label && label.name === 'order');
+            core.setOutput('hasOrderLabel', hasOrderLabel.toString());
             
             if (result.encryptedOrderData) {
               core.setOutput('encryptedOrderData', result.encryptedOrderData);
