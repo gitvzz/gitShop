@@ -1,117 +1,132 @@
 /**
- * 检查Issue是否为有效订单
+ * 检查Issue是否为订单
  * 
- * @param {object} context GitHub Actions上下文
- * @returns {object} 检查结果
+ * 此脚本检查GitHub Issue是否为有效的订单格式，并提取加密的订单数据
  */
-module.exports = async (context) => {
+
+const forge = require('node-forge');
+
+module.exports = async function checkOrder(context) {
   try {
-    // 检查 context 和 issue 是否存在
-    if (!context || !context.payload || !context.payload.issue) {
-      console.log('无效的上下文或Issue不存在');
+    const issue = context.payload.issue;
+    
+    // 检查Issue是否存在
+    if (!issue) {
       return {
         isOrder: false,
         isValid: false,
         signatureValid: false,
-        message: 'Issue不存在或无效'
+        message: '不是有效的Issue'
       };
     }
     
-    // 获取Issue内容
-    const issueBody = context.payload.issue.body || '';
-    const issueTitle = context.payload.issue.title || '';
+    const issueBody = issue.body || '';
+    const issueTitle = issue.title || '';
     
-    console.log('处理Issue标题:', issueTitle);
+    // 检查标题是否符合订单格式
+    const titleRegex = /^Order ORDER-\d{8}-[A-Z0-9]{6}$/;
+    const isTitleValid = titleRegex.test(issueTitle);
     
-    // 清理字符串，移除控制字符
-    const cleanString = (str) => {
-      if (!str) return '';
-      return str.replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
-    };
-    
-    const cleanIssueBody = cleanString(issueBody);
-    const cleanIssueTitle = cleanString(issueTitle);
-    
-    // 检查是否为订单Issue
-    const isOrderTitle = cleanIssueTitle.startsWith('Order:');
-    
-    // 提取加密的订单数据
-    let encryptedOrderData = null;
-    const orderDataMatch = cleanIssueBody.match(/\[ENCRYPTED_ORDER_DATA\]([\s\S]*?)\[\/ENCRYPTED_ORDER_DATA\]/);
-    if (orderDataMatch && orderDataMatch[1]) {
-      encryptedOrderData = orderDataMatch[1].trim();
+    if (!isTitleValid) {
+      return {
+        isOrder: false,
+        isValid: false,
+        signatureValid: false,
+        message: '标题不符合订单格式'
+      };
     }
     
-    // 提取加密的收货信息
+    // 检查是否包含加密的订单数据
+    const encryptedDataRegex = /\[ENCRYPTED_ORDER_DATA\]\s*([\s\S]*?)\s*\[\/ENCRYPTED_ORDER_DATA\]/;
+    const encryptedDataMatch = issueBody.match(encryptedDataRegex);
+    
+    if (!encryptedDataMatch) {
+      return {
+        isOrder: true,
+        isValid: false,
+        signatureValid: false,
+        message: '未找到加密的订单数据'
+      };
+    }
+    
+    const encryptedOrderData = encryptedDataMatch[1].trim();
+    
+    // 检查是否包含加密的收货信息
+    const shippingDataRegex = /\[ENCRYPTED_SHIPPING_DATA\]\s*([\s\S]*?)\s*\[\/ENCRYPTED_SHIPPING_DATA\]/;
+    const shippingDataMatch = issueBody.match(shippingDataRegex);
+    
     let encryptedShippingData = null;
-    const shippingDataMatch = cleanIssueBody.match(/\[ENCRYPTED_SHIPPING_DATA\]([\s\S]*?)\[\/ENCRYPTED_SHIPPING_DATA\]/);
-    if (shippingDataMatch && shippingDataMatch[1]) {
+    if (shippingDataMatch) {
       encryptedShippingData = shippingDataMatch[1].trim();
     }
     
-    // 提取签名
-    let providedSignature = null;
-    const signatureMatch = cleanIssueBody.match(/## Signature\s*\`([a-f0-9]{32})\`/i);
-    if (signatureMatch && signatureMatch[1]) {
-      providedSignature = signatureMatch[1].trim();
-    }
+    // 检查是否包含MD5签名
+    const signatureRegex = /## MD5:\s*`([a-f0-9]{32})`/i;
+    const signatureMatch = issueBody.match(signatureRegex);
     
-    // 如果不是订单标题或没有加密数据，则不是订单
-    if (!isOrderTitle || !encryptedOrderData) {
-      console.log('不是订单Issue: 标题或加密数据不符合要求');
+    if (!signatureMatch) {
       return {
-        isOrder: false,
+        isOrder: true,
         isValid: false,
         signatureValid: false,
-        message: '不是有效的订单Issue格式'
+        message: '未找到订单签名'
       };
     }
     
-    // 验证签名
-    let signatureValid = false;
-    let calculatedSignature = null;
+    const signature = signatureMatch[1];
     
-    if (providedSignature) {
-      try {
-        // 计算签名的内容应该是去除签名部分的Issue内容
-        const contentToSign = cleanIssueTitle + cleanIssueBody.split('## Signature')[0].trim();
-        
-        // 计算MD5签名
-        const crypto = require('crypto');
-        calculatedSignature = crypto.createHash('md5').update(contentToSign).digest('hex');
-        
-        // 比较签名
-        signatureValid = calculatedSignature.toLowerCase() === providedSignature.toLowerCase();
-        console.log('签名验证结果:', signatureValid, '计算签名:', calculatedSignature, '提供签名:', providedSignature);
-      } catch (error) {
-        console.error('计算签名时出错:', error);
-        signatureValid = false;
-      }
-    } else {
-      console.log('未提供签名');
+    // 验证MD5签名 - 使用与前端相同的方法
+    // 1. 移除签名部分
+    const contentWithoutSignature = issueBody.replace(/\n## MD5:\s*`[a-f0-9]{32}`/i, '');
+    
+    // 2. 拼接标题和内容，与前端保持一致
+    const contentToSign = issueTitle + contentWithoutSignature;
+    
+    // 3. 使用CryptoJS.MD5计算签名，与前端保持一致
+    const calculatedSignature = forge.md.md5.create().update(contentToSign).digest().toHex()
+    
+    const signatureValid = calculatedSignature === signature;
+    
+    if (!signatureValid) {
+      return {
+        isOrder: true,
+        isValid: false,
+        signatureValid: false,
+        message: '订单签名无效',
+        calculatedSignature,
+        providedSignature: signature
+      };
     }
     
-    // 返回检查结果
-    const result = {
+    // 检查是否有分销商ID
+    const distributorRegex = /Distributor ID: ([a-zA-Z0-9_-]+)/;
+    const distributorMatch = issueBody.match(distributorRegex);
+    let distributorId = null;
+    
+    if (distributorMatch) {
+      distributorId = distributorMatch[1];
+    }
+    
+    // 所有检查通过，返回有效订单
+    return {
       isOrder: true,
-      isValid: signatureValid === true,
-      signatureValid: signatureValid,
-      providedSignature: providedSignature || '',
-      calculatedSignature: calculatedSignature || '',
-      encryptedOrderData: encryptedOrderData || '',
-      encryptedShippingData: encryptedShippingData || '',
-      message: signatureValid === false ? '订单签名验证失败' : (providedSignature === null ? '订单缺少签名' : '订单格式有效')
+      isValid: true,
+      signatureValid: true,
+      encryptedOrderData,
+      encryptedShippingData,
+      signature,
+      distributorId,
+      issueTitle,
+      issueBody
     };
     
-    console.log('返回结果:', JSON.stringify(result, null, 2));
-    return result;
   } catch (error) {
-    console.error('检查订单时发生错误:', error);
+    console.error(`检查订单时出错: ${error.message}`);
     return {
       isOrder: false,
       isValid: false,
       signatureValid: false,
-      message: `检查订单时发生错误: ${error.message}`
+      message: `检查订单时出错: ${error.message}`
     };
   }
 }; 
