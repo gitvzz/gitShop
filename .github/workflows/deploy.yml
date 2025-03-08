@@ -48,13 +48,28 @@ jobs:
         run: |
           echo "列出构建输出目录内容"
           ls -la
-          ls -la dist || echo "dist 目录不存在"
+          echo "检查 dist 目录是否存在及其内容"
+          if [ -d "dist" ]; then
+            echo "dist 目录存在，内容如下："
+            ls -la dist
+            echo "检查 dist/index.html 是否存在"
+            if [ -f "dist/index.html" ]; then
+              echo "dist/index.html 存在"
+              head -n 20 dist/index.html
+            else
+              echo "dist/index.html 不存在！"
+            fi
+          else
+            echo "dist 目录不存在！"
+          fi
+          echo "检查 frontend/dist 目录"
           ls -la frontend/dist || echo "frontend/dist 目录不存在"
       
-      - name: Deploy 🚀
+      - name: Force Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: dist
           branch: gh-pages
           clean: true
+          force: true
           token: ${{ secrets.GITHUB_TOKEN }} 
