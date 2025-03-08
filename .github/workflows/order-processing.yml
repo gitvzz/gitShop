@@ -88,12 +88,15 @@ jobs:
           script: |
             const fs = require('fs');
             const decryptOrder = require('./.github/workflows/scripts/decrypt-order.js');
-            
+            const resultStr = '${{steps.check_order.outputs.result}}';
+            console.log("resultStr",resultStr);
+            // 移除可能的控制字符
+            const cleanResultStr = resultStr.replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
+            const result = JSON.parse(cleanResultStr);
+
             // 加载商品数据库
             const productsDatabase = JSON.parse(fs.readFileSync('.github/workflows/data/products.json', 'utf8'));
-            
-            // 解密订单数据
-            const result = JSON.parse('${{steps.check_order.outputs.result}}');
+            console.log("productsDatabase",productsDatabase);
             const decryptResult = await decryptOrder(result, process.env.PRIVATE_KEY, productsDatabase);
             
             // 设置输出变量
