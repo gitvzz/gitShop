@@ -72,4 +72,10 @@ jobs:
           branch: gh-pages
           clean: true
           force: true
-          token: ${{ secrets.GITHUB_TOKEN }} 
+          token: ${{ secrets.GITHUB_TOKEN }}
+          exclude: |
+            **/.env
+            **/.env.*
+            **/node_modules
+            **/.git
+            **/.github 
