@@ -5,6 +5,9 @@ bower_components/
 .pnp/
 .pnp.js
 
+package-lock.json
+package.json
+
 # 构建输出
 dist/
 build/
