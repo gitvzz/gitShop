@@ -70,9 +70,9 @@
                   d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
               <!-- 购物车徽章 -->
-              <span v-if="store.cardProducts.length > 0"
+              <span v-if="cartStore.carts.length > 0"
                 class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                {{ store.cardProducts.length }}
+                {{ cartStore.carts.length }}
               </span>
             </router-link>
             <div class="relative">
@@ -185,7 +185,7 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useStore } from '@/store'
+import { useStore, useCartStore } from '@/store'
 import { useRoute } from 'vue-router'
 
 const { locale, t } = useI18n()
@@ -193,13 +193,14 @@ const showLanguageMenu = ref(false)
 const showMobileMenu = ref(false)
 const currentLanguage = ref(locale.value === 'zh' ? '中文' : 'English')
 const store = useStore()
+const cartStore = useCartStore()
 const route = useRoute()
 
 // 加载产品数据
 const initData = async () => {
   store.loading = true
   store.error = null
-  store.locale = locale.value
+  store.locale = locale.value as Locale
   if (route.query.ref) {
     const distributor_id = route.query.ref as string
     localStorage.setItem('distributor_id', distributor_id)
@@ -234,7 +235,7 @@ const toggleMobileMenu = () => {
   showMobileMenu.value = !showMobileMenu.value
 }
 
-const changeLanguage = (lang: string) => {
+const changeLanguage = (lang: Locale) => {
   locale.value = lang
   store.locale = lang
   currentLanguage.value = lang === 'zh' ? '中文' : 'English'

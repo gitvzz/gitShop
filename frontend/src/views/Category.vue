@@ -176,13 +176,13 @@
                 <div class="mt-3 flex justify-between items-center">
                   <div>
                     <span class="text-lg font-bold text-gray-900">
-                      {{ product.discountPrice || product.price }} {{ $t('common.currency') }}
+                      {{ product.discount_price || product.price }} {{ $t('common.currency') }}
                     </span>
-                    <span v-if="product.discountPrice" class="ml-2 text-sm text-gray-500 line-through">
+                    <span v-if="product.discount_price" class="ml-2 text-sm text-gray-500 line-through">
                       {{ product.price }} {{ $t('common.currency') }}
                     </span>
                   </div>
-                  <button class="p-2 rounded-full bg-blue-50 hover:bg-blue-100 transition-colors" :class="store.isInCart(product.id)?'text-red-600':'text-blue-600'" @click="addToCart($event, product)">
+                  <button class="p-2 rounded-full bg-blue-50 hover:bg-blue-100 transition-colors" :class="cartStore.isInCart(product.id)?'text-red-600':'text-blue-600'" @click="addToCart($event, product)">
                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -224,11 +224,12 @@
 
 <script lang="ts" setup>
 import { ref, computed, watch } from 'vue'
-import { useStore } from '@/store'
+import { useStore, useCartStore } from '@/store'
 import { useRouter, useRoute } from 'vue-router'
 import placeholderImage from '@/assets/placeholder.png';
 
 const store = useStore()
+const cartStore = useCartStore()
 const router = useRouter()
 const route = useRoute()
 const sortOption = ref('popularity')
@@ -344,10 +345,10 @@ const handleImageError = (event: Event) => {
 // 添加到购物车
 const addToCart = (e: Event, product: any) => {
   e.stopPropagation()
-  if(store.isInCart(product.id)){
-    store.removeItem(product.id)
+  if(cartStore.isInCart(product.id)){
+    cartStore.remove(product.id)
   }else{
-    store.addItem(product)
+    cartStore.add(product)
   }
 }
 

@@ -23,9 +23,13 @@
     /* Paths */
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
-    }
+      "@/*": ["src/*"],
+      "@types": ["types.d.ts"]
+    },
+    
+    /* Type Declaration Files */
+    "typeRoots": ["./node_modules/@types", "./types.d.ts"]
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "types.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

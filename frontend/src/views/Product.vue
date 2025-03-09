@@ -75,8 +75,8 @@
             <div>
                 <div class="flex items-center">
                   <span class="text-3xl font-bold text-gray-900">
-                    {{ product.discountPrice || product.price }} {{ $t('common.currency') }}
-                    <span v-if="product.discountPrice" class="text-sm text-gray-500 line-through ml-2">
+                    {{ product.discount_price || product.price }} {{ $t('common.currency') }}
+                    <span v-if="product.discount_price" class="text-sm text-gray-500 line-through ml-2">
                       {{ product.price }} {{ $t('common.currency') }}
                     </span>
                   </span>
@@ -278,14 +278,16 @@
 <script lang="ts" setup>
 import { ref, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useStore,type Product } from '@/store'
+import { useStore, useCartStore } from '@/store'
 import { useI18n } from 'vue-i18n'
 import Toast from '@/components/Toast.vue'
 import config from '@/config'
 import placeholderImage from '@/assets/placeholder.png';
+
 const route = useRoute()
 const router = useRouter()
 const store = useStore()
+const cartStore = useCartStore()
 const { t } = useI18n()
 
 // Toast相关状态
@@ -303,7 +305,7 @@ const product = computed(() => {
 
 // 检查商品是否在购物车中
 const isInCart = computed(() => {
-  return store.isInCart(productId.value)
+  return cartStore.isInCart(productId.value)
 })
 
 // 获取分类信息
@@ -345,7 +347,7 @@ const showToastMessage = (message: string, type: string = 'success') => {
 
 // 添加到购物车
 const addToCart = (product: Product) => {
-  store.addItem(product)
+  cartStore.add(product)
 
   // 显示成功提示
   showToastMessage(t('product.added_to_cart', { name: product.name }), 'success')
@@ -353,7 +355,7 @@ const addToCart = (product: Product) => {
 
 // 从购物车中移除
 const removeFromCart = (product: Product) => {
-  store.removeItem(product.id)
+  cartStore.remove(product.id)
 
   // 显示成功提示
   showToastMessage(t('product.removed_from_cart', { name: product.name }), 'info')
@@ -362,9 +364,9 @@ const removeFromCart = (product: Product) => {
 // 立即购买
 const buyNow = (product: Product) => {
   // 检查商品是否已在购物车中
-  if (!store.isInCart(product.id)) {
+  if (!cartStore.isInCart(product.id)) {
     // 如果不在购物车中，先添加到购物车
-    store.addItem(product);
+    cartStore.add(product);
 
     // 显示添加成功提示
     showToastMessage(t('product.added_to_cart', { name: product.name }), 'success');

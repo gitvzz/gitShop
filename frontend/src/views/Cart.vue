@@ -24,9 +24,7 @@
         <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
           <h2 class="text-lg leading-6 font-medium text-gray-900">{{ $t('cart.items') }}</h2>
           <div class="flex items-center space-x-4">
-            <button @click="toggleSelectAll" class="text-sm text-blue-600 hover:text-blue-800"
-              :class="{ 'opacity-50 cursor-not-allowed': hasPhysicalProducts && hasDigitalProducts }"
-              :disabled="hasPhysicalProducts && hasDigitalProducts">
+            <button @click="toggleSelectAll(isAllSelected?false:true)" class="text-sm text-blue-600 hover:text-blue-800">
               {{ isAllSelected ? $t('cart.deselect_all') : $t('cart.select_all') }}
             </button>
             <button @click="clearCart" class="text-sm text-red-600 hover:text-red-800">
@@ -35,13 +33,6 @@
           </div>
         </div>
 
-        <!-- 商品类型提示 -->
-        <div v-if="hasPhysicalProducts && hasDigitalProducts"
-          class="px-4 py-3 bg-blue-50 border-t border-b border-blue-100">
-          <p class="text-sm text-blue-700">
-            {{ $t('cart.mixed_products_notice') }}
-          </p>
-        </div>
 
         <!-- 商品类型冲突提示 -->
         <div v-if="showTypeConflictAlert" class="px-4 py-3 bg-red-50 border-t border-b border-red-100">
@@ -55,8 +46,7 @@
             <!-- 商品选择复选框 -->
             <div class="mr-4">
               <input type="checkbox" :checked="item.selected" @change="toggleItemSelection(item.id, !item.selected)"
-                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                :disabled="isItemDisabled(item)" :class="{ 'opacity-50 cursor-not-allowed': isItemDisabled(item) }">
+                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
             </div>
 
             <div class="flex-shrink-0 h-16 w-16 bg-gray-200 rounded-md overflow-hidden">
@@ -71,7 +61,7 @@
                     <router-link :to="`/product/${item.id}`">{{ item.name }}</router-link>
                     <span class="text-xs text-white bg-red-500 rounded-full px-1 ml-2" v-for="(desc,index) in promotionsText(item)" :key="index">{{ desc }}</span>
                   </h3>
-                  <p class="mt-1 text-sm text-gray-700" v-if="item.discountPrice">{{ item.discountPrice }} {{ $t('common.currency') }}
+                  <p class="mt-1 text-sm text-gray-700" v-if="item.discount_price">{{ item.discount_price }} {{ $t('common.currency') }}
                     <span class="line-through text-gray-500 text-xs ml-1">{{ item.price }} {{ $t('common.currency') }}</span>
                   </p>
                   <p class="mt-1 text-sm text-gray-700" v-else>{{ item.price }} {{ $t('common.currency') }}</p>
@@ -124,7 +114,7 @@
           </dl>
 
           <!-- 收货地址信息 (仅当选中了实物商品时显示) -->
-          <div v-if="hasSelectedPhysicalProducts" class="mt-6 border-t border-gray-200 pt-4">
+          <div v-if="hasRequiresShipping" class="mt-6 border-t border-gray-200 pt-4">
             <div class="flex justify-between items-center mb-3">
               <h3 class="text-sm font-medium text-gray-900">{{ $t('cart.shipping_info') }}</h3>
               <button @click="showShippingModal = true" class="text-sm text-blue-600 hover:text-blue-800">
@@ -273,14 +263,26 @@
 <script lang="ts" setup>
 import { ref, computed, onMounted, watch, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useStore,type CartProduct } from '@/store'
+import { useStore, useCartStore } from '@/store'
 import ShippingInfoForm from '@/components/ShippingInfoForm.vue'
 import placeholderImage from '@/assets/placeholder.png';
 
 const { t } = useI18n()
 
 const store = useStore()
-const products = computed(() => store.cardProducts)
+const cartStore = useCartStore()
+
+const products = computed(() => {
+  return cartStore.carts.map(c => {
+      const product = store.products.find(p => p.id === c.id)!
+      return {
+        ...product,
+        quantity: c.quantity,
+        selected: c.selected
+      }
+    })
+})
+
 // 订单信息相关状态
 const showOrderModal = ref(false)
 const orderInfo = ref('')
@@ -314,48 +316,27 @@ const confirmCallback = ref<(() => void) | null>(null)
 
 // 商品选择相关状态
 const showTypeConflictAlert = ref(false)
-const firstSelectedType = ref<string | null>(null)
 
-
-// 检查购物车中是否有实物商品(需要邮寄的商品)
-const hasPhysicalProducts = computed(() => {
-  return store.cardProducts.some(item => item.requires_shipping)
+const hasRequiresShipping = computed(() => {
+  return products.value.some(item => item.selected && item.requires_shipping)
 })
 
-// 检查购物车中是否有数字商品(不需要邮寄的商品)
-const hasDigitalProducts = computed(() => {
-  return store.cardProducts.some(item => !item.requires_shipping)
-})
 
 // 检查是否有选中的商品
 const hasSelectedItems = computed(() => {
-  return store.cardProducts.some(item => item.selected)
-})
-
-// 检查是否有选中的实物商品
-const hasSelectedPhysicalProducts = computed(() => {
-  return store.cardProducts.some(item => item.selected && item.requires_shipping)
+  return cartStore.carts.some(item => item.selected)
 })
 
 // 检查是否所有商品都被选中
 const isAllSelected = computed(() => {
-  return store.carts.length > 0 && store.cardProducts.every(item => item.selected)
+  return cartStore.carts.length > 0 && cartStore.carts.every(item => item.selected)
 })
 
 // 获取选中的商品
 const selectedItems = computed(() => {
-  return store.cardProducts.filter(item => item.selected)
+  return products.value.filter(item => item.selected)
 })
 
-// 判断商品是否应该被禁用选择
-const isItemDisabled = (item: CartProduct) => {
-  // 如果购物车中同时有实物和数字商品，且已经选择了一种类型
-  if (hasPhysicalProducts.value && hasDigitalProducts.value && firstSelectedType.value) {
-    // 如果商品类型与已选类型不同，则禁用
-    return (item.requires_shipping ? 'physical' : 'digital') !== firstSelectedType.value
-  }
-  return false
-}
 
 // 计算选中商品的小计
 const selectedSubtotal = computed(() => {
@@ -364,7 +345,7 @@ const selectedSubtotal = computed(() => {
   }, 0).toFixed(2)
 })
 
-const promotionsText = (item: CartProduct) => {
+const promotionsText = (item: Product) => {
   if(item.promotions?.discount_percent){
     return [`- ${item.promotions.discount_percent}%`]
   }else if(item.promotions?.tier_pricing){
@@ -379,7 +360,7 @@ const promotionsText = (item: CartProduct) => {
 // 计算选中商品的优惠
 const selectedPromotions = computed(() => {
   return selectedItems.value.reduce((total, item) => {
-    const {amount} = store.computeItemDiscount(item)
+    const {amount} = cartStore.promotions(item,item.quantity)
     return total + amount
   },0).toFixed(2)
 })
@@ -391,26 +372,9 @@ const selectedTotal = computed(() => {
 
 // 组件挂载时加载购物车数据
 onMounted(() => {
-  // 根据商品类型设置默认选中状态
-  if (hasPhysicalProducts.value && !hasDigitalProducts.value) {
-    // 仅有实物商品，全部选中
-    store.carts.forEach(item => {
-      item.selected = true
-    })
-    firstSelectedType.value = 'physical'
-  } else if (!hasPhysicalProducts.value && hasDigitalProducts.value) {
-    // 仅有数字商品，全部选中
-    store.carts.forEach(item => {
-      item.selected = true
-    })
-    firstSelectedType.value = 'digital'
-  } else {
-    // 两种商品都有，默认不选中
-    store.carts.forEach(item => {
-      item.selected = false
-    })
-    firstSelectedType.value = null
-  }
+  cartStore.carts.forEach(item => {
+    item.selected = true
+  })
 
 })
 
@@ -440,117 +404,47 @@ const handleImageError = (event: Event) => {
 
 // 增加商品数量
 const increaseQuantity = (index: number) => {
-  const item = store.carts[index]
+  const item = cartStore.carts[index]
   item.quantity++
-  store.saveCart()
+  cartStore.save()
 }
 
 // 减少商品数量
 const decreaseQuantity = (index: number) => {
-  const item = store.carts[index]
+  const item = cartStore.carts[index]
   if (item.quantity > 1) {
     item.quantity--
-    store.saveCart()
+    cartStore.save()
   }
 }
 
 // 移除商品
 const removeItem = (index: number) => {
-  const item = store.carts[index]
-  store.removeItem(item.id)
+  const item = cartStore.carts[index]
+  cartStore.remove(item.id)
 
-  // 如果移除后购物车为空，重置firstSelectedType
-  if (store.cardProducts.length === 0) {
-    firstSelectedType.value = null
-  }
-
-  // 如果移除后只剩一种类型的商品，更新firstSelectedType
-  if (!hasPhysicalProducts.value && hasDigitalProducts.value) {
-    firstSelectedType.value = 'digital'
-  } else if (hasPhysicalProducts.value && !hasDigitalProducts.value) {
-    firstSelectedType.value = 'physical'
-  }
 }
 
 // 清空购物车
 const clearCart = () => {
-  store.clearCart()
-  firstSelectedType.value = null
+  cartStore.clear()
 }
 
 // 选择/取消选择所有商品
-const toggleSelectAll = () => {
-  if (isAllSelected.value) {
-    // 取消全选
-    store.carts.forEach(item => {
-      item.selected = false
-    })
-    firstSelectedType.value = null
-  } else {
-    // 全选
-    if (hasPhysicalProducts.value && hasDigitalProducts.value) {
-      // 如果有两种类型的商品，只能选择一种类型
-      if (firstSelectedType.value) {
-        // 已经有选中的类型，选择该类型的所有商品
-        store.cardProducts.forEach((item,i) => {
-          if ((item.requires_shipping ? 'physical' : 'digital') === firstSelectedType.value) {
-            store.carts[i].selected = true
-          }
-        })
-      } else {
-        // 没有选中的类型，默认选择实物商品
-        store.cardProducts.forEach((item,i) => {
-          if (item.requires_shipping) {
-            store.carts[i].selected = true
-          }
-        })
-        firstSelectedType.value = 'physical'
-      }
-    } else {
-      // 只有一种类型的商品，全部选中
-      store.carts.forEach(item => {
-        item.selected = true
-      })
-      firstSelectedType.value = hasPhysicalProducts.value ? 'physical' : 'digital'
-    }
-  }
+const toggleSelectAll = (selected: boolean) => {
+  cartStore.carts.forEach(item => {
+    item.selected = selected
+  })
   showTypeConflictAlert.value = false
 }
 
 // 选择/取消选择单个商品
 const toggleItemSelection = (id: string, selected: boolean) => {
-  const item = store.cardProducts.find(i => i.id === id)
+  const item = cartStore.carts.find(i => i.id === id)
   if (!item) return
-
-  const cartItem = store.carts.find(i => i.id === id)!
-  if (selected) {
-    const type = item.requires_shipping ? 'physical' : 'digital'
-    // 选中商品
-    if (firstSelectedType.value === null) {
-      // 第一次选择商品，记录类型
-      firstSelectedType.value = type
-      cartItem.selected = true
-      showTypeConflictAlert.value = false
-    } else if (type === firstSelectedType.value) {
-      // 与已选商品类型相同，允许选择
-      cartItem.selected = true
-      showTypeConflictAlert.value = false
-    } else {
-      // 与已选商品类型不同，不允许选择
-      showTypeConflictAlert.value = true
-      return
-    }
-  } else {
-    // 取消选择商品
-    cartItem.selected = false
-    showTypeConflictAlert.value = false
-
-    // 如果没有选中的商品，重置firstSelectedType
-    if (!store.cardProducts.some(i => i.selected)) {
-      firstSelectedType.value = null
-    }
-  }
-
+  item.selected = selected
+  showTypeConflictAlert.value = false
+  
 }
 
 // 显示确认模态框
@@ -593,7 +487,7 @@ const checkout = () => {
   }
 
   // 验证收货信息
-  if (hasSelectedPhysicalProducts.value) {
+  if (hasRequiresShipping.value) {
     if (!shippingInfo.value.recipient || !shippingInfo.value.phone || !shippingInfo.value.address1) {
       showConfirm(
         t('cart.shipping_info_incomplete'),
@@ -611,7 +505,20 @@ const checkout = () => {
     total: selectedTotal.value,
   };
 
-  const result = store.submitOrder(selectedItems.value,summary,hasSelectedPhysicalProducts.value ? shippingInfo.value : null)
+  const _products: OrderItem[] = selectedItems.value.map(item => {
+    const { type, amount, description } = cartStore.promotions(item,item.quantity)
+    return {
+      id: item.id,
+      name: item.name,
+      price: item.price.toFixed(2),
+      quantity: item.quantity,
+      subtotal: (item.price * item.quantity).toFixed(2),
+      promotions: amount > 0 ? { type, amount: amount.toFixed(2), description } : {},
+      merchant_id: item.merchant_id,
+      distributor_id: store.distributor_id
+    }
+  })
+  const result = store.submitOrder(_products,summary,hasRequiresShipping.value ? shippingInfo.value : null)
   
   
   // 保存订单信息到本地，以便后续查询
@@ -625,23 +532,11 @@ const checkout = () => {
 
 // 清除已选商品
 const clearSelectedItems = () => {
-  store.cardProducts.forEach(item => {
+  products.value.forEach(item => {
     if (item.selected) {
-      store.removeItem(item.id);
+      cartStore.remove(item.id);
     }
   });
-
-  // 如果移除后购物车为空，重置firstSelectedType
-  if (store.cardProducts.length === 0) {
-    firstSelectedType.value = null;
-  }
-
-  // 如果移除后只剩一种类型的商品，更新firstSelectedType
-  if (!hasPhysicalProducts.value && hasDigitalProducts.value) {
-    firstSelectedType.value = 'digital';
-  } else if (hasPhysicalProducts.value && !hasDigitalProducts.value) {
-    firstSelectedType.value = 'physical';
-  }
 }
 
 // 复制订单信息

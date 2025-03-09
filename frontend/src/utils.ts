@@ -1,4 +1,3 @@
-// @ts-ignore
 import forge from 'node-forge';
 
 export function md5(str:string){
@@ -32,9 +31,3 @@ export function encrypt(data:object,pub_key:string){
   return encryptedKeyBase64 + '.' + encryptedDataBase64;
 }
 
-export function generateOrderId(){
-    const date = new Date();
-    const dateStr = date.toISOString().slice(0, 10).replace(/-/g, '');
-    const randomStr = Math.random().toString(36).substring(2, 8).toUpperCase();
-    return `ORDER-${dateStr}-${randomStr}`;
-}

@@ -12,7 +12,6 @@ interface Config {
     name: string;
     version: string;
     publicKey: string;
-    privateKey?: string;
   };
 }
 
@@ -26,8 +25,7 @@ const config: Config = {
   app: {
     name: 'GitShop',
     version: '1.0.0',
-    publicKey: import.meta.env.VITE_PUBLIC_KEY || '',
-    privateKey: import.meta.env.VITE_PRIVATE_KEY || '',
+    publicKey: import.meta.env.VITE_PUBLIC_KEY || ''
   }
 };
 
