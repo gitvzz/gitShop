@@ -75,7 +75,7 @@ class default_1 extends issue_1.default {
         const outputPath = path_1.default.join(projectRoot, '_data/distributors.json');
         fs_1.default.writeFileSync(outputPath, JSON.stringify(data, null, 4));
         const url = `https://${owner}.github.io/${repo}/#/?ref=${user.username}`;
-        await this.createComment(`Distributor data updated. [Distribution Link](${url})\n${url}`);
+        await this.createComment(`Distributor data updated. [Distribution Link](${url})`);
         await this.updateIssue('closed', ['distributor']);
         return { distributors: true };
     }
