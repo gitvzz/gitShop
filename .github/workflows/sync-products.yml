@@ -17,7 +17,6 @@ on:
 # 设置权限
 permissions:
   contents: write
-  actions: write
 
 jobs:
   sync-products:
@@ -26,50 +25,24 @@ jobs:
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0  # 获取完整历史以便检测变更
-      
-      - name: 检查产品数据变更 🔍
-        id: check_changes
-        run: |
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            echo "手动触发同步，跳过变更检查"
-            echo "has_changes=true" >> $GITHUB_OUTPUT
-          else
-            # 检查最近的提交是否修改了 products 目录
-            CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -E '^frontend/public/products/')
-            if [[ -n "$CHANGED_FILES" ]]; then
-              echo "检测到产品数据变更:"
-              echo "$CHANGED_FILES"
-              echo "has_changes=true" >> $GITHUB_OUTPUT
-            else
-              echo "未检测到产品数据变更"
-              echo "has_changes=false" >> $GITHUB_OUTPUT
-            fi
-          fi
-      
-      - name: 复制产品数据到构建目录 📋
-        if: steps.check_changes.outputs.has_changes == 'true'
-        run: |
-          echo "复制 products 数据到构建输出目录"
-          if [ -d "frontend/public/products" ]; then
-            echo "frontend/public/products 目录存在，正在复制..."
-            mkdir -p dist/products
-            cp -r frontend/public/products/* dist/products/
-            echo "复制完成，dist/products 目录内容："
-            ls -la dist/products/
-          else
-            echo "警告：frontend/public/products 目录不存在！"
-            ls -la frontend/public/
-            exit 1
-          fi
       
       - name: 同步产品数据 📊
-        if: steps.check_changes.outputs.has_changes == 'true'
         run: |
           echo "开始同步产品数据..."
           
           # 确保目标目录存在
+          mkdir -p dist/products
+          
+          # 复制产品数据到构建目录
+          if [ -d "frontend/public/products" ]; then
+            echo "复制 products 数据到构建输出目录..."
+            cp -r frontend/public/products/* dist/products/
+          else
+            echo "警告：frontend/public/products 目录不存在！"
+            exit 1
+          fi
+          
+          # 确保 _data 目录存在
           mkdir -p _data
           
           # 安装依赖
@@ -78,15 +51,16 @@ jobs:
           # 执行同步脚本
           node .github/workflows/scripts/sync-products.js
           
+          echo "产品数据同步完成"
       
       - name: 提交产品数据到仓库 💾
-        if: steps.check_changes.outputs.has_changes == 'true'
         run: |
+          echo "准备提交产品数据到仓库..."
+          
           # 配置 Git
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           
-          # 添加更改
           git add _data/products.json
           
           # 检查是否有变更需要提交
@@ -101,68 +75,4 @@ jobs:
             git push
             
             echo "成功更新并提交 products.json"
-          fi
-      
-      - name: 部署到 gh-pages 分支 🚀
-        if: steps.check_changes.outputs.has_changes == 'true' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev')
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          folder: dist
-          branch: gh-pages
-          target-folder: products
-          clean: true
-          clean-exclude: |
-            assets/**
-            index.html
-            favicon.ico
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "自动更新产品数据 [skip ci]"
-      
-      # 添加触发 deploy 工作流的步骤
-      - name: 检查是否需要触发完整部署 🔄
-        id: check_other_changes
-        if: github.event_name == 'push'
-        run: |
-          echo "开始检查是否有其他文件变更..."
-          echo "当前分支: $(git branch --show-current)"
-          echo "当前提交: ${{ github.sha }}"
-          echo "前一提交: ${{ github.event.before }}"
-          
-          # 设置默认值，避免后续步骤失败
-          echo "has_other_changes=false" >> $GITHUB_OUTPUT
-          
-          # 检查 github.event.before 是否为有效值
-          if [[ "${{ github.event.before }}" == "0000000000000000000000000000000000000000" ]]; then
-            echo "这是首次推送或新分支，默认触发完整部署"
-            echo "has_other_changes=true" >> $GITHUB_OUTPUT
-            exit 0
-          fi
-          
-          # 尝试获取变更文件列表
-          echo "尝试获取变更文件列表..."
-          if ! CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }}); then
-            echo "获取变更文件列表失败，可能是历史不完整，默认触发完整部署"
-            echo "has_other_changes=true" >> $GITHUB_OUTPUT
-            exit 0
-          fi
-          
-          echo "变更文件列表:"
-          echo "$CHANGED_FILES"
-          
-          # 检查除了 products 目录外是否还有其他变更
-          if echo "$CHANGED_FILES" | grep -v -E '^frontend/public/products/' | grep -q .; then
-            echo "检测到其他文件变更，需要触发完整部署"
-            echo "has_other_changes=true" >> $GITHUB_OUTPUT
-          else
-            echo "未检测到其他文件变更，无需触发完整部署"
-            echo "has_other_changes=false" >> $GITHUB_OUTPUT
-          fi
-      
-      - name: 触发部署工作流 🚀
-        if: steps.check_other_changes.outputs.has_other_changes == 'true'
-        uses: benc-uk/workflow-dispatch@v1
-        with:
-          workflow: deploy.yml
-          token: ${{ secrets.GITHUB_TOKEN }}
-          ref: ${{ github.ref }}
-          inputs: '{"deploy_message": "产品数据更新后的自动部署"}' 
+          fi 
