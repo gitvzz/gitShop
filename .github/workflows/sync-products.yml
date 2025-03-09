@@ -113,16 +113,16 @@ jobs:
                         const { discount_percent, tier_pricing, threshold_discounts } = product.promotions || {};
                         if (discount_percent) {
                           productData.promotions['discount_percent'] = discount_percent;
-                        }else if (tier_pricing) {
-                          productData.promotions['tier_pricing'] = tier_pricing.map((t:any)=>({
+                        } else if (tier_pricing) {
+                          productData.promotions['tier_pricing'] = tier_pricing.map((t) => ({
                             min_quantity: t.min_quantity,
                             discount_percent: t.discount_percent
-                          })).filter((_t:any,index:number)=>index<2).sort((a:any,b:any)=>b.min_quantity-a.min_quantity);
-                        }else if (threshold_discounts) {
-                          productData.promotions['threshold_discounts'] = threshold_discounts.map((t:any)=>({
+                          })).filter((_, index) => index < 2).sort((a, b) => b.min_quantity - a.min_quantity);
+                        } else if (threshold_discounts) {
+                          productData.promotions['threshold_discounts'] = threshold_discounts.map((t) => ({
                             threshold: t.threshold,
                             discount_amount: t.discount_amount
-                          })).filter((_t:any,index:number)=>index<2).sort((a:any,b:any)=>b.threshold-a.threshold);
+                          })).filter((_, index) => index < 2).sort((a, b) => b.threshold - a.threshold);
                         }
                         productsData.push(productData);
                       }
