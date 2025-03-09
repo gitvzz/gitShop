@@ -1,4 +1,4 @@
-name: 同步产品数据
+name: 同步商品价格
 
 on:
   push:
@@ -12,7 +12,7 @@ on:
       reason:
         description: '手动触发同步的原因'
         required: false
-        default: '手动同步产品数据'
+        default: '手动同步商品价格'
 
 # 设置权限
 permissions:
@@ -27,21 +27,8 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
       
-      - name: 同步产品数据 📊
+      - name: 同步商品价格及优惠，将用于验证订单信息 📊
         run: |
-          echo "开始同步产品数据..."
-          
-          # 确保目标目录存在
-          mkdir -p dist/products
-          
-          # 复制产品数据到构建目录
-          if [ -d "frontend/public/products" ]; then
-            echo "复制 products 数据到构建输出目录..."
-            cp -r frontend/public/products/* dist/products/
-          else
-            echo "警告：frontend/public/products 目录不存在！"
-            exit 1
-          fi
           
           # 确保 _data 目录存在
           mkdir -p _data
@@ -52,11 +39,11 @@ jobs:
           # 执行同步脚本
           node .github/workflows/scripts/sync-products.js
           
-          echo "产品数据同步完成"
+          echo "商品数据同步完成"
       
-      - name: 提交产品数据到仓库 💾
+      - name: 提交商品价格到仓库 💾
         run: |
-          echo "准备提交产品数据到仓库..."
+          echo "准备提交商品价格到仓库..."
           
           # 配置 Git
           git config --local user.email "action@github.com"
@@ -69,7 +56,7 @@ jobs:
             echo "products.json 没有变化，跳过提交"
           else
             # 提交更改
-            git commit -m "自动更新产品数据"
+            git commit -m "自动更新商品价格"
             
             # 推送更改
             echo "推送更改到仓库..."
@@ -84,6 +71,6 @@ jobs:
           echo "正在触发部署工作流..."
           
           # 使用 GitHub CLI 触发部署工作流
-          gh workflow run deploy.yml -f deploy_message="产品数据更新后的自动部署"
+          gh workflow run deploy.yml -f deploy_message="商品价格更新后的自动部署"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 

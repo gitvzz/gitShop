@@ -7,11 +7,6 @@ export const syncProducts = async () => {
     
     const categoryUrl = path.join(projectRoot, 'frontend/public/products/index.json');
     
-    console.log(`尝试读取文件: ${categoryUrl}`);
-    console.log(`当前工作目录: ${projectRoot}`);
-    console.log(`目录内容: ${fs.readdirSync(projectRoot).join(', ')}`);
-    console.log(`frontend 目录内容: ${fs.existsSync(path.join(projectRoot, 'frontend')) ? fs.readdirSync(path.join(projectRoot, 'frontend')).join(', ') : '目录不存在'}`);
-    
     const category = JSON.parse(fs.readFileSync(categoryUrl, 'utf8'));
     const products = [] as any[];
     
@@ -57,16 +52,14 @@ export const syncProducts = async () => {
     
     // 写入结果到 products.json
     const outputPath = path.join(projectRoot,  '_data/products.json');
-    console.log(`写入结果到: ${outputPath}`);
     fs.writeFileSync(outputPath, JSON.stringify(products, null, 4));
-    console.log(`目录内容: ${fs.readdirSync(dataDir).join(', ')}`);
     
 }
 
 // 自动执行函数（当直接运行此脚本时）
 if (require.main === module) {
     syncProducts().catch(err => {
-        console.error('同步产品数据时出错:', err);
+        console.error('同步商品价格时出错:', err);
         process.exit(1);
     });
 }

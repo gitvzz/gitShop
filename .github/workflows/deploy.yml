@@ -55,16 +55,12 @@ jobs:
       
       - name: Copy Products Data 📋
         run: |
-          echo "复制 products 数据到构建输出目录"
+          echo "复制 frontend/public/products->dist/products 数据到构建输出目录"
           if [ -d "frontend/public/products" ]; then
-            echo "frontend/public/products 目录存在，正在复制..."
             mkdir -p dist/products
             cp -r frontend/public/products/* dist/products/
-            echo "复制完成，dist/products 目录内容："
-            ls -la dist/products/
           else
             echo "警告：frontend/public/products 目录不存在！"
-            ls -la frontend/public/
           fi
       
       - name: Force Deploy 🚀

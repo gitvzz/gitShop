@@ -138,7 +138,6 @@ class default_1 extends issue_1.default {
                 }
             }
         }
-        console.log(`尝试读取文件: ${url}`);
         const products = JSON.parse(fs_1.default.readFileSync(url, 'utf8'));
         //console.log(products);
         data.items.forEach((item) => {

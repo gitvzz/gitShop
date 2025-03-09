@@ -145,7 +145,6 @@ export default class extends Issue {
             }
         }
         
-        console.log(`尝试读取文件: ${url}`);
         const products = JSON.parse(fs.readFileSync(url, 'utf8'));
         //console.log(products);
         data.items.forEach((item: any) => {

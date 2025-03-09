@@ -10,10 +10,6 @@ const syncProducts = async () => {
     // 获取当前工作目录
     const projectRoot = process.cwd();
     const categoryUrl = path_1.default.join(projectRoot, 'frontend/public/products/index.json');
-    console.log(`尝试读取文件: ${categoryUrl}`);
-    console.log(`当前工作目录: ${projectRoot}`);
-    console.log(`目录内容: ${fs_1.default.readdirSync(projectRoot).join(', ')}`);
-    console.log(`frontend 目录内容: ${fs_1.default.existsSync(path_1.default.join(projectRoot, 'frontend')) ? fs_1.default.readdirSync(path_1.default.join(projectRoot, 'frontend')).join(', ') : '目录不存在'}`);
     const category = JSON.parse(fs_1.default.readFileSync(categoryUrl, 'utf8'));
     const products = [];
     category.items.forEach((item) => {
@@ -56,15 +52,13 @@ const syncProducts = async () => {
     }
     // 写入结果到 products.json
     const outputPath = path_1.default.join(projectRoot, '_data/products.json');
-    console.log(`写入结果到: ${outputPath}`);
     fs_1.default.writeFileSync(outputPath, JSON.stringify(products, null, 4));
-    console.log(`目录内容: ${fs_1.default.readdirSync(dataDir).join(', ')}`);
 };
 exports.syncProducts = syncProducts;
 // 自动执行函数（当直接运行此脚本时）
 if (require.main === module) {
     (0, exports.syncProducts)().catch(err => {
-        console.error('同步产品数据时出错:', err);
+        console.error('同步商品价格时出错:', err);
         process.exit(1);
     });
 }
