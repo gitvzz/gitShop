@@ -3,8 +3,8 @@ import path from 'path';
 import fs from 'fs';
 export default class extends Issue {
     private repoName: string;
-    constructor(github: any, context: any, repoName: string) {
-        super(github, context);
+    constructor(github: any, context: any,tgTokenApi: string, repoName: string) {
+        super(github, context,tgTokenApi);
         this.repoName = repoName;
     }
 

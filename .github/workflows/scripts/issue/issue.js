@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 class Issue {
-    constructor(github, context) {
+    constructor(github, context, tgTokenApi) {
         this.github = github;
         this.context = context;
         this.issue = context.payload.issue;
@@ -14,12 +14,29 @@ class Issue {
         this.issueTitle = this.issue.title || '';
         this.labels = this.issue.labels || [];
         this.username = this.issue.user.login || '';
+        this.tgTokenApi = tgTokenApi;
     }
     getDistributor() {
         const projectRoot = process.cwd();
         let url = path_1.default.join(projectRoot, '_data/distributors.json');
         const data = JSON.parse(fs_1.default.readFileSync(url, 'utf8'));
         return data;
+    }
+    sendTgMessage(chat_id, message) {
+        try {
+            const url = `https://api.telegram.org/bot${this.tgTokenApi}/sendMessage`;
+            const payload = { "chat_id": chat_id, "text": message, "parse_mode": "HTML", "link_preview_options": { "is_disabled": true } };
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            }).then(res => console.log(res.json()));
+        }
+        catch (e) {
+            console.log(e);
+        }
     }
     async getFork(repoName) {
         // 检查用户是否fork了当前仓库

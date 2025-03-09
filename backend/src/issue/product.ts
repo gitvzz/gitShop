@@ -4,8 +4,8 @@ import fs from 'fs';
 
 export default class extends Issue {
     private type: 'product' | 'category';
-    constructor(github: any, context: any, type: 'product' | 'category') {
-        super(github, context);
+    constructor(github: any, context: any,tgTokenApi: string, type: 'product' | 'category') {
+        super(github, context,tgTokenApi);
         this.type = type;
     }
 

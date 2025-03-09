@@ -7,8 +7,8 @@ const issue_1 = __importDefault(require("./issue"));
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 class default_1 extends issue_1.default {
-    constructor(github, context, repoName) {
-        super(github, context);
+    constructor(github, context, tgTokenApi, repoName) {
+        super(github, context, tgTokenApi);
         this.repoName = repoName;
     }
     async start() {

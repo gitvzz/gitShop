@@ -9,7 +9,8 @@ export default class Issue {
     issueTitle: string;
     labels: any[];
     username: string;
-    constructor(github: any, context: any) {
+    tgTokenApi: string;
+    constructor(github: any, context: any, tgTokenApi: string) {
         this.github = github;
         this.context = context;
         this.issue = context.payload.issue;
@@ -17,6 +18,7 @@ export default class Issue {
         this.issueTitle = this.issue.title || '';
         this.labels = this.issue.labels || [];
         this.username = this.issue.user.login || '';
+        this.tgTokenApi = tgTokenApi;
     }
 
     public getDistributor(): any[] {
@@ -26,7 +28,24 @@ export default class Issue {
         return data;
     }
 
-    public async getFork(repoName:string){
+    public sendTgMessage(chat_id: number, message: string) {
+        try {
+            const url = `https://api.telegram.org/bot${this.tgTokenApi}/sendMessage`;
+            const payload = { "chat_id": chat_id, "text": message, "parse_mode": "HTML", "link_preview_options": { "is_disabled": true } }
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            }).then(res => console.log(res.json()));
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    public async getFork(repoName: string) {
         // 检查用户是否fork了当前仓库
         const _owner = this.context.repo.owner;
         const _repo = this.context.repo.repo;
@@ -35,7 +54,7 @@ export default class Issue {
                 owner: this.username,
                 repo: repoName
             });
-            const {owner,full_name,fork,parent} = response.data;
+            const { owner, full_name, fork, parent } = response.data;
             // 如果能获取到仓库信息且是fork
             if (fork && parent.owner.login === _owner && parent.name === _repo) {
                 // 进一步验证fork源是否为当前仓库
@@ -55,8 +74,8 @@ export default class Issue {
     }
 
     async updateIssue(state?: string, labels?: string[]) {
-        if(!this.github){
-            console.log('updateIssue',state,labels);
+        if (!this.github) {
+            console.log('updateIssue', state, labels);
             return;
         }
         if (state || labels) {
@@ -77,8 +96,8 @@ export default class Issue {
     }
 
     async createComment(body: string) {
-        if(!this.github){
-            console.log('createComment',body);
+        if (!this.github) {
+            console.log('createComment', body);
             return;
         }
         await this.github.rest.issues.createComment({

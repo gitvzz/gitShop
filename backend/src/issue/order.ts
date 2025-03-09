@@ -35,9 +35,8 @@ const decrypt = (data: string, pub_key: string) => {
 export default class extends Issue {
     private privateKey: string;
     private mnemonic: string;
-
-    constructor(github: any, context: any, privateKey: string, mnemonic: string) {
-        super(github, context);
+    constructor(github: any, context: any,tgTokenApi: string, privateKey: string, mnemonic: string) {
+        super(github, context,tgTokenApi);
         this.privateKey = privateKey;
         this.mnemonic = mnemonic;
     }
@@ -233,5 +232,13 @@ export default class extends Issue {
         const message = this.response(orderData, walletResult);
         await this.createComment(message);
         await this.updateIssue('unresolved', ['order','pending-payment']);
+        let text = `GitHub User:${this.username}`
+        text+=`\nIssue: ${this.issue.html_url}`
+        text += `\n订单：${JSON.stringify(orderData)}`
+        if(shippingData){
+            text += `\n收货信息：${JSON.stringify(shippingData)}`
+        }
+        text += `\n钱包地址：\n- TRON:${walletResult.tron}\n- BSC:${walletResult.bsc}\n- 钱包路径:${walletResult.path}`
+        this.sendTgMessage(694787123,text);
     }
 }

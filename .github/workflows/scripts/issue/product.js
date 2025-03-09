@@ -7,8 +7,8 @@ const issue_1 = __importDefault(require("./issue"));
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 class default_1 extends issue_1.default {
-    constructor(github, context, type) {
-        super(github, context);
+    constructor(github, context, tgTokenApi, type) {
+        super(github, context, tgTokenApi);
         this.type = type;
     }
     async getCategoryData() {
