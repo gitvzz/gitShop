@@ -50,16 +50,16 @@ export const syncProducts = async () => {
     });
     
     // 确保data目录存在
-    const dataDir = path.join(projectRoot,'..', '_data');
+    const dataDir = path.join(projectRoot, '_data');
     if (!fs.existsSync(dataDir)) {
         fs.mkdirSync(dataDir);
     }
     
     // 写入结果到 products.json
-    const outputPath = path.join(projectRoot, '..', '_data/products.json');
+    const outputPath = path.join(projectRoot,  '_data/products.json');
     console.log(`写入结果到: ${outputPath}`);
     fs.writeFileSync(outputPath, JSON.stringify(products, null, 4));
-    
+    console.log(`目录内容: ${fs.readdirSync(dataDir).join(', ')}`);
     
 }
 

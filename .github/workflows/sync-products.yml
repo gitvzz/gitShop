@@ -71,7 +71,6 @@ jobs:
           
           # 确保目标目录存在
           mkdir -p _data
-          mkdir -p dist/products
           
           # 安装依赖
           npm install --no-save fs path
@@ -79,9 +78,6 @@ jobs:
           # 执行同步脚本
           node .github/workflows/scripts/sync-products.js
           
-          # 显示生成的文件
-          echo "products.json 内容预览:"
-          head -n 20 _data/products.json
       
       - name: 部署到 gh-pages 分支 🚀
         if: steps.check_changes.outputs.has_changes == 'true' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev')

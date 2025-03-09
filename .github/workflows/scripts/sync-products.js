@@ -50,14 +50,15 @@ const syncProducts = async () => {
         }
     });
     // 确保data目录存在
-    const dataDir = path_1.default.join(projectRoot, '..', '_data');
+    const dataDir = path_1.default.join(projectRoot, '_data');
     if (!fs_1.default.existsSync(dataDir)) {
         fs_1.default.mkdirSync(dataDir);
     }
     // 写入结果到 products.json
-    const outputPath = path_1.default.join(projectRoot, '..', '_data/products.json');
+    const outputPath = path_1.default.join(projectRoot, '_data/products.json');
     console.log(`写入结果到: ${outputPath}`);
     fs_1.default.writeFileSync(outputPath, JSON.stringify(products, null, 4));
+    console.log(`目录内容: ${fs_1.default.readdirSync(dataDir).join(', ')}`);
 };
 exports.syncProducts = syncProducts;
 // 自动执行函数（当直接运行此脚本时）
