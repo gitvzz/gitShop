@@ -40,7 +40,6 @@ export default class extends Issue {
         super(github, context);
         this.privateKey = privateKey;
         this.mnemonic = mnemonic;
-        
     }
 
     private async checkSignature() {
@@ -166,29 +165,29 @@ export default class extends Issue {
         })
     }
 
-    private response(orderData: any, walletAddress: string) {
+    private response(orderData: any, walletAddress: any) {
         const now = new Date();
         const paymentDeadline = new Date(now.getTime() + 48 * 60 * 60 * 1000);
         const formattedDeadline = paymentDeadline.toISOString().replace(/T/, ' ').replace(/\..+/, '') + ' UTC';
-
+        const { tron, bsc, path } = walletAddress;
         // 构建回复内容
         let replyBody = `## 您的订单已成功提交！\n\n`;
 
         replyBody += `### 订单信息\n`;
         replyBody += `- 订单ID: ${orderData.orderId}\n`;
         replyBody += `- 订单总额: ${orderData.summary.total} USDT\n`;
-        replyBody += `- 创建时间: ${new Date(orderData.timestamp).toLocaleString()}\n\n`;
+        replyBody += `- 创建时间: ${new Date(orderData.timestamp).toISOString().replace(/T/, ' ').replace(/\..+/, '') + ' UTC'}\n\n`;
 
         replyBody += `### 支付信息\n`;
-        replyBody += `- 支付币种: USDT (TRC20)\n`;
+        replyBody += `- 支付币种: USDT\n`;
         replyBody += `- 支付金额: ${orderData.summary.total} USDT\n`;
-        replyBody += `- 收款地址: \`${walletAddress}\`\n`;
+        replyBody += `- 收款地址: \n  - BSC:\`${bsc}\`\n  - TRON:\`${tron}\`\n  - 钱包路径: \`${path}\`\n`;
         replyBody += `- 支付截止时间: ${formattedDeadline}\n\n`;
 
         replyBody += `### 支付说明\n`;
         replyBody += `1. 请在支付截止时间前完成转账\n`;
         replyBody += `2. 请确保转账金额准确，不要多付或少付\n`;
-        replyBody += `3. 转账时请使用TRC20网络\n`;
+        replyBody += `3. 转账时请正确选择网络\n`;
         replyBody += `4. 转账完成后，请在此Issue下回复转账交易ID\n\n`;
 
         replyBody += `### 注意事项\n`;
@@ -231,7 +230,7 @@ export default class extends Issue {
             return;
         }
         const walletResult = generateWallet(this.username, this.mnemonic);
-        const message = this.response(orderData, walletResult.address);
+        const message = this.response(orderData, walletResult);
         await this.createComment(message);
         await this.updateIssue('unresolved', ['order','pending-payment']);
     }

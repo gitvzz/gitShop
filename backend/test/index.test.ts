@@ -47,27 +47,28 @@ const runTest = async () => {
           user: {
             login: 'gitvzz'
           },
-          title: 'Order ORDER-20250309-LHOW2G',
-          body: `# Order ORDER-20250309-LHOW2G
+          title: 'Order ORDER-20250309-QIVV6X',
+          body: `# Order ORDER-20250309-QIVV6X
+Distributor ID: netferes
 
 ## Products
-- [武夷岩茶](https://gitvzz.github.io/gitShop/#/product/rock-tea) x1
-- [Telegram开发教学](https://gitvzz.github.io/gitShop/#/product/telegram-dev) x1
-- [智能手机Pro](https://gitvzz.github.io/gitShop/#/product/smartphone-pro) x1
+- [武夷岩茶](https://gitvzz.github.io/gitShop/#/product/rock-tea?ref=netferes) x1
+- [Telegram开发教学1](https://gitvzz.github.io/gitShop/#/product/telegram-dev?ref=netferes) x2
+- [智能手机Pro](https://gitvzz.github.io/gitShop/#/product/smartphone-pro?ref=netferes) x1
 
 ## Order Data
 [ENCRYPTED_ORDER_DATA]
-mVyVcUnHhgoTY923qq5dHtxDIu9IcqZDIq/WpMLWJSJdKruGhXZRRGLOhzU8qZlXLGYmC6yYxpFjFosfmnFAUnaWB+QsDr2Huq7R4mD9c1irOpiz4seiARy/pRFsgAM6bx/EJf98utVFVbmbDhNwmYu3n6CkCwpqPIA/mwL+GYU3OxXdp7At2GmDxvT1GSDap6z7jGoWcs1sFiaGZHtfUBog0VuR092+fAC9aJpPw3R3erOSr5m5rkHBsBcmC3hdlF5gohGqR+z8srqLuyd5Nbemie8KiRMenNr6D/k0mLdzTepErpfN/rDuc/OpvVdNpYh/4oyz3k+/O4hng9mNzQ==.voNuY7ZxnISLXvvEi6faCyu9DJTGkL/epNTnEG8/aFwbrCvz3qMjtOagUXwy4nyNvIQlNwMA1+mpASKGDkVMygWF7JcacGUiEGbGDoWqOPXejQbpPyQrgKhG/qOc3g8gIbhkk3x5H7gGzEIesWAJN3u7w72fjnx2FK4/3Me4y0Er9AaO6rm9zBao1DyL0fw0Iibua1S9d2WJ4yAwl4O2jVFEXXlf6MsDeidMmSakUz0n23kOE1crz1Olj75U+2G9NzOt6PJTC/BH4hY0vevIPILJn7f6E7PSEh+sJ9ff+cdcEd24/gDNDaLnTiYzJmg/RFgyh7ZnLagNn0DJNVl6DO9j7qbzoxWuAiZfEAspKbJsfgWVebuEmCN/RFQOwjvXzgYjWqZvp+a50gJXSdrNQZBjcO1NPZ4SbMLOxk7s7+mtNoDrAB9xnsUWK58WI15Aszc406SUfPiVt21+BDReShAKSu6u+t2vWz5lUA0n52eYFygiGRF/C+Do+1JREDs49nWOy4RgkIg7RQnFnCgrwaNIYTxenH2Uq7uNLThHeEonj05iLb0SaWyEwtUlobK52eOEDxOPBMCeihd3x+XclfPqBq2EX+zD3H/prv3o8txrg4F8ANjw30WBoeJfdic1adXrIaW3uUC3ZMaZSJg7s/PV+NuXc6PP+X26sez+5+l3Jp/Fvl5Eivu8llRT+oNT8Tq3uoBTGjAUuu7uoWWk/78vAURwroKM7ivD6bGzkIZpwbmkatbw8dctOwFUFovcszuLqMnkqR8jK1Y3CSwOAGcUhosz3+ugIb+Ogjd4PzY=
+afRESCjSV3ob8bZQvCQ7iWNJ+33Th9PLGRhaLr8fUH1yZLN5Qe2I4itXf7/bmWUN5KYsl2E39i9Sm7z+C3mQdnci2qMlNqQpYNAp8aQxnoU3i3MHY+5v/gvRLta1JEBLueRAFMaupGCCIe9L0+QVDs82yqg5T4DWq+yFfSbniXcj3IQGyYZ5C5kteDKIE7BLKzBRlxGiaj67/C4VkIwKwzj7pmKdx6wbf3/NmlWgSTAOnEC6HLP/6YzSM03/z5mwNcIpVrlnSgF1SJ7SzabbopgOBZ8Tu5ywZ0LRCL5djH3HNwAQ83mMoD/gmqE/XxOAzKr2T0xlnznHiPOksMB0GQ==.+j0f7zb/K3ZLuMUaKE1VVW1DTlMUL2B0au4+7A9vhVo3CcB/tO5bAY/zC8OvYMqn0R1F82KsQF5fXeH2w922neWClcgn2USrl8yVyp+He0ddHoWPCXBgoTyJagp9MvKkFmuVCR9GKcxS5+00/JaupARY0grpkjS4iLJ4Ltx6L3bnwagleEUpX36IRl5L276hvOXrlOlQs93r5LZlonCc9VLsPOI+wB4jXEiDaOUtEax0jFA6fRZuMGD4RBnVlvOJODiK6rM3aL7CqNNN0xtn7dsA/kVtmmTOOkZPCAMnduAcLdmDi/F6awxxmiJ8eUWII/AMilPXMlYF0exQvejwtwSm2aP5SNgGGsTA4slb+m+k8v1pyW2A0h+OibHCiIItfuJ6to/qW3NRzCyAAmH+FXpaTMhCDJ2QlXodDvtt9tC7URP920tuw49n+NK3rue3+FsNJ/OIB2UQqO1Bz+3GsRtpwcYRtXNyeuKnxnZGXRhypyd6YuuImOoE1hVTrlyrmESMBxP2z51rpsdjVCWyT5AS76pLR8Dr1q1hUC++LsKtxBArzag68fo2A7XM6MatLyoXLf3nRW9JaTX/FUrBTgKPx6/DISYujFSn2cazXF2LabB27Z/O+8s4SHiqnZ5Q0Wr4Dyo8rs7cRfNdTEMnVznjMn/xGwvKoJON/hxzy/dM5hJOKvEEYCN9Gv52tw+wmg73QNTGKFRtVI6LtTO06fM8fZe3anifdUNvdaAGHHEdZnq+i8E9TAGK3jmrGDmvPLWLfQ1AVz8tttlhk/cIMZV0l8/NCEVyDYxX0SIZ+B87i/VwIeMkPYexI0bpBjSFwRgqspgAeNoYkCwwhpNjSA8OYoDTBhLmDfReLHedXsNm0veBgFoA2l6ze66165OnmJjfhSWcWYdk2x+QDy8t9ZRP24uVJK0YTlMfxu9SHyeb4ehnyGIExXLY/n0gshzlHqcYd5S3Zy5lnF8KBqtT/9QDf9DCV4wIUOY/khl/TnaxX507yyTM0RNgbKRIBqcB
 [/ENCRYPTED_ORDER_DATA]
 
 ## Shipping Data
 [ENCRYPTED_SHIPPING_DATA]
-PtOWV9Qw/87rRbceIbSOzzoNHKNuQ9qRUmWHR9FZp3cVlZ8ygp3O0pFPqgA2s2698DWYfMqLBNrI1tQub7iqf/9koROQF9IUMWFQyygXV+edPL13CEMfW5MveAvk0mi5EcYfDOt6yvO7zyInxonNvt4+iGzrLklLOS/+pqaSogexZ72rcMrjRoWtqukLjGWK4hFXCkK9bTG3/W4xyVoC/rLGBglyuayKRoy7yUxrLyqT9f6eVtZB3SC7j2gVgLndiSYkxKu4kFfxdY5eMKIu8uik0j+cKLn5ql1Vqlci6BiQyT/uXuGfRyOha0ZSQh6QPQ66veg1yyX7T+KguxFGLQ==.1cpL4he7tlpbMkw7pLzig5nAeGhdZzJCoieUf/AAabaCFdbdQU3oI9XwtSo6IF1WxwZcHHOO3zrKZu1UESNZmvCLTj+vhQhMzWj9WmRAS3/4OEuXJRrj7P2N9SPL9B+OZ8hunOQJxUwN0On2ZYeOpR5u8Pb86ABXXjdz3t/Khytn8u4n6hmSuSJhjZYoAYi1rslCqMzHdib2JVXG1FB8313qdymz4iDBOccCfXzC+FIB/ipFhjJzhuBvxyPqvRRxA+vz0HYznE2aPEtOdIfUD7LgVW+8NpgJ1hslFJoLKNOaJXN723/2eCtFxoLar07Y2YpSIOFnofaPAYLU5M/CLYHluK5ggEk2cq5hUwQ/dX0=
+A22lTMWsd3Ihs8GjZxW6SNuUQO3Xxx/5jUNDVrTnEinppoG0SmFdVWMnIpJC8cDqZf+vyrJqZmsjADcWPTMn2+KH+Eu6bYGnc6n1n4xX1mpKfO8idRGTZgtuwrA36OU8b05JfFqBFqlEQTcMYfAs7yZ2yDu47RokeR0HJijMbwsEKUH20iztpzLmAM8w6QTNpIl4/Sr1mIP53XqqCsnjOXQ8ICHOquS1faYyCv/ibitZ2gfy6ARCyrUnB6+7amIPNSSH/NMKCLimj+XKR0xaNl5byMYdEkZFhzFP9gh7SsRQyktntTQPLt0bu4gzecHK1fkHmFNxaLtEtSUnYxpQpw==.s1aYjKmXYmySlXrZKFmWtRHwIkzXpXIh9HtZYGhlzucupQqmLDKKN3ymeQlDgXNb33PW6kOO1D92heGw4erhEo5aUtQpYtsYS8qEexLhh1VO2Mh7dNUQ1ZEzV6OyDUQaKePRTNKHdZUCAxxFeL8Gcz1RZQS+49KIk9p/OICAh/0pGGbaaxB5G1Y0Wfq74NdIqombBmaTg/LlLO9b4kjcn/ZyZmfuWg8LHSphl/uWwrnRNJCOjrUmubsDPB5UKj+9tI5FiARLqlHgwMKfvpCdK4nO+Uiyi1LuQajFrmbhj8lqFZL39c1GYOCTMQv7swUvRwT9tN6FH6sGX8akNuK2i0maMUYa/l3x3+Y3e00wTNM=
 [/ENCRYPTED_SHIPPING_DATA]
 
 ---
 *This order was generated automatically by GitShop. Please do not edit this issue manually.*
-MD5:d8367e7c40270e5758de014b26657574`,
+MD5:7f5d82ff9f936e53166d32e0d485b51b`,
         }
       }
     };
@@ -81,7 +82,7 @@ MD5:d8367e7c40270e5758de014b26657574`,
   }
 }
 
-/* syncProducts()
+syncProducts()
 // 执行测试
 runTest().then(() => {
   console.log("测试完成");
@@ -89,4 +90,43 @@ runTest().then(() => {
 }).catch(error => {
   console.error("测试失败:", error);
   process.exit(1);
-});  */
+}); 
+
+import bs58 from 'bs58'
+// 将以太坊地址转换为Tron地址的函数
+function toBase58CheckAddress(ethAddress:string) {
+  // 引入所需的库
+  const crypto = require('crypto');
+  //const bs58 = require('bs58');
+  
+  
+  // 移除0x前缀（如果有）
+  let hexAddress = ethAddress.startsWith('0x') ? ethAddress.slice(2) : ethAddress;
+  
+  // 添加Tron地址前缀41
+  hexAddress = '41' + hexAddress;
+  
+  // 将十六进制字符串转换为Buffer
+  const addressBytes = Buffer.from(hexAddress, 'hex');
+  
+  // 第一次SHA256哈希
+  const hash1 = crypto.createHash('sha256').update(addressBytes).digest();
+  
+  // 第二次SHA256哈希
+  const hash2 = crypto.createHash('sha256').update(hash1).digest();
+  
+  // 取前4个字节作为校验和
+  const checksum = hash2.slice(0, 4);
+  
+  // 连接地址和校验和
+  const addressWithChecksum = Buffer.concat([addressBytes, checksum]);
+  // Base58编码
+  const base58Address = bs58.encode(addressWithChecksum);
+  
+  return base58Address;
+}
+
+// 示例使用
+/* const ethAddress = '0x44E05b79817b4A1829c1aC8598F3416a93666666';
+const tronAddress = toBase58CheckAddress(ethAddress);
+console.log(tronAddress); */
