@@ -201,12 +201,17 @@ const initData = async () => {
   store.loading = true
   store.error = null
   store.locale = locale.value as Locale
-  console.log(route.query)
-  if (route.query.ref) {
+  if (window.location.hash.includes('?ref=')) {
+     const hashQuery = window.location.hash.split('?')[1];
+     const params = new URLSearchParams(hashQuery);
+     const distributor_id = params.get('ref');
+     if (distributor_id) {
+       localStorage.setItem('distributor_id', distributor_id);
+       store.distributor_id = distributor_id;
+     }
+   } else if (route.query.ref) {
     const distributor_id = route.query.ref as string
-    console.log(distributor_id)
     localStorage.setItem('distributor_id', distributor_id)
-    console.log(localStorage.getItem('distributor_id'))
     store.distributor_id = distributor_id
   } else {
     const distributor_id = localStorage.getItem('distributor_id')
