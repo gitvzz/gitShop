@@ -5,7 +5,7 @@ export const syncProducts = async () => {
     // 获取当前工作目录
     const projectRoot = process.cwd();
     
-    const categoryUrl = path.join(projectRoot, 'frontend/public/products/index.json');
+    const categoryUrl = path.join(projectRoot,'..', 'frontend/public/products/index.json');
     
     console.log(`尝试读取文件: ${categoryUrl}`);
     console.log(`当前工作目录: ${projectRoot}`);
@@ -16,7 +16,7 @@ export const syncProducts = async () => {
     const products = [] as any[];
     
     category.items.forEach((item: any) => {
-        const productPath = path.join(projectRoot, 'frontend/public/products', `${item.id}.json`);
+        const productPath = path.join(projectRoot,'..', 'frontend/public/products', `${item.id}.json`);
         if (fs.existsSync(productPath)) {
             const list = JSON.parse(fs.readFileSync(productPath, 'utf8'));
             list.forEach((product: any) => {

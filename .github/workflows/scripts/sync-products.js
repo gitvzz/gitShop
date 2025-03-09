@@ -9,7 +9,7 @@ const path_1 = __importDefault(require("path"));
 const syncProducts = async () => {
     // 获取当前工作目录
     const projectRoot = process.cwd();
-    const categoryUrl = path_1.default.join(projectRoot, 'frontend/public/products/index.json');
+    const categoryUrl = path_1.default.join(projectRoot, '..', 'frontend/public/products/index.json');
     console.log(`尝试读取文件: ${categoryUrl}`);
     console.log(`当前工作目录: ${projectRoot}`);
     console.log(`目录内容: ${fs_1.default.readdirSync(projectRoot).join(', ')}`);
@@ -17,7 +17,7 @@ const syncProducts = async () => {
     const category = JSON.parse(fs_1.default.readFileSync(categoryUrl, 'utf8'));
     const products = [];
     category.items.forEach((item) => {
-        const productPath = path_1.default.join(projectRoot, 'frontend/public/products', `${item.id}.json`);
+        const productPath = path_1.default.join(projectRoot, '..', 'frontend/public/products', `${item.id}.json`);
         if (fs_1.default.existsSync(productPath)) {
             const list = JSON.parse(fs_1.default.readFileSync(productPath, 'utf8'));
             list.forEach((product) => {
