@@ -24,6 +24,7 @@ class default_1 extends issue_1.default {
         return data;
     }
     async saveProductData(data) {
+        console.log(data);
         let { id, name, description, price, images, category_id, requires_shipping, features, stock, tags, related_products, promotions } = data;
         if (!id || !name || !description || !price || !images || !category_id) {
             return { success: false, message: 'Invalid product data' };
@@ -43,7 +44,7 @@ class default_1 extends issue_1.default {
         if (typeof images !== 'object' || !Array.isArray(images) || images.length === 0) {
             return { success: false, message: 'Invalid product images' };
         }
-        if (typeof category_id !== 'string' || /^[\w-]{3,15}$/.test(category_id)) {
+        if (typeof category_id !== 'string' || !/^[\w-]{3,15}$/.test(category_id)) {
             return { success: false, message: 'Invalid product category id' };
         }
         if (requires_shipping !== undefined && typeof requires_shipping !== 'boolean') {
@@ -103,7 +104,6 @@ class default_1 extends issue_1.default {
         return { success: true, message: `Product saved successfully. [${product.name}](${url})` };
     }
     async saveCategoryData(data) {
-        console.log(data);
         const { id, name, description, image } = data;
         if (!id || !name || !description || !image) {
             return { success: false, message: 'Invalid category data' };

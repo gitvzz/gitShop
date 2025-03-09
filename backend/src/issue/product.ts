@@ -24,6 +24,7 @@ export default class extends Issue {
     }
 
     private async saveProductData(data: any) {
+        console.log(data);
         let { id, name, description, price, 
             images, category_id, requires_shipping,
             features, stock, tags, 
@@ -47,7 +48,7 @@ export default class extends Issue {
         if (typeof images !== 'object' || !Array.isArray(images) || images.length === 0) {
             return { success: false, message: 'Invalid product images' };
         }
-        if (typeof category_id !== 'string' || /^[\w-]{3,15}$/.test(category_id)) {
+        if (typeof category_id !== 'string' || !/^[\w-]{3,15}$/.test(category_id)) {
             return { success: false, message: 'Invalid product category id' };
         }
         if(requires_shipping!==undefined && typeof requires_shipping !== 'boolean'){
@@ -108,7 +109,6 @@ export default class extends Issue {
     }
 
     private async saveCategoryData(data: any) {
-        console.log(data);
         const { id, name, description, image } = data;
         if (!id || !name || !description || !image) {
             return { success: false, message: 'Invalid category data' };
