@@ -8,6 +8,7 @@ class Issue {
         this.issueBody = this.issue.body || '';
         this.issueTitle = this.issue.title || '';
         this.labels = this.issue.labels || [];
+        this.username = this.issue.user.login || '';
     }
     async start() {
     }

@@ -35,13 +35,12 @@ const decrypt = (data: string, pub_key: string) => {
 export default class extends Issue {
     private privateKey: string;
     private mnemonic: string;
-    private username: string;
 
     constructor(github: any, context: any, privateKey: string, mnemonic: string) {
         super(github, context);
         this.privateKey = privateKey;
         this.mnemonic = mnemonic;
-        this.username = this.issue.user.login;
+        
     }
 
     private async checkSignature() {

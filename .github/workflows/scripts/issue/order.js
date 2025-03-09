@@ -35,7 +35,6 @@ class default_1 extends issue_1.default {
         super(github, context);
         this.privateKey = privateKey;
         this.mnemonic = mnemonic;
-        this.username = this.issue.user.login;
     }
     async checkSignature() {
         const signatureRegex = /MD5:([a-f0-9]{32})/i;
@@ -187,12 +186,10 @@ class default_1 extends issue_1.default {
         return replyBody;
     }
     async start() {
-        const titleRegex = /^Order ORDER-\d{8}-[A-Z0-9]{6}$/;
         const encryptedDataRegex = /\[ENCRYPTED_ORDER_DATA\]\s*([\s\S]*?)\s*\[\/ENCRYPTED_ORDER_DATA\]/;
-        const isTitleValid = titleRegex.test(this.issueTitle);
         const encryptedDataMatch = this.issueBody.match(encryptedDataRegex);
         const encryptedData = encryptedDataMatch ? encryptedDataMatch[1].trim() : '';
-        if (!isTitleValid || !encryptedDataMatch) {
+        if (!encryptedDataMatch) {
             await this.createComment('订单不符合规则');
             await this.updateIssue('closed', ['invalid']);
             return;
@@ -219,6 +216,7 @@ class default_1 extends issue_1.default {
         const walletResult = (0, generate_wallet_1.generateWallet)(this.username, this.mnemonic);
         const message = this.response(orderData, walletResult.address);
         await this.createComment(message);
+        await this.updateIssue('unresolved', ['order', 'pending-payment']);
     }
 }
 exports.default = default_1;

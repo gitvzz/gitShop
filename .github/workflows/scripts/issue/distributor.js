@@ -1,12 +1,16 @@
-import Issue from './issue';
-import path from 'path';
-import fs from 'fs';
-export default class extends Issue {
-    constructor(github: any, context: any) {
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const issue_1 = __importDefault(require("./issue"));
+const path_1 = __importDefault(require("path"));
+const fs_1 = __importDefault(require("fs"));
+class default_1 extends issue_1.default {
+    constructor(github, context) {
         super(github, context);
     }
-
-    private async checkFork(){
+    async checkFork() {
         // 检查用户是否fork了当前仓库
         const owner = this.context.repo.owner;
         const repo = this.context.repo.repo;
@@ -25,25 +29,24 @@ export default class extends Issue {
                 }
             }
             return false;
-        } catch (error) {
+        }
+        catch (error) {
             // 如果获取失败(仓库不存在等情况)返回false
             return false;
         }
     }
-
-    private getDistributor() {
+    getDistributor() {
         const projectRoot = process.cwd();
-        let url = path.join(projectRoot, '_data/distributors.json');
-        const data = JSON.parse(fs.readFileSync(url, 'utf8'));
-        return data.find((item: any) => item.username === this.username);
+        let url = path_1.default.join(projectRoot, '_data/distributors.json');
+        const data = JSON.parse(fs_1.default.readFileSync(url, 'utf8'));
+        return data.find((item) => item.username === this.username);
     }
-
     async start() {
         console.log(this.context.repo);
         const owner = this.context.repo.owner;
         const repo = this.context.repo.repo;
         const isFork = await this.checkFork();
-        if(!isFork){
+        if (!isFork) {
             await this.createComment(`You need to fork the repository to become a distributor. [Fork here](https://github.com/${owner}/${repo}/fork)`);
             await this.updateIssue('closed', ['invalid']);
             return;
@@ -51,3 +54,4 @@ export default class extends Issue {
         const distributor = this.getDistributor();
     }
 }
+exports.default = default_1;
