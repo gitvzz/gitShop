@@ -28,7 +28,7 @@ class default_1 extends issue_1.default {
         if (!id || !name || !description || !price || !images || !category_id) {
             return { success: false, message: 'Invalid product data' };
         }
-        if (typeof id !== 'string' || /^[\w-]{3,15}$/.test(id)) {
+        if (typeof id !== 'string' || !/^[\w-]{3,15}$/.test(id)) {
             return { success: false, message: 'Invalid product id' };
         }
         if (typeof name !== 'string' || name.length < 3 || name.length > 20) {
@@ -107,7 +107,7 @@ class default_1 extends issue_1.default {
         if (!id || !name || !description || !image) {
             return { success: false, message: 'Invalid category data' };
         }
-        if (typeof id !== 'string' || /^[\w-]{3,15}$/.test(id)) {
+        if (typeof id !== 'string' || !/^[\w-]{3,15}$/.test(id)) {
             return { success: false, message: 'Invalid category id' };
         }
         if (typeof name !== 'string' || name.length < 3 || name.length > 20) {
@@ -161,12 +161,7 @@ class default_1 extends issue_1.default {
             if (result.success) {
                 await this.createComment(result.message);
                 await this.updateIssue('closed', ['success']);
-                if (this.type === 'product') {
-                    return { products: true };
-                }
-                else {
-                    return { category: true };
-                }
+                return { products: true };
             }
             else {
                 await this.createComment(result.message);
