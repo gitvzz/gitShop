@@ -1,38 +1,41 @@
-{
-  "items": [
+[
     {
-      "id": "tea",
-      "name": {
-        "en": "Tea",
-        "zh": "茶叶"
-      },
-      "description": {
-        "zh": "精选优质茶叶，源自天然茶园",
-        "en": "Select high-quality tea, sourced from natural tea gardens"
-      },
-      "image": "/assets/categories/tea.png"
+        "id": "tea",
+        "name": {
+            "en": "Tea",
+            "zh": "茶叶"
+        },
+        "description": {
+            "zh": "精选优质茶叶，源自天然茶园",
+            "en": "Select high-quality tea, sourced from natural tea gardens"
+        },
+        "image": "/assets/categories/tea.png"
     },
     {
-      "id": "learning",
-      "name": "学艺",
-      "description": "专业人工教学服务，提升您的技能",
-      "image": "/assets/categories/learning.png"
+        "id": "learning",
+        "name": "学艺",
+        "description": "专业人工教学服务，提升您的技能",
+        "image": "/assets/categories/learning.png"
     },
     {
-      "id": "electronics",
-      "name": {
-        "en": "Electronics",
-        "zh": "数码电子"
-      },
-      "description": {
-        "zh": "精选优质数码电子产品，提升您的科技生活体验",
-        "en": "Selected high-quality electronic products to enhance your tech life experience"
-      },
-      "image": "/assets/categories/electronics.png"
+        "id": "electronics",
+        "name": {
+            "en": "Electronics",
+            "zh": "数码电子"
+        },
+        "description": {
+            "zh": "精选优质数码电子产品，提升您的科技生活体验",
+            "en": "Selected high-quality electronic products to enhance your tech life experience"
+        },
+        "image": "/assets/categories/electronics.png"
+    },
+    {
+        "id": "girl",
+        "name": "GIRL",
+        "description": "美女套图",
+        "image": {
+            "src": "https://cdn.pixabay.com/photo/2022/04/06/11/30/girl-7115394_1280.jpg",
+            "alt": "girl"
+        }
     }
-  ],
-  "metadata": {
-    "last_updated": "2023-05-01",
-    "version": "1.0.0"
-  }
-} 
+]
