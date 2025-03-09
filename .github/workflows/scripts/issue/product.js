@@ -9,7 +9,7 @@ class default_1 extends issue_1.default {
         super(github, context);
     }
     async start() {
-        return 'product updated';
+        return { product: true };
     }
 }
 exports.default = default_1;

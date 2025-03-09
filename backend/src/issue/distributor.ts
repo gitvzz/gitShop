@@ -73,6 +73,6 @@ export default class extends Issue {
         fs.writeFileSync(outputPath, JSON.stringify(data, null, 4));
         await this.createComment(`Distributor data updated. [Distribution Link](https://${owner}.github.io/${repo}/)`);
         await this.updateIssue('closed', ['distributor']);
-        return 'distributors';
+        return {distributors:true};
     }
 }

@@ -6,6 +6,6 @@ export default class extends Issue {
     }
 
     async start() {
-        return 'product updated';
+        return {product:true};
     }
 }

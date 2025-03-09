@@ -38,14 +38,18 @@ jobs:
             const { handleIssue } = require('./.github/workflows/scripts/issue/index.js');
             const result = await handleIssue(github,context);
             
-            console.log(`处理结果: ${result}`);
+        
+            console.log(`处理结果: ${JSON.stringify(result)}`);
             
-            // 将简化结果写入输出变量
-            core.setOutput('result', result);
+            // 将 JSON 结果的各个属性分别设置为输出
+            for (const [key, value] of Object.entries(result)) {
+              core.setOutput(key, value);
+            }
             
             return result;
             
       - name: 提交分销商数据并触发部署
+        if: steps.handle_issue.outputs.distributors == 'true'
         run: |
           echo "分销商数据已更新，准备提交更改..."
           
@@ -74,7 +78,7 @@ jobs:
           fi
           
       - name: 触发部署工作流
-        if: steps.handle_issue.outputs.result == 'distributors'
+        if: steps.handle_issue.outputs.distributors == 'true'
         run: |
           echo "正在触发部署工作流..."
           
