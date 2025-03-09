@@ -69,7 +69,7 @@ export const useStore = defineStore('store', {
       this.loading = true
       try {
         const categoriesRes = await axios.get(`${import.meta.env.BASE_URL}products/index.json`)
-        for (const category of categoriesRes.data.items) {
+        for (const category of categoriesRes.data) {
           const productsRes = await axios.get(`${import.meta.env.BASE_URL}products/${category.id}.json`)
           if (productsRes.data) {
             const products = productsRes.data.filter((p:any) => p.images && p.images.length > 0).map((product: Product) => {

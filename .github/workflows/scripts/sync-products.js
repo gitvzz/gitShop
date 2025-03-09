@@ -12,7 +12,7 @@ const syncProducts = async () => {
     const categoryUrl = path_1.default.join(projectRoot, 'frontend/public/products/index.json');
     const category = JSON.parse(fs_1.default.readFileSync(categoryUrl, 'utf8'));
     const products = [];
-    category.items.forEach((item) => {
+    category.forEach((item) => {
         const productPath = path_1.default.join(projectRoot, 'frontend/public/products', `${item.id}.json`);
         if (fs_1.default.existsSync(productPath)) {
             const list = JSON.parse(fs_1.default.readFileSync(productPath, 'utf8'));

@@ -10,7 +10,7 @@ export const syncProducts = async () => {
     const category = JSON.parse(fs.readFileSync(categoryUrl, 'utf8'));
     const products = [] as any[];
     
-    category.items.forEach((item: any) => {
+    category.forEach((item: any) => {
         const productPath = path.join(projectRoot, 'frontend/public/products', `${item.id}.json`);
         if (fs.existsSync(productPath)) {
             const list = JSON.parse(fs.readFileSync(productPath, 'utf8'));
