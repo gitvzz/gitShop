@@ -20,6 +20,9 @@ class default_1 extends issue_1.default {
     async getProductData(category_id) {
         const projectRoot = process.cwd();
         let url = path_1.default.join(projectRoot, `frontend/public/products/${category_id}.json`);
+        if (!fs_1.default.existsSync(url)) {
+            return [];
+        }
         const data = JSON.parse(fs_1.default.readFileSync(url, 'utf8'));
         return data;
     }
@@ -68,7 +71,6 @@ class default_1 extends issue_1.default {
             return { success: false, message: 'Invalid product images' };
         }
         const category_list = await this.getCategoryData();
-        console.log("category_list", category_list);
         const category = category_list.find((item) => item.id === category_id);
         if (!category) {
             return { success: false, message: 'Category not found' };

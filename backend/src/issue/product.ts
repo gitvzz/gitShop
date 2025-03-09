@@ -19,6 +19,9 @@ export default class extends Issue {
     private async getProductData(category_id: string) {
         const projectRoot = process.cwd();
         let url = path.join(projectRoot, `frontend/public/products/${category_id}.json`);
+        if(!fs.existsSync(url)){
+            return [];
+        }
         const data = JSON.parse(fs.readFileSync(url, 'utf8'));
         return data;
     }
@@ -72,7 +75,6 @@ export default class extends Issue {
             return { success: false, message: 'Invalid product images' };
         }
         const category_list = await this.getCategoryData();
-        console.log("category_list",category_list);
         const category = category_list.find((item: any) => item.id === category_id);
         if (!category) {
             return { success: false, message: 'Category not found' };
