@@ -19,6 +19,7 @@ const handleIssue = async (github, context) => {
     }
     else if (distributorTitleRegex.test(title)) {
         const match = title.match(distributorTitleRegex);
+        console.log(match);
         await new distributor_1.default(github, context, match[1]).start();
     }
 };

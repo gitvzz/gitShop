@@ -13,6 +13,7 @@ const handleIssue = async (github: any, context: any) => {
         await new Product(github,context).start();
     }else if(distributorTitleRegex.test(title)){
         const match = title.match(distributorTitleRegex);
+        console.log(match);
         await new Distributor(github,context, match[1]).start();
     }
 }

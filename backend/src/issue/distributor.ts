@@ -6,6 +6,7 @@ export default class extends Issue {
     constructor(github: any, context: any, repoName: string) {
         super(github, context);
         this.repoName = repoName;
+        console.log(this.repoName);
     }
 
     private async checkFork(){
@@ -15,7 +16,7 @@ export default class extends Issue {
         try {
             const response = await this.github.rest.repos.get({
                 owner: this.username,
-                repo: this.repoName
+                repo: this.repoName || 'gitshop11'
             });
             console.log(response.data);
             // 如果能获取到仓库信息且是fork
@@ -42,7 +43,6 @@ export default class extends Issue {
     }
 
     async start() {
-        console.log(this.context);
         const owner = this.context.repo.owner;
         const repo = this.context.repo.repo;
         const isFork = await this.checkFork();

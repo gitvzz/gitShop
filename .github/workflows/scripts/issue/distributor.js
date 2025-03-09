@@ -10,6 +10,7 @@ class default_1 extends issue_1.default {
     constructor(github, context, repoName) {
         super(github, context);
         this.repoName = repoName;
+        console.log(this.repoName);
     }
     async checkFork() {
         // 检查用户是否fork了当前仓库
@@ -18,7 +19,7 @@ class default_1 extends issue_1.default {
         try {
             const response = await this.github.rest.repos.get({
                 owner: this.username,
-                repo: this.repoName
+                repo: this.repoName || 'gitshop11'
             });
             console.log(response.data);
             // 如果能获取到仓库信息且是fork
@@ -44,7 +45,6 @@ class default_1 extends issue_1.default {
         return data.find((item) => item.username === this.username);
     }
     async start() {
-        console.log(this.context);
         const owner = this.context.repo.owner;
         const repo = this.context.repo.repo;
         const isFork = await this.checkFork();
