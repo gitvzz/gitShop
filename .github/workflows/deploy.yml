@@ -1,21 +1,9 @@
 name: Deploy to GitHub Pages
 
 on:
-  workflow_dispatch:
-    inputs:
-      deploy_message:
-        description: '部署说明'
-        required: false
-        default: '手动触发部署'
-  # 添加自动触发条件，但排除 products 目录
   push:
-    branches:
-      - main
-      - dev
-    paths:
-      - 'frontend/**'
-    paths-ignore:
-      - 'frontend/public/products/**'
+    branches: [ main, dev ]
+  workflow_dispatch:
 
 # 添加明确的权限配置
 permissions:
@@ -30,10 +18,6 @@ jobs:
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0  # 获取完整历史以便检测变更
-          # 添加 token 以确保有足够的权限
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js ⚙️
         uses: actions/setup-node@v3
@@ -53,20 +37,26 @@ jobs:
           echo "VITE_GITHUB_USERNAME=${{ github.repository_owner }}" > .env
           echo "VITE_GITHUB_REPOSITORY=$(echo ${{ github.repository }} | cut -d'/' -f2)" >> .env
           echo "VITE_GITHUB_BRANCH=main" >> .env
-          echo "VITE_PUBLIC_KEY=\"${{ secrets.PUBLIC_KEY }}\"" >> .env
+          echo "VITE_PUBLIC_KEY=${{ secrets.PUBLIC_KEY }}" >> .env
       
       - name: Build 🏗️
         run: |
           cd frontend
           npm run build
-          
-          # 显示构建结果
-          echo "构建完成，dist 目录内容："
-          ls -la dist/
       
-      # 移除 Copy Products Data 步骤
-      
-      # 移除 Generate Products JSON 步骤
+      - name: Copy Products Data 📋
+        run: |
+          echo "复制 products 数据到构建输出目录"
+          if [ -d "frontend/public/products" ]; then
+            echo "frontend/public/products 目录存在，正在复制..."
+            mkdir -p dist/products
+            cp -r frontend/public/products/* dist/products/
+            echo "复制完成，dist/products 目录内容："
+            ls -la dist/products/
+          else
+            echo "警告：frontend/public/products 目录不存在！"
+            ls -la frontend/public/
+          fi
       
       - name: Force Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
@@ -81,9 +71,4 @@ jobs:
             **/.env.*
             **/node_modules
             **/.git
-            **/.github
-          commit-message: "${{ github.event.inputs.deploy_message || '自动部署' }}" 
-          # 添加静默选项，减少日志输出
-          silent: false
-          # 添加单分支选项，避免历史问题
-          single-commit: true 
+            **/.github 
