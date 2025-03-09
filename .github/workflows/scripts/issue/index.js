@@ -7,6 +7,7 @@ exports.handleIssue = void 0;
 const order_1 = __importDefault(require("./order"));
 const product_1 = __importDefault(require("./product"));
 const distributor_1 = __importDefault(require("./distributor"));
+const distributorTitleRegex = /^Become a Distributor #[a-zA-Z0-9-_]+$/i;
 const handleIssue = async (github, context) => {
     //const labels = (context.payload.issue.labels || []).map((label: any) => label.name);
     const title = context.payload.issue.title;
@@ -16,8 +17,9 @@ const handleIssue = async (github, context) => {
     else if (title === 'Product put on shelves') {
         await new product_1.default(github, context).start();
     }
-    else if (title === 'Become a Distributor') {
-        await new distributor_1.default(github, context).start();
+    else if (distributorTitleRegex.test(title)) {
+        const match = title.match(distributorTitleRegex);
+        await new distributor_1.default(github, context, match[1]).start();
     }
 };
 exports.handleIssue = handleIssue;

@@ -2,8 +2,10 @@ import Issue from './issue';
 import path from 'path';
 import fs from 'fs';
 export default class extends Issue {
-    constructor(github: any, context: any) {
+    private repoName: string;
+    constructor(github: any, context: any, repoName: string) {
         super(github, context);
+        this.repoName = repoName;
     }
 
     private async checkFork(){
@@ -13,7 +15,7 @@ export default class extends Issue {
         try {
             const response = await this.github.rest.repos.get({
                 owner: this.username,
-                repo: repo
+                repo: this.repoName
             });
             console.log(response.data);
             // 如果能获取到仓库信息且是fork
