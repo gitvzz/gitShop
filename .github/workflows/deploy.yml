@@ -46,7 +46,7 @@ jobs:
           echo "VITE_GITHUB_USERNAME=${{ github.repository_owner }}" > .env
           echo "VITE_GITHUB_REPOSITORY=$(echo ${{ github.repository }} | cut -d'/' -f2)" >> .env
           echo "VITE_GITHUB_BRANCH=main" >> .env
-          echo "VITE_PUBLIC_KEY=${{ secrets.PUBLIC_KEY }}" >> .env
+          echo "VITE_PUBLIC_KEY=\"${{ secrets.PUBLIC_KEY }}\"" >> .env
       
       - name: Build 🏗️
         run: |
