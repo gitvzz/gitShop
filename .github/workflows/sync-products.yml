@@ -97,6 +97,7 @@ jobs:
             git commit -m "自动更新产品数据 [skip ci]"
             
             # 推送更改
+            echo "推送更改到仓库..."
             git push
             
             echo "成功更新并提交 products.json"
@@ -122,9 +123,34 @@ jobs:
         id: check_other_changes
         if: github.event_name == 'push'
         run: |
+          echo "开始检查是否有其他文件变更..."
+          echo "当前分支: $(git branch --show-current)"
+          echo "当前提交: ${{ github.sha }}"
+          echo "前一提交: ${{ github.event.before }}"
+          
+          # 设置默认值，避免后续步骤失败
+          echo "has_other_changes=false" >> $GITHUB_OUTPUT
+          
+          # 检查 github.event.before 是否为有效值
+          if [[ "${{ github.event.before }}" == "0000000000000000000000000000000000000000" ]]; then
+            echo "这是首次推送或新分支，默认触发完整部署"
+            echo "has_other_changes=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          # 尝试获取变更文件列表
+          echo "尝试获取变更文件列表..."
+          if ! CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }}); then
+            echo "获取变更文件列表失败，可能是历史不完整，默认触发完整部署"
+            echo "has_other_changes=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          echo "变更文件列表:"
+          echo "$CHANGED_FILES"
+          
           # 检查除了 products 目录外是否还有其他变更
-          OTHER_CHANGES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -v -E '^frontend/public/products/')
-          if [[ -n "$OTHER_CHANGES" ]]; then
+          if echo "$CHANGED_FILES" | grep -v -E '^frontend/public/products/' | grep -q .; then
             echo "检测到其他文件变更，需要触发完整部署"
             echo "has_other_changes=true" >> $GITHUB_OUTPUT
           else
