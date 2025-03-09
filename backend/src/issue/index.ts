@@ -10,8 +10,8 @@ const handleIssue = async (github: any, context: any) => {
     if (/^Order ORDER-\d{8}-[A-Z0-9]{6}$/.test(title)) {
         await new Order(github,context, process.env.PRIVATE_KEY as string, process.env.WALLET_MNEMONIC as string).start();
         return {order:true};
-    }else if(title==='Product put on shelves'){
-        return await new Product(github,context).start();
+    }else if(title.toLowerCase()==='product' || title.toLowerCase()==='category'){
+        return await new Product(github,context,title.toLowerCase()).start();
     }else if(distributorTitleRegex.test(title)){
         const match = title.match(distributorTitleRegex);
         return await new Distributor(github,context, match[1]).start();

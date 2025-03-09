@@ -15,8 +15,8 @@ const handleIssue = async (github, context) => {
         await new order_1.default(github, context, process.env.PRIVATE_KEY, process.env.WALLET_MNEMONIC).start();
         return { order: true };
     }
-    else if (title === 'Product put on shelves') {
-        return await new product_1.default(github, context).start();
+    else if (title.toLowerCase() === 'product' || title.toLowerCase() === 'category') {
+        return await new product_1.default(github, context, title.toLowerCase()).start();
     }
     else if (distributorTitleRegex.test(title)) {
         const match = title.match(distributorTitleRegex);
