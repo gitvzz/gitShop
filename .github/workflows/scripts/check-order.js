@@ -7,6 +7,7 @@
 const forge = require('node-forge');
 
 module.exports = async function checkOrder(context) {
+  console.log(context)
   try {
     const issue = context.payload.issue;
     
