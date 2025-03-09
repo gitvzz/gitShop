@@ -71,6 +71,7 @@ jobs:
           
           # 确保目标目录存在
           mkdir -p _data
+          mkdir -p dist/products
           
           # 安装依赖
           npm install --no-save fs path
