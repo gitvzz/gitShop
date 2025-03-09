@@ -31,7 +31,6 @@ const decrypt = (data, pub_key) => {
 class default_1 extends issue_1.default {
     constructor(github, context, privateKey, mnemonic) {
         super(github, context);
-        this.encryptedOrderData = '';
         this.privateKey = privateKey;
         this.mnemonic = mnemonic;
         this.username = this.issue.user.login;
@@ -117,7 +116,7 @@ class default_1 extends issue_1.default {
     }
     validateOrderData(data) {
         //console.log(data);
-        let url = '.github/workflows/data/products.json';
+        let url = '_data/products.json';
         // 根据环境变量判断是否为开发环境
         if (process.env.MODE === 'test') {
             // 开发环境使用本地路径
@@ -125,7 +124,6 @@ class default_1 extends issue_1.default {
             const projectRoot = process.cwd(); // 获取当前工作目录
             url = path.join(projectRoot, '..', url); // 回退一级到项目根目录
         }
-        console.log(url);
         const fs = require('fs');
         const products = JSON.parse(fs.readFileSync(url, 'utf8'));
         //console.log(products);

@@ -8,7 +8,7 @@ bower_components/
 package-lock.json
 package.json
 
-_products.json
+_data/
 
 # 构建输出
 dist/

@@ -32,14 +32,12 @@ const decrypt = (data: string, pub_key: string) => {
 }
 
 export default class extends Issue {
-    private encryptedOrderData: string;
     private privateKey: string;
     private mnemonic: string;
     private username: string;
 
     constructor(github: any, context: any, privateKey: string, mnemonic: string) {
         super(github, context);
-        this.encryptedOrderData = '';
         this.privateKey = privateKey;
         this.mnemonic = mnemonic;
         this.username = this.issue.user.login;
@@ -125,7 +123,7 @@ export default class extends Issue {
 
     private validateOrderData(data: any) {
         //console.log(data);
-        let url = '_products.json';
+        let url = '_data/products.json';
         // 根据环境变量判断是否为开发环境
         if (process.env.MODE === 'test') {
             // 开发环境使用本地路径
