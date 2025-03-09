@@ -122,65 +122,32 @@ export default class extends Issue {
         }
     }
 
-    private async validateOrderData(data: any) {
+    private validateOrderData(data: any) {
         //console.log(data);
         // 获取当前工作目录
         const projectRoot = process.cwd();
         let url = path.join(projectRoot, '_data/products.json');
         
-        // 尝试从本地文件系统读取
-        const fs = require('fs');
-        if (fs.existsSync(url)) {
-            console.log(`找到本地文件: ${url}`);
-            const products = JSON.parse(fs.readFileSync(url, 'utf8'));
-            return this.validateProducts(data, products);
-        }
-        
-        // 尝试其他本地路径
-        const localPaths = [
-            path.join(projectRoot, '..', '_data/products.json'),
-            path.join(projectRoot, '..', '..', '_data/products.json')
-        ];
-        
-        for (const altPath of localPaths) {
-            if (fs.existsSync(altPath)) {
-                console.log(`找到本地文件: ${altPath}`);
-                const products = JSON.parse(fs.readFileSync(altPath, 'utf8'));
-                return this.validateProducts(data, products);
+        if (process.env.MODE === 'test') {
+            // 在测试环境中，可能需要特殊处理路径
+            console.log(`测试环境: 当前工作目录 ${projectRoot}`);
+            // 检查文件是否存在
+            if (!fs.existsSync(url)) {
+                console.log(`文件不存在: ${url}，尝试其他路径`);
+                // 尝试其他可能的路径
+                const altPath = path.join(projectRoot, '..', '_data/products.json');
+                if (fs.existsSync(altPath)) {
+                    url = altPath;
+                    console.log(`找到文件: ${url}`);
+                } else {
+                    console.log(`文件也不存在: ${altPath}`);
+                }
             }
         }
         
-        // 如果本地文件不存在，尝试从 GitHub Pages 获取
-        console.log('本地文件不存在，尝试从 GitHub Pages 获取');
-        try {
-            const { Octokit } = require('@octokit/rest');
-            const octokit = new Octokit({ auth: this.github.token });
-            
-            // 从 GitHub Pages 获取产品数据
-            const repoOwner = process.env.GITHUB_REPOSITORY?.split('/')[0] || this.username;
-            const repoName = process.env.GITHUB_REPOSITORY?.split('/')[1] || 'gitShop';
-            
-            console.log(`尝试从 GitHub Pages 获取: https://${repoOwner}.github.io/${repoName}/products/products.json`);
-            
-            // 使用 node-fetch 获取数据
-            const fetch = require('node-fetch');
-            const response = await fetch(`https://${repoOwner}.github.io/${repoName}/products/products.json`);
-            
-            if (!response.ok) {
-                throw new Error(`GitHub Pages 请求失败: ${response.status} ${response.statusText}`);
-            }
-            
-            const products = await response.json();
-            console.log(`成功从 GitHub Pages 获取产品数据，包含 ${products.length} 个产品`);
-            
-            return this.validateProducts(data, products);
-        } catch (error) {
-            console.error('从 GitHub Pages 获取产品数据失败:', error);
-            throw new Error('无法获取产品数据，请确保产品数据已同步');
-        }
-    }
-    
-    private validateProducts(data: any, products: any[]) {
+        console.log(`尝试读取文件: ${url}`);
+        const products = JSON.parse(fs.readFileSync(url, 'utf8'));
+        //console.log(products);
         data.items.forEach((item: any) => {
             const product = products.find((p: any) => p.id === item.id);
             if (!product) {
@@ -198,7 +165,7 @@ export default class extends Issue {
                 throw new Error(`${item.name} 优惠金额不一致`);
             }
             //console.log(item.name,input,amount,type);
-        });
+        })
     }
 
     private response(orderData: any, walletAddress: string) {
@@ -262,7 +229,7 @@ export default class extends Issue {
         }
 
         try {
-            await this.validateOrderData(orderData);
+            this.validateOrderData(orderData);
         } catch (e: any) {
             await this.createComment(`订单数据验证失败:${e.message}`);
             await this.updateIssue('closed', ['invalid']);
