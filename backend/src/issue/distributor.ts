@@ -59,6 +59,7 @@ export default class extends Issue {
             return;
         }
         user.address = address;
+        console.log(user);
         const data = this.getDistributor();
         const distributor = data.find((item:any) => item.username === user.username);
         if(distributor){
@@ -66,9 +67,12 @@ export default class extends Issue {
         }else{
             data.push(user);
         }
+        console.log(data);
         const projectRoot = process.cwd();
         const outputPath = path.join(projectRoot,  '_data/distributors.json');
         fs.writeFileSync(outputPath, JSON.stringify(data, null, 4));
+        await this.createComment(`Distributor data updated. [Distribution Link](https://${owner}.github.io/${repo}/)`);
+        await this.updateIssue('closed', ['distributor']);
         return 'distributors updated';
     }
 }
