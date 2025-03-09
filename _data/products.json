@@ -41,7 +41,7 @@
     },
     {
         "id": "smartphone-pro",
-        "price": 999,
+        "price": 800,
         "promotions": {
             "discount_percent": 5
         }
