@@ -46,7 +46,6 @@ jobs:
             return result;
             
       - name: 提交分销商数据并触发部署
-        if: steps.handle_issue.outputs.result == 'distributors'
         run: |
           echo "分销商数据已更新，准备提交更改..."
           
