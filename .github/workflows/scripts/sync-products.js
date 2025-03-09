@@ -53,6 +53,12 @@ const syncProducts = async () => {
     // 写入结果到 products.json
     const outputPath = path.join(projectRoot, '..', '_data', 'products.json');
     fs_1.default.writeFileSync(outputPath, JSON.stringify(products, null, 4));
-    
 };
 exports.syncProducts = syncProducts;
+// 自动执行函数（当直接运行此脚本时）
+if (require.main === module) {
+    (0, exports.syncProducts)().catch(err => {
+        console.error('同步产品数据时出错:', err);
+        process.exit(1);
+    });
+}
