@@ -1,0 +1,34 @@
+[
+    {
+        "id": "girl-1",
+        "name": "GIRL-1",
+        "description": "这个不错啊",
+        "price": 10,
+        "currency": "USDT",
+        "images": [
+            {
+                "src": "https://cdn.pixabay.com/photo/2022/04/06/11/30/girl-7115394_1280.jpg",
+                "alt": "girl"
+            }
+        ],
+        "category_id": "girl",
+        "features": [
+            "10次一对一在线指导",
+            "实战项目开发",
+            "源码讲解",
+            "部署与维护指导",
+            "6个月技术支持"
+        ],
+        "stock": 10,
+        "reviews": 0,
+        "rating": 0,
+        "tags": [
+            "Girl"
+        ],
+        "related_products": [],
+        "promotions": {
+            "discount_percent": 2
+        },
+        "merchant_id": "netferes"
+    }
+]
