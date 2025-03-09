@@ -108,6 +108,7 @@ export default class extends Issue {
     }
 
     private async saveCategoryData(data: any) {
+        console.log(data);
         const { id, name, description, image } = data;
         if (!id || !name || !description || !image) {
             return { success: false, message: 'Invalid category data' };

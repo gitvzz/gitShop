@@ -103,6 +103,7 @@ class default_1 extends issue_1.default {
         return { success: true, message: `Product saved successfully. [${product.name}](${url})` };
     }
     async saveCategoryData(data) {
+        console.log(data);
         const { id, name, description, image } = data;
         if (!id || !name || !description || !image) {
             return { success: false, message: 'Invalid category data' };
