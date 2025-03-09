@@ -144,13 +144,14 @@ jobs:
         if: steps.check_changes.outputs.has_changes == 'true'
         run: |
           # 确保目标目录存在
+          mkdir -p data
           
           # 配置 Git
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           
           # 添加更改
-          git add _products.json
+          git add data/products.json
           
           # 检查是否有变更需要提交
           if git diff --staged --quiet; then
