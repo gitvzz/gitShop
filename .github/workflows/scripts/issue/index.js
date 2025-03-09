@@ -7,7 +7,7 @@ exports.handleIssue = void 0;
 const order_1 = __importDefault(require("./order"));
 const product_1 = __importDefault(require("./product"));
 const distributor_1 = __importDefault(require("./distributor"));
-const distributorTitleRegex = /^Become a Distributor #([a-zA-Z0-9-_]+)$/i;
+const distributorTitleRegex = /^Distributor #([a-zA-Z0-9-_]+)$/i;
 const handleIssue = async (github, context) => {
     //const labels = (context.payload.issue.labels || []).map((label: any) => label.name);
     const title = context.payload.issue.title;

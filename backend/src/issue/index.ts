@@ -2,7 +2,7 @@ import Order from './order';
 import Product from './product'
 import Distributor from './distributor'
 
-const distributorTitleRegex = /^Become a Distributor #([a-zA-Z0-9-_]+)$/i;
+const distributorTitleRegex = /^Distributor #([a-zA-Z0-9-_]+)$/i;
 
 const handleIssue = async (github: any, context: any) => {
     //const labels = (context.payload.issue.labels || []).map((label: any) => label.name);
