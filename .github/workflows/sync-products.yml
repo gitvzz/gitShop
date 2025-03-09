@@ -17,6 +17,7 @@ on:
 # 设置权限
 permissions:
   contents: write
+  actions: write
 
 jobs:
   sync-products:
@@ -75,4 +76,14 @@ jobs:
             git push
             
             echo "成功更新并提交 products.json"
-          fi 
+          fi
+          
+      - name: 触发部署工作流 🚀
+        if: success()
+        run: |
+          echo "正在触发部署工作流..."
+          
+          # 使用 GitHub CLI 触发部署工作流
+          gh workflow run deploy.yml -f deploy_message="产品数据更新后的自动部署"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
