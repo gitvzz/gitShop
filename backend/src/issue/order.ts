@@ -2,6 +2,7 @@ import forge from 'node-forge';
 import fs from 'fs';
 import { generateWallet } from '../generate-wallet';
 import Issue from './issue';
+import path from 'path';
 
 const md5 = (str: string) => {
     return forge.md.md5.create().update(str).digest().toHex()
@@ -123,15 +124,31 @@ export default class extends Issue {
 
     private validateOrderData(data: any) {
         //console.log(data);
-        let url = '_data/products.json';
+        // 获取当前工作目录
+        const projectRoot = process.cwd();
+        let url = path.join(projectRoot, '_data/products.json');
+        
         // 根据环境变量判断是否为开发环境
         if (process.env.MODE === 'test') {
-            // 开发环境使用本地路径
-            const path = require('path');
-            const projectRoot = process.cwd(); // 获取当前工作目录
-            url = path.join(projectRoot, '..', url); // 回退一级到项目根目录
+            // 在测试环境中，可能需要特殊处理路径
+            console.log(`测试环境: 当前工作目录 ${projectRoot}`);
+            // 检查文件是否存在
+            const fs = require('fs');
+            if (!fs.existsSync(url)) {
+                console.log(`文件不存在: ${url}，尝试其他路径`);
+                // 尝试其他可能的路径
+                const altPath = path.join(projectRoot, '..', '_data/products.json');
+                if (fs.existsSync(altPath)) {
+                    url = altPath;
+                    console.log(`找到文件: ${url}`);
+                } else {
+                    console.log(`文件也不存在: ${altPath}`);
+                }
+            }
         }
+        
         const fs = require('fs');
+        console.log(`尝试读取文件: ${url}`);
         const products = JSON.parse(fs.readFileSync(url, 'utf8'));
         //console.log(products);
         data.items.forEach((item: any) => {
