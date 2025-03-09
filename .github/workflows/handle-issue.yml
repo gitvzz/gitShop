@@ -1,0 +1,51 @@
+name: 处理订单
+
+on:
+  issues:
+    types: [opened, edited]
+
+# 添加权限配置
+permissions:
+  issues: write
+  pull-requests: write
+  contents: read
+
+jobs:
+  process_order:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v3
+
+      - name: 设置Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          
+      - name: 安装依赖
+        run: npm install @actions/core @actions/github node-forge ethers@5.7.2
+        
+      - name: 处理Issue
+        id: handle_issue
+        uses: actions/github-script@v6
+        env:
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          WALLET_MNEMONIC: ${{ secrets.WALLET_MNEMONIC }}
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const { handleIssue } = require('./.github/workflows/scripts/issue/index.js');
+            const message = handleIssue(context, process.env.PRIVATE_KEY, process.env.WALLET_MNEMONIC);
+            console.log(message);
+            return message;
+            
+      - name: 输出结果
+        if: steps.handle_issue.outputs.message != ''
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const message = steps.handle_issue.outputs.message;
+            console.log(message);
+            
+      

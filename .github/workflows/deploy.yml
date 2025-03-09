@@ -7,6 +7,15 @@ on:
         description: '部署说明'
         required: false
         default: '手动触发部署'
+  # 添加自动触发条件，但排除 products 目录
+  push:
+    branches:
+      - main
+      - dev
+    paths:
+      - 'frontend/**'
+    paths-ignore:
+      - 'frontend/public/products/**'
 
 # 添加明确的权限配置
 permissions:
@@ -47,19 +56,9 @@ jobs:
           cd frontend
           npm run build
       
-      - name: Copy Products Data 📋
-        run: |
-          echo "复制 products 数据到构建输出目录"
-          if [ -d "frontend/public/products" ]; then
-            echo "frontend/public/products 目录存在，正在复制..."
-            mkdir -p dist/products
-            cp -r frontend/public/products/* dist/products/
-            echo "复制完成，dist/products 目录内容："
-            ls -la dist/products/
-          else
-            echo "警告：frontend/public/products 目录不存在！"
-            ls -la frontend/public/
-          fi
+      # 移除 Copy Products Data 步骤
+      
+      # 移除 Generate Products JSON 步骤
       
       - name: Force Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4

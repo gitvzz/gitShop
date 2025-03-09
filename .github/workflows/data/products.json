@@ -1,26 +1,22 @@
 [
     {
         "id": "rock-tea",
-        "name": "武夷岩茶",
         "price": 288,
         "promotions": {
             "threshold_discounts": [
                 {
                     "threshold": 500,
-                    "discount_amount": 60,
-                    "description": "满500减60"
+                    "discount_amount": 60
                 },
                 {
                     "threshold": 300,
-                    "discount_amount": 30,
-                    "description": "满300减30"
+                    "discount_amount": 30
                 }
             ]
         }
     },
     {
         "id": "black-tea",
-        "name": "正山小种红茶",
         "price": 198,
         "promotions": {
             "discount_percent": 5
@@ -28,22 +24,67 @@
     },
     {
         "id": "telegram-dev",
-        "name": "Telegram开发教学",
         "price": 198,
         "promotions": {
             "tier_pricing": [
                 {
                     "min_quantity": 3,
-                    "discount_percent": 10,
-                    "description": "购买3个课程享9折"
+                    "discount_percent": 10
                 },
                 {
                     "min_quantity": 2,
-                    "discount_percent": 5,
-                    "description": "购买2个课程享95折"
+                    "discount_percent": 5
                 }
             ]
         },
         "merchant_id": "lingang"
+    },
+    {
+        "id": "smartphone-pro",
+        "price": 999,
+        "promotions": {
+            "discount_percent": 5
+        }
+    },
+    {
+        "id": "wireless-earbuds",
+        "price": 199,
+        "promotions": {
+            "tier_pricing": [
+                {
+                    "min_quantity": 2,
+                    "discount_percent": 10
+                }
+            ]
+        }
+    },
+    {
+        "id": "smartwatch",
+        "price": 249,
+        "promotions": {
+            "threshold_discounts": [
+                {
+                    "threshold": 500,
+                    "discount_amount": 50
+                }
+            ]
+        }
+    },
+    {
+        "id": "portable-charger",
+        "price": 79,
+        "promotions": {}
+    },
+    {
+        "id": "bluetooth-speaker",
+        "price": 129,
+        "promotions": {
+            "tier_pricing": [
+                {
+                    "min_quantity": 2,
+                    "discount_percent": 15
+                }
+            ]
+        }
     }
 ]

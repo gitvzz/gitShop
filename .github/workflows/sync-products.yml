@@ -1,0 +1,222 @@
+name: 同步产品数据
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+    paths:
+      - 'frontend/public/products/**'
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: '手动触发同步的原因'
+        required: false
+        default: '手动同步产品数据'
+
+# 设置权限
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  sync-products:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # 获取完整历史以便检测变更
+      
+      - name: 检查产品数据变更 🔍
+        id: check_changes
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "手动触发同步，跳过变更检查"
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          else
+            # 检查最近的提交是否修改了 products 目录
+            CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -E '^frontend/public/products/')
+            if [[ -n "$CHANGED_FILES" ]]; then
+              echo "检测到产品数据变更:"
+              echo "$CHANGED_FILES"
+              echo "has_changes=true" >> $GITHUB_OUTPUT
+            else
+              echo "未检测到产品数据变更"
+              echo "has_changes=false" >> $GITHUB_OUTPUT
+            fi
+          fi
+      
+      - name: 复制产品数据到构建目录 📋
+        if: steps.check_changes.outputs.has_changes == 'true'
+        run: |
+          echo "复制 products 数据到构建输出目录"
+          if [ -d "frontend/public/products" ]; then
+            echo "frontend/public/products 目录存在，正在复制..."
+            mkdir -p dist/products
+            cp -r frontend/public/products/* dist/products/
+            echo "复制完成，dist/products 目录内容："
+            ls -la dist/products/
+          else
+            echo "警告：frontend/public/products 目录不存在！"
+            ls -la frontend/public/
+            exit 1
+          fi
+      
+      - name: 同步产品数据 📊
+        if: steps.check_changes.outputs.has_changes == 'true'
+        run: |
+          echo "开始同步产品数据..."
+          
+          # 确保目标目录存在
+          mkdir -p .github/workflows/data
+          
+          # 检查 index.json 是否存在
+          if [ -f "frontend/public/products/index.json" ]; then
+            echo "找到 index.json，开始处理..."
+            
+            # 创建临时脚本来处理 JSON 数据
+            cat > process_products.js << 'EOF'
+            const fs = require('fs');
+            const path = require('path');
+            
+            try {
+              // 读取 index.json
+              const indexPath = path.join('frontend', 'public', 'products', 'index.json');
+              const indexData = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
+              
+              // 初始化结果数组
+              const productsData = [];
+              
+              // 遍历 categories 中的每个 item
+              if (indexData.items && Array.isArray(indexData.items)) {
+                for (const category of indexData.items) {
+                  // 读取每个分类的产品文件
+                  const categoryPath = path.join('frontend', 'public', 'products', `${category.id}.json`);
+                  if (fs.existsSync(categoryPath)) {
+                    const categoryProducts = JSON.parse(fs.readFileSync(categoryPath, 'utf8'));
+                    
+                    // 处理每个产品，提取所需字段
+                    if (Array.isArray(categoryProducts)) {
+                      for (const product of categoryProducts) {
+                        const productData = {
+                          id: product.id,
+                          price: product.price,
+                          promotions: {}
+                        };
+
+                        if (product.merchant_id) {
+                          productData.merchant_id = product.merchant_id;
+                        }
+
+                        const { discount_percent, tier_pricing, threshold_discounts } = product.promotions || {};
+                        if (discount_percent) {
+                          productData.promotions['discount_percent'] = discount_percent;
+                        }else if (tier_pricing) {
+                          productData.promotions['tier_pricing'] = tier_pricing.map((t:any)=>({
+                            min_quantity: t.min_quantity,
+                            discount_percent: t.discount_percent
+                          })).filter((_t:any,index:number)=>index<2).sort((a:any,b:any)=>b.min_quantity-a.min_quantity);
+                        }else if (threshold_discounts) {
+                          productData.promotions['threshold_discounts'] = threshold_discounts.map((t:any)=>({
+                            threshold: t.threshold,
+                            discount_amount: t.discount_amount
+                          })).filter((_t:any,index:number)=>index<2).sort((a:any,b:any)=>b.threshold-a.threshold);
+                        }
+                        productsData.push(productData);
+                      }
+                    }
+                  }
+                }
+              }
+              
+              // 写入结果到 products.json
+              const outputPath = path.join('.github', 'workflows', 'data', 'products.json');
+              fs.writeFileSync(outputPath, JSON.stringify(productsData, null, 4));
+              
+              console.log(`成功生成 products.json，包含 ${productsData.length} 个产品`);
+              
+              // 同时将处理后的数据写入到 dist/products 目录
+              if (fs.existsSync('dist/products')) {
+                const distOutputPath = path.join('dist', 'products', 'products.json');
+                fs.writeFileSync(distOutputPath, JSON.stringify(productsData, null, 4));
+                console.log(`同时更新了 dist/products/products.json`);
+              }
+            } catch (error) {
+              console.error('处理产品数据时出错:', error);
+              process.exit(1);
+            }
+            EOF
+            
+            # 执行脚本
+            node process_products.js
+            
+            # 显示生成的文件
+            echo "products.json 内容预览:"
+            head -n 20 .github/workflows/data/products.json
+          else
+            echo "错误：frontend/public/products/index.json 文件不存在！"
+            exit 1
+          fi
+      
+      - name: 提交更新的产品数据 
+        if: steps.check_changes.outputs.has_changes == 'true'
+        run: |
+          # 配置 Git
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          # 添加更改
+          git add .github/workflows/data/products.json
+          
+          # 检查是否有变更需要提交
+          if git diff --staged --quiet; then
+            echo "products.json 没有变化，跳过提交"
+          else
+            # 提交更改
+            git commit -m "自动更新产品数据 [skip ci]"
+            
+            # 推送更改
+            git push
+            
+            echo "成功更新并提交 products.json"
+          fi
+      
+      - name: 部署到 gh-pages 分支 🚀
+        if: steps.check_changes.outputs.has_changes == 'true' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev')
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: dist
+          branch: gh-pages
+          target-folder: products
+          clean: true
+          clean-exclude: |
+            assets/**
+            index.html
+            favicon.ico
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "自动更新产品数据 [skip ci]"
+      
+      # 添加触发 deploy 工作流的步骤
+      - name: 检查是否需要触发完整部署 🔄
+        id: check_other_changes
+        if: github.event_name == 'push'
+        run: |
+          # 检查除了 products 目录外是否还有其他变更
+          OTHER_CHANGES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -v -E '^frontend/public/products/')
+          if [[ -n "$OTHER_CHANGES" ]]; then
+            echo "检测到其他文件变更，需要触发完整部署"
+            echo "has_other_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "未检测到其他文件变更，无需触发完整部署"
+            echo "has_other_changes=false" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: 触发部署工作流 🚀
+        if: steps.check_other_changes.outputs.has_other_changes == 'true'
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: deploy.yml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          inputs: '{"deploy_message": "产品数据更新后的自动部署"}' 

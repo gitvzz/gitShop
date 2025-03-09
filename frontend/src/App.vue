@@ -214,7 +214,7 @@ const initData = async () => {
 
   try {
     await store.initData()
-    //console.log(store.products.map(a=>({id:a.id,name:a.name,price:a.price,promotions:a.promotions,merchant_id:a.merchant_id})))
+    console.log(store.products.map(a=>({id:a.id,name:a.name,price:a.price,promotions:a.promotions,merchant_id:a.merchant_id})))
   } catch (err) {
     store.error = t('common.error')
     console.error('Error loading products:', err)

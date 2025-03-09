@@ -63,32 +63,32 @@ export const useCartStore = defineStore('cart', {
             let type = ''
             let description = ''
             if (item.promotions?.discount_percent) {
-              amount = (item.price - (item.discount_price || item.price)) * quantity
-              type = 'discount_percent'
-              description = `${item.promotions.discount_percent}% discount`
+                amount = (item.price - (item.discount_price || item.price)) * quantity
+                type = 'discount_percent'
+                description = `${item.promotions.discount_percent}% discount`
             } else if (item.promotions?.tier_pricing) {
-              // 阶梯价格优惠
-              const tier_item = item.promotions.tier_pricing.find(({ min_quantity }) => {
-                return quantity >= min_quantity
-              })
-              if (tier_item) {
-                amount = item.price * quantity * (tier_item.discount_percent / 100)
-                type = 'tier_pricing'
-                description = tier_item.description
-              }
+                // 阶梯价格优惠
+                const tier_item = item.promotions.tier_pricing.find(({ min_quantity }) => {
+                    return quantity >= min_quantity
+                })
+                if (tier_item) {
+                    amount = item.price * quantity * (tier_item.discount_percent / 100)
+                    type = 'tier_pricing'
+                    description = tier_item.description
+                }
             } else if (item.promotions?.threshold_discounts) {
-              // 满减优惠
-              const threshold_item = item.promotions.threshold_discounts.find(({ threshold }) => {
-                return (quantity * item.price) >= threshold
-              })
-              if (threshold_item) {
-                amount = threshold_item.discount_amount
-                type = 'threshold_discount'
-                description = threshold_item.description
-              }
+                // 满减优惠
+                const threshold_item = item.promotions.threshold_discounts.find(({ threshold }) => {
+                    return (quantity * item.price) >= threshold
+                })
+                if (threshold_item) {
+                    amount = threshold_item.discount_amount
+                    type = 'threshold_discount'
+                    description = threshold_item.description
+                }
             }
             return { amount, type, description }
-          },
+        },
     }
 })
 

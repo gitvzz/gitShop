@@ -140,7 +140,8 @@ export const useStore = defineStore('store', {
       templates.push(`MD5:${signature}`)
 
       issueBody = templates.join('\n')
-
+      console.log('issueBody:', issueBody);
+      console.log('issueTitle:', issueTitle);
       const encodedBody = encodeURIComponent(issueBody);
       const encodedTitle = encodeURIComponent(issueTitle);
       const issueUrl = `${this.githubUrl}/issues/new?title=${encodedTitle}&labels=order&body=${encodedBody}`;
