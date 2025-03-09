@@ -76,78 +76,58 @@ jobs:
           if [ -f "frontend/public/products/index.json" ]; then
             echo "找到 index.json，开始处理..."
             
-            # 创建临时脚本来处理 JSON 数据
-            cat > process_products.js << 'EOF'
-            const fs = require('fs');
-            const path = require('path');
-            
-            try {
-              // 读取 index.json
-              const indexPath = path.join('frontend', 'public', 'products', 'index.json');
-              const indexData = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
-              
-              // 初始化结果数组
-              const productsData = [];
-              
-              // 遍历 categories 中的每个 item
-              if (indexData.items && Array.isArray(indexData.items)) {
-                for (const category of indexData.items) {
-                  // 读取每个分类的产品文件
-                  const categoryPath = path.join('frontend', 'public', 'products', `${category.id}.json`);
-                  if (fs.existsSync(categoryPath)) {
-                    const categoryProducts = JSON.parse(fs.readFileSync(categoryPath, 'utf8'));
-                    
-                    // 处理每个产品，提取所需字段
-                    if (Array.isArray(categoryProducts)) {
-                      for (const product of categoryProducts) {
-                        const productData = {
-                          id: product.id,
-                          price: product.price,
-                          promotions: {}
-                        };
-
-                        if (product.merchant_id) {
-                          productData.merchant_id = product.merchant_id;
-                        }
-
-                        const { discount_percent, tier_pricing, threshold_discounts } = product.promotions || {};
-                        if (discount_percent) {
-                          productData.promotions['discount_percent'] = discount_percent;
-                        } else if (tier_pricing) {
-                          productData.promotions['tier_pricing'] = tier_pricing.map((t) => ({
-                            min_quantity: t.min_quantity,
-                            discount_percent: t.discount_percent
-                          })).filter((_, index) => index < 2).sort((a, b) => b.min_quantity - a.min_quantity);
-                        } else if (threshold_discounts) {
-                          productData.promotions['threshold_discounts'] = threshold_discounts.map((t) => ({
-                            threshold: t.threshold,
-                            discount_amount: t.discount_amount
-                          })).filter((_, index) => index < 2).sort((a, b) => b.threshold - a.threshold);
-                        }
-                        productsData.push(productData);
-                      }
-                    }
-                  }
-                }
-              }
-              
-              // 写入结果到 products.json
-              const outputPath = path.join('.github', 'workflows', 'data', 'products.json');
-              fs.writeFileSync(outputPath, JSON.stringify(productsData, null, 4));
-              
-              console.log(`成功生成 products.json，包含 ${productsData.length} 个产品`);
-              
-              // 同时将处理后的数据写入到 dist/products 目录
-              if (fs.existsSync('dist/products')) {
-                const distOutputPath = path.join('dist', 'products', 'products.json');
-                fs.writeFileSync(distOutputPath, JSON.stringify(productsData, null, 4));
-                console.log(`同时更新了 dist/products/products.json`);
-              }
-            } catch (error) {
-              console.error('处理产品数据时出错:', error);
-              process.exit(1);
-            }
-            EOF
+            # 创建简化版的处理脚本
+            echo 'const fs = require("fs");' > process_products.js
+            echo 'const path = require("path");' >> process_products.js
+            echo '' >> process_products.js
+            echo 'try {' >> process_products.js
+            echo '  const indexPath = path.join("frontend", "public", "products", "index.json");' >> process_products.js
+            echo '  const indexData = JSON.parse(fs.readFileSync(indexPath, "utf8"));' >> process_products.js
+            echo '  const productsData = [];' >> process_products.js
+            echo '' >> process_products.js
+            echo '  if (indexData.items && Array.isArray(indexData.items)) {' >> process_products.js
+            echo '    for (const category of indexData.items) {' >> process_products.js
+            echo '      const categoryPath = path.join("frontend", "public", "products", `${category.id}.json`);' >> process_products.js
+            echo '      if (fs.existsSync(categoryPath)) {' >> process_products.js
+            echo '        const categoryProducts = JSON.parse(fs.readFileSync(categoryPath, "utf8"));' >> process_products.js
+            echo '        if (Array.isArray(categoryProducts)) {' >> process_products.js
+            echo '          for (const product of categoryProducts) {' >> process_products.js
+            echo '            const productData = { id: product.id, price: product.price, promotions: {} };' >> process_products.js
+            echo '            if (product.merchant_id) productData.merchant_id = product.merchant_id;' >> process_products.js
+            echo '            const promotions = product.promotions || {};' >> process_products.js
+            echo '            if (promotions.discount_percent) {' >> process_products.js
+            echo '              productData.promotions.discount_percent = promotions.discount_percent;' >> process_products.js
+            echo '            } else if (promotions.tier_pricing) {' >> process_products.js
+            echo '              productData.promotions.tier_pricing = promotions.tier_pricing' >> process_products.js
+            echo '                .map(t => ({ min_quantity: t.min_quantity, discount_percent: t.discount_percent }))' >> process_products.js
+            echo '                .filter((_, i) => i < 2)' >> process_products.js
+            echo '                .sort((a, b) => b.min_quantity - a.min_quantity);' >> process_products.js
+            echo '            } else if (promotions.threshold_discounts) {' >> process_products.js
+            echo '              productData.promotions.threshold_discounts = promotions.threshold_discounts' >> process_products.js
+            echo '                .map(t => ({ threshold: t.threshold, discount_amount: t.discount_amount }))' >> process_products.js
+            echo '                .filter((_, i) => i < 2)' >> process_products.js
+            echo '                .sort((a, b) => b.threshold - a.threshold);' >> process_products.js
+            echo '            }' >> process_products.js
+            echo '            productsData.push(productData);' >> process_products.js
+            echo '          }' >> process_products.js
+            echo '        }' >> process_products.js
+            echo '      }' >> process_products.js
+            echo '    }' >> process_products.js
+            echo '  }' >> process_products.js
+            echo '' >> process_products.js
+            echo '  const outputPath = path.join(".github", "workflows", "data", "products.json");' >> process_products.js
+            echo '  fs.writeFileSync(outputPath, JSON.stringify(productsData, null, 2));' >> process_products.js
+            echo '  console.log(`成功生成 products.json，包含 ${productsData.length} 个产品`);' >> process_products.js
+            echo '' >> process_products.js
+            echo '  if (fs.existsSync("dist/products")) {' >> process_products.js
+            echo '    const distOutputPath = path.join("dist", "products", "products.json");' >> process_products.js
+            echo '    fs.writeFileSync(distOutputPath, JSON.stringify(productsData, null, 2));' >> process_products.js
+            echo '    console.log("同时更新了 dist/products/products.json");' >> process_products.js
+            echo '  }' >> process_products.js
+            echo '} catch (error) {' >> process_products.js
+            echo '  console.error("处理产品数据时出错:", error);' >> process_products.js
+            echo '  process.exit(1);' >> process_products.js
+            echo '}' >> process_products.js
             
             # 执行脚本
             node process_products.js
