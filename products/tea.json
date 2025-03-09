@@ -9,7 +9,7 @@
       "en": "Produced in the Wuyi Mountains of Fujian, this rock tea has a rich flavor and long-lasting aroma. It is made using traditional craftsmanship, preserving the unique characteristics of Wuyi rock tea.",
       "zh": "产自福建武夷山的优质岩茶，口感醇厚，香气持久。采用传统工艺精制而成，保留了岩茶独特的岩韵和香气。"
     },
-    "price": 288,
+    "price": 100,
     "currency": "USDT",
     "images": [
       {
@@ -74,7 +74,7 @@
     "id": "black-tea",
     "name": "正山小种红茶",
     "description": "来自福建武夷山的正山小种红茶，采用优质茶叶嫩芽，经过传统工艺烘焙而成。具有独特的松烟香和甜香，口感醇厚回甘。",
-    "price": 198,
+    "price": 50,
     "currency": "USDT",
     "images": ["/assets/products/black-tea.png"],
     "requires_shipping": true,
