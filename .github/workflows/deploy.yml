@@ -30,6 +30,10 @@ jobs:
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # 获取完整历史以便检测变更
+          # 添加 token 以确保有足够的权限
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js ⚙️
         uses: actions/setup-node@v3
@@ -55,6 +59,10 @@ jobs:
         run: |
           cd frontend
           npm run build
+          
+          # 显示构建结果
+          echo "构建完成，dist 目录内容："
+          ls -la dist/
       
       # 移除 Copy Products Data 步骤
       
@@ -75,3 +83,7 @@ jobs:
             **/.git
             **/.github
           commit-message: "${{ github.event.inputs.deploy_message || '自动部署' }}" 
+          # 添加静默选项，减少日志输出
+          silent: false
+          # 添加单分支选项，避免历史问题
+          single-commit: true 

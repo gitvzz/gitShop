@@ -164,4 +164,5 @@ jobs:
         with:
           workflow: deploy.yml
           token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ github.ref }}
           inputs: '{"deploy_message": "产品数据更新后的自动部署"}' 
