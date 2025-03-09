@@ -125,7 +125,7 @@ export default class extends Issue {
 
     private validateOrderData(data: any) {
         //console.log(data);
-        let url = '.github/workflows/data/products.json';
+        let url = '_products.json';
         // 根据环境变量判断是否为开发环境
         if (process.env.MODE === 'test') {
             // 开发环境使用本地路径

@@ -121,7 +121,7 @@ const syncProducts = async () => {
     }
   })
   // 写入结果到 products.json
-  const outputPath = path.join(projectRoot,'..','.github', 'workflows', 'data', 'products.json');
+  const outputPath = path.join(projectRoot,'..','_products.json');
   console.log(outputPath);
 
   fs.writeFileSync(outputPath, JSON.stringify(products, null, 4));

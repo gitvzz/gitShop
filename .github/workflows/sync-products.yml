@@ -70,7 +70,7 @@ jobs:
           echo "开始同步产品数据..."
           
           # 确保目标目录存在
-          mkdir -p .github/workflows/data
+          mkdir -p data
           
           # 检查 index.json 是否存在
           if [ -f "frontend/public/products/index.json" ]; then
@@ -115,7 +115,7 @@ jobs:
             echo '    }' >> process_products.js
             echo '  }' >> process_products.js
             echo '' >> process_products.js
-            echo '  const outputPath = path.join(".github", "workflows", "data", "products.json");' >> process_products.js
+            echo '  const outputPath = path.join("data", "products.json");' >> process_products.js
             echo '  fs.writeFileSync(outputPath, JSON.stringify(productsData, null, 2));' >> process_products.js
             echo '  console.log(`成功生成 products.json，包含 ${productsData.length} 个产品`);' >> process_products.js
             echo '' >> process_products.js
@@ -134,7 +134,7 @@ jobs:
             
             # 显示生成的文件
             echo "products.json 内容预览:"
-            head -n 20 .github/workflows/data/products.json
+            head -n 20 data/products.json
           else
             echo "错误：frontend/public/products/index.json 文件不存在！"
             exit 1
@@ -143,12 +143,14 @@ jobs:
       - name: 提交更新的产品数据 
         if: steps.check_changes.outputs.has_changes == 'true'
         run: |
+          # 确保目标目录存在
+          
           # 配置 Git
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           
           # 添加更改
-          git add .github/workflows/data/products.json
+          git add _products.json
           
           # 检查是否有变更需要提交
           if git diff --staged --quiet; then
