@@ -1,7 +1,7 @@
 [
     {
         "id": "rock-tea",
-        "price": 100,
+        "price": 80,
         "promotions": {
             "threshold_discounts": [
                 {
