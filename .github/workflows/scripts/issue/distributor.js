@@ -31,6 +31,7 @@ class default_1 extends issue_1.default {
             return false;
         }
         catch (error) {
+            console.log(error);
             // 如果获取失败(仓库不存在等情况)返回false
             return false;
         }
@@ -42,7 +43,7 @@ class default_1 extends issue_1.default {
         return data.find((item) => item.username === this.username);
     }
     async start() {
-        console.log(this.context.repo);
+        console.log(this.context);
         const owner = this.context.repo.owner;
         const repo = this.context.repo.repo;
         const isFork = await this.checkFork();
