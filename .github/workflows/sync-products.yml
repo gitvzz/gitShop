@@ -78,9 +78,6 @@ jobs:
           # 执行同步脚本
           node .github/workflows/scripts/sync-products.js
           
-          # 显示生成的文件
-          echo "products.json 内容预览:"
-          head -n 20 _data/products.json
       
       - name: 提交产品数据到仓库 💾
         if: steps.check_changes.outputs.has_changes == 'true'
