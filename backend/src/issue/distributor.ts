@@ -71,7 +71,7 @@ export default class extends Issue {
         const projectRoot = process.cwd();
         const outputPath = path.join(projectRoot,  '_data/distributors.json');
         fs.writeFileSync(outputPath, JSON.stringify(data, null, 4));
-        await this.createComment(`Distributor data updated. [Distribution Link](https://${owner}.github.io/${repo}/)`);
+        await this.createComment(`Distributor data updated. [Distribution Link](https://${owner}.github.io/${repo}/?ref=${user.username})`);
         await this.updateIssue('closed', ['distributor']);
         return {distributors:true};
     }
