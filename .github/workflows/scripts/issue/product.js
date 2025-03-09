@@ -92,7 +92,7 @@ class default_1 extends issue_1.default {
             reviews: 0,
             rating: 0,
             tags,
-            related_products,
+            related_products: related_products || [],
             promotions,
             merchant_id: this.username
         };
