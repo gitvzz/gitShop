@@ -17,7 +17,7 @@
     },
     {
         "id": "black-tea",
-        "price": 198,
+        "price": 50,
         "promotions": {
             "discount_percent": 5
         }
