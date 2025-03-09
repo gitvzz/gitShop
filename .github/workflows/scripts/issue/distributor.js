@@ -76,7 +76,7 @@ class default_1 extends issue_1.default {
         fs_1.default.writeFileSync(outputPath, JSON.stringify(data, null, 4));
         await this.createComment(`Distributor data updated. [Distribution Link](https://${owner}.github.io/${repo}/)`);
         await this.updateIssue('closed', ['distributor']);
-        return 'distributors updated';
+        return 'distributors';
     }
 }
 exports.default = default_1;

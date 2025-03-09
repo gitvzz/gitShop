@@ -37,37 +37,16 @@ jobs:
           script: |
             const { handleIssue } = require('./.github/workflows/scripts/issue/index.js');
             const result = await handleIssue(github,context);
+            
             console.log(`处理结果: ${result}`);
             
-            // 将结果写入输出变量
+            // 将简化结果写入输出变量
             core.setOutput('result', result);
-            
-            // 将结果写入环境变量，作为备用方案
-            core.exportVariable('ISSUE_RESULT', result);
             
             return result;
             
-      - name: 检查处理结果
-        id: check_result
-        run: |
-          echo "从输出变量读取结果: ${{ steps.handle_issue.outputs.result }}"
-          echo "从环境变量读取结果: $ISSUE_RESULT"
-          
-          # 将结果保存到步骤输出
-          RESULT="${{ steps.handle_issue.outputs.result }}"
-          if [ "$RESULT" = "distributors updated" ]; then
-            echo "should_update=true" >> $GITHUB_OUTPUT
-            echo "使用输出变量判断: 需要更新分销商数据"
-          elif [ "$ISSUE_RESULT" = "distributors updated" ]; then
-            echo "should_update=true" >> $GITHUB_OUTPUT
-            echo "使用环境变量判断: 需要更新分销商数据"
-          else
-            echo "should_update=false" >> $GITHUB_OUTPUT
-            echo "不需要更新分销商数据"
-          fi
-            
       - name: 提交分销商数据并触发部署
-        if: steps.check_result.outputs.should_update == 'true'
+        if: steps.handle_issue.outputs.result == 'distributors'
         run: |
           echo "分销商数据已更新，准备提交更改..."
           
@@ -96,7 +75,7 @@ jobs:
           fi
           
       - name: 触发部署工作流
-        if: steps.check_result.outputs.should_update == 'true'
+        if: steps.handle_issue.outputs.result == 'distributors'
         run: |
           echo "正在触发部署工作流..."
           
