@@ -1,90 +1,90 @@
 [
-  {
-    "id": "rock-tea",
-    "price": 288,
-    "promotions": {
-      "threshold_discounts": [
-        {
-          "threshold": 500,
-          "discount_amount": 60
-        },
-        {
-          "threshold": 300,
-          "discount_amount": 30
+    {
+        "id": "rock-tea",
+        "price": 288,
+        "promotions": {
+            "threshold_discounts": [
+                {
+                    "threshold": 500,
+                    "discount_amount": 60
+                },
+                {
+                    "threshold": 300,
+                    "discount_amount": 30
+                }
+            ]
         }
-      ]
-    }
-  },
-  {
-    "id": "black-tea",
-    "price": 198,
-    "promotions": {
-      "discount_percent": 5
-    }
-  },
-  {
-    "id": "telegram-dev",
-    "price": 198,
-    "promotions": {
-      "tier_pricing": [
-        {
-          "min_quantity": 3,
-          "discount_percent": 10
-        },
-        {
-          "min_quantity": 2,
-          "discount_percent": 5
-        }
-      ]
     },
-    "merchant_id": "lingang"
-  },
-  {
-    "id": "smartphone-pro",
-    "price": 999,
-    "promotions": {
-      "discount_percent": 5
-    }
-  },
-  {
-    "id": "wireless-earbuds",
-    "price": 199,
-    "promotions": {
-      "tier_pricing": [
-        {
-          "min_quantity": 2,
-          "discount_percent": 10
+    {
+        "id": "black-tea",
+        "price": 198,
+        "promotions": {
+            "discount_percent": 5
         }
-      ]
-    }
-  },
-  {
-    "id": "smartwatch",
-    "price": 249,
-    "promotions": {
-      "threshold_discounts": [
-        {
-          "threshold": 500,
-          "discount_amount": 50
+    },
+    {
+        "id": "telegram-dev",
+        "price": 198,
+        "promotions": {
+            "tier_pricing": [
+                {
+                    "min_quantity": 3,
+                    "discount_percent": 10
+                },
+                {
+                    "min_quantity": 2,
+                    "discount_percent": 5
+                }
+            ]
+        },
+        "merchant_id": "lingang"
+    },
+    {
+        "id": "smartphone-pro",
+        "price": 999,
+        "promotions": {
+            "discount_percent": 5
         }
-      ]
-    }
-  },
-  {
-    "id": "portable-charger",
-    "price": 79,
-    "promotions": {}
-  },
-  {
-    "id": "bluetooth-speaker",
-    "price": 129,
-    "promotions": {
-      "tier_pricing": [
-        {
-          "min_quantity": 2,
-          "discount_percent": 15
+    },
+    {
+        "id": "wireless-earbuds",
+        "price": 199,
+        "promotions": {
+            "tier_pricing": [
+                {
+                    "min_quantity": 2,
+                    "discount_percent": 10
+                }
+            ]
         }
-      ]
+    },
+    {
+        "id": "smartwatch",
+        "price": 249,
+        "promotions": {
+            "threshold_discounts": [
+                {
+                    "threshold": 500,
+                    "discount_amount": 50
+                }
+            ]
+        }
+    },
+    {
+        "id": "portable-charger",
+        "price": 79,
+        "promotions": {}
+    },
+    {
+        "id": "bluetooth-speaker",
+        "price": 129,
+        "promotions": {
+            "tier_pricing": [
+                {
+                    "min_quantity": 2,
+                    "discount_percent": 15
+                }
+            ]
+        }
     }
-  }
 ]
