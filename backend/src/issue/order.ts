@@ -133,7 +133,6 @@ export default class extends Issue {
             // 在测试环境中，可能需要特殊处理路径
             console.log(`测试环境: 当前工作目录 ${projectRoot}`);
             // 检查文件是否存在
-            const fs = require('fs');
             if (!fs.existsSync(url)) {
                 console.log(`文件不存在: ${url}，尝试其他路径`);
                 // 尝试其他可能的路径
@@ -147,7 +146,6 @@ export default class extends Issue {
             }
         }
         
-        const fs = require('fs');
         console.log(`尝试读取文件: ${url}`);
         const products = JSON.parse(fs.readFileSync(url, 'utf8'));
         //console.log(products);
