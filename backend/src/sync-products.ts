@@ -56,7 +56,7 @@ export const syncProducts = async () => {
     }
     
     // 写入结果到 products.json
-    const outputPath = path.join(projectRoot, '_data', 'products.json');
+    const outputPath = path.join(projectRoot, '..', '_data/products.json');
     console.log(`写入结果到: ${outputPath}`);
     fs.writeFileSync(outputPath, JSON.stringify(products, null, 4));
     

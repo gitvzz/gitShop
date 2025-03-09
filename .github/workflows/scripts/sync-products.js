@@ -55,7 +55,7 @@ const syncProducts = async () => {
         fs_1.default.mkdirSync(dataDir);
     }
     // 写入结果到 products.json
-    const outputPath = path_1.default.join(projectRoot, '_data', 'products.json');
+    const outputPath = path_1.default.join(projectRoot, '..', '_data/products.json');
     console.log(`写入结果到: ${outputPath}`);
     fs_1.default.writeFileSync(outputPath, JSON.stringify(products, null, 4));
 };
