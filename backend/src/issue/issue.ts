@@ -16,10 +16,6 @@ export default class Issue {
         this.username = this.issue.user.login || '';
     }
 
-    async start() {
-
-    }
-
     async updateIssue(state?: string, labels?: string[]) {
         if(!this.github){
             console.log('updateIssue',state,labels);

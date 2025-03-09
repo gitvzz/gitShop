@@ -10,8 +10,6 @@ class Issue {
         this.labels = this.issue.labels || [];
         this.username = this.issue.user.login || '';
     }
-    async start() {
-    }
     async updateIssue(state, labels) {
         if (!this.github) {
             console.log('updateIssue', state, labels);

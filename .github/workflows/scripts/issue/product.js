@@ -8,5 +8,8 @@ class default_1 extends issue_1.default {
     constructor(github, context) {
         super(github, context);
     }
+    async start() {
+        return 'product updated';
+    }
 }
 exports.default = default_1;

@@ -6,26 +6,27 @@ export default class extends Issue {
     constructor(github: any, context: any, repoName: string) {
         super(github, context);
         this.repoName = repoName;
-        console.log(this.repoName);
     }
 
     private async checkFork(){
         // 检查用户是否fork了当前仓库
-        const owner = this.context.repo.owner;
-        const repo = this.context.repo.repo;
+        const _owner = this.context.repo.owner;
+        const _repo = this.context.repo.repo;
         try {
             const response = await this.github.rest.repos.get({
                 owner: this.username,
-                repo: this.repoName || 'gitshop11'
+                repo: this.repoName
             });
-            console.log(response.data);
+            const {owner,full_name,fork,parent} = response.data;
             // 如果能获取到仓库信息且是fork
-            if (response.data.fork) {
+            if (fork && parent.owner.login === _owner && parent.name === _repo) {
                 // 进一步验证fork源是否为当前仓库
-                const parent = response.data.parent;
-                if (parent && parent.owner.login === owner && parent.name === repo) {
-                    return true;
-                }
+                return {
+                    id: owner.id,
+                    username: owner.login,
+                    avatar_url: owner.avatar_url,
+                    full_name: `https://github.com/${full_name}`
+                };
             }
             return false;
         } catch (error) {
@@ -35,22 +36,39 @@ export default class extends Issue {
         }
     }
 
-    private getDistributor() {
+    private getDistributor(): any[] {
         const projectRoot = process.cwd();
         let url = path.join(projectRoot, '_data/distributors.json');
         const data = JSON.parse(fs.readFileSync(url, 'utf8'));
-        return data.find((item: any) => item.username === this.username);
+        return data;
     }
 
     async start() {
+        const address = this.issueBody.replace(/^.*\n/, '');
+        if(!/^T[a-zA-Z0-9]{33}$/.test(address) && !/^0x[a-fA-F0-9]{40}$/.test(address) ){
+            await this.createComment('A Tron or BSC chain wallet address must be provided');
+            await this.updateIssue('closed', ['invalid']);
+            return;
+        }
         const owner = this.context.repo.owner;
         const repo = this.context.repo.repo;
-        const isFork = await this.checkFork();
-        if(!isFork){
+        const user:any = await this.checkFork();
+        if(user === false){
             await this.createComment(`You need to fork the repository to become a distributor. [Fork here](https://github.com/${owner}/${repo}/fork)`);
             await this.updateIssue('closed', ['invalid']);
             return;
         }
-        const distributor = this.getDistributor();
+        user.address = address;
+        const data = this.getDistributor();
+        const distributor = data.find((item:any) => item.username === user.username);
+        if(distributor){
+            Object.assign(distributor,user);
+        }else{
+            data.push(user);
+        }
+        const projectRoot = process.cwd();
+        const outputPath = path.join(projectRoot,  '_data/distributors.json');
+        fs.writeFileSync(outputPath, JSON.stringify(data, null, 4));
+        return 'distributors updated';
     }
 }

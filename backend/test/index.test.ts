@@ -81,7 +81,7 @@ MD5:d8367e7c40270e5758de014b26657574`,
   }
 }
 
-syncProducts()
+/* syncProducts()
 // 执行测试
 runTest().then(() => {
   console.log("测试完成");
@@ -89,4 +89,4 @@ runTest().then(() => {
 }).catch(error => {
   console.error("测试失败:", error);
   process.exit(1);
-}); 
+});  */
