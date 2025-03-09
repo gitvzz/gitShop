@@ -15,7 +15,7 @@ class default_1 extends issue_1.default {
         const projectRoot = process.cwd();
         let url = path_1.default.join(projectRoot, 'frontend/public/products/index.json');
         const data = JSON.parse(fs_1.default.readFileSync(url, 'utf8'));
-        return data.items;
+        return data;
     }
     async getProductData(category_id) {
         const projectRoot = process.cwd();
@@ -24,7 +24,6 @@ class default_1 extends issue_1.default {
         return data;
     }
     async saveProductData(data) {
-        console.log(data);
         let { id, name, description, price, images, category_id, requires_shipping, features, stock, tags, related_products, promotions } = data;
         if (!id || !name || !description || !price || !images || !category_id) {
             return { success: false, message: 'Invalid product data' };
@@ -69,6 +68,7 @@ class default_1 extends issue_1.default {
             return { success: false, message: 'Invalid product images' };
         }
         const category_list = await this.getCategoryData();
+        console.log("category_list", category_list);
         const category = category_list.find((item) => item.id === category_id);
         if (!category) {
             return { success: false, message: 'Category not found' };
