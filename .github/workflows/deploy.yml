@@ -3,6 +3,11 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [ main, dev ]
+    paths:
+      - 'frontend/**'
+      - '_data/**'
+    paths-ignore:
+      - 'frontend/public/products/**'
   workflow_dispatch:
     inputs:
       deploy_message:
