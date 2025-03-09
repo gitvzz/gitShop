@@ -128,7 +128,6 @@ export default class extends Issue {
         const projectRoot = process.cwd();
         let url = path.join(projectRoot, '_data/products.json');
         
-        // 根据环境变量判断是否为开发环境
         if (process.env.MODE === 'test') {
             // 在测试环境中，可能需要特殊处理路径
             console.log(`测试环境: 当前工作目录 ${projectRoot}`);

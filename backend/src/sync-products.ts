@@ -57,17 +57,10 @@ export const syncProducts = async () => {
     
     // 写入结果到 products.json
     const outputPath = path.join(projectRoot, '_data', 'products.json');
+    console.log(`写入结果到: ${outputPath}`);
     fs.writeFileSync(outputPath, JSON.stringify(products, null, 4));
     
-    // 同时将处理后的数据写入到 dist/products 目录
-    const distDir = path.join(projectRoot, 'dist/products');
-    if (fs.existsSync(distDir)) {
-        const distOutputPath = path.join(distDir, 'products.json');
-        fs.writeFileSync(distOutputPath, JSON.stringify(products, null, 4));
-        console.log(`同时更新了 dist/products/products.json`);
-    }
     
-    console.log(`成功生成 products.json，包含 ${products.length} 个产品`);
 }
 
 // 自动执行函数（当直接运行此脚本时）
