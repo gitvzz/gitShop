@@ -54,10 +54,11 @@ jobs:
           echo "从环境变量读取结果: $ISSUE_RESULT"
           
           # 将结果保存到步骤输出
-          if [[ "${{ steps.handle_issue.outputs.result }}" == "distributors updated" ]]; then
+          RESULT="${{ steps.handle_issue.outputs.result }}"
+          if [ "$RESULT" = "distributors updated" ]; then
             echo "should_update=true" >> $GITHUB_OUTPUT
             echo "使用输出变量判断: 需要更新分销商数据"
-          elif [[ "$ISSUE_RESULT" == "distributors updated" ]]; then
+          elif [ "$ISSUE_RESULT" = "distributors updated" ]; then
             echo "should_update=true" >> $GITHUB_OUTPUT
             echo "使用环境变量判断: 需要更新分销商数据"
           else
@@ -99,14 +100,9 @@ jobs:
         run: |
           echo "正在触发部署工作流..."
           
-          # 安装 GitHub CLI
-          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
-          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-          sudo apt update
-          sudo apt install gh
-          
           # 使用 GitHub CLI 触发部署工作流
-          gh auth login --with-token <<< "${{ secrets.GITHUB_TOKEN }}"
           gh workflow run deploy.yml -f deploy_message="分销商数据更新后的自动部署"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             
       
