@@ -1,14 +1,22 @@
 import fs from 'fs';
+import path from 'path';
 
 export const syncProducts = async () => {
-    let categoryUrl = 'frontend/public/products/index.json'
-    const path = require('path');
-    const projectRoot = process.cwd(); // 获取当前工作目录
-    categoryUrl = path.join(projectRoot, '..', categoryUrl);
+    // 获取当前工作目录
+    const projectRoot = process.cwd();
+    
+    const categoryUrl = path.join(projectRoot, 'frontend/public/products/index.json');
+    
+    console.log(`尝试读取文件: ${categoryUrl}`);
+    console.log(`当前工作目录: ${projectRoot}`);
+    console.log(`目录内容: ${fs.readdirSync(projectRoot).join(', ')}`);
+    console.log(`frontend 目录内容: ${fs.existsSync(path.join(projectRoot, 'frontend')) ? fs.readdirSync(path.join(projectRoot, 'frontend')).join(', ') : '目录不存在'}`);
+    
     const category = JSON.parse(fs.readFileSync(categoryUrl, 'utf8'));
     const products = [] as any[];
+    
     category.items.forEach((item: any) => {
-        const productPath = path.join(projectRoot, '..', 'frontend/public/products', `${item.id}.json`);
+        const productPath = path.join(projectRoot, 'frontend/public/products', `${item.id}.json`);
         if (fs.existsSync(productPath)) {
             const list = JSON.parse(fs.readFileSync(productPath, 'utf8'));
             list.forEach((product: any) => {
@@ -40,15 +48,26 @@ export const syncProducts = async () => {
             })
         }
     });
+    
     // 确保data目录存在
-    const dataDir = path.join(projectRoot, '..', '_data');
+    const dataDir = path.join(projectRoot, '_data');
     if (!fs.existsSync(dataDir)) {
         fs.mkdirSync(dataDir);
     }
+    
     // 写入结果到 products.json
-    const outputPath = path.join(projectRoot, '..', '_data', 'products.json');
-
+    const outputPath = path.join(projectRoot, '_data', 'products.json');
     fs.writeFileSync(outputPath, JSON.stringify(products, null, 4));
+    
+    // 同时将处理后的数据写入到 dist/products 目录
+    const distDir = path.join(projectRoot, 'dist/products');
+    if (fs.existsSync(distDir)) {
+        const distOutputPath = path.join(distDir, 'products.json');
+        fs.writeFileSync(distOutputPath, JSON.stringify(products, null, 4));
+        console.log(`同时更新了 dist/products/products.json`);
+    }
+    
+    console.log(`成功生成 products.json，包含 ${products.length} 个产品`);
 }
 
 // 自动执行函数（当直接运行此脚本时）
@@ -58,3 +77,4 @@ if (require.main === module) {
         process.exit(1);
     });
 }
+
