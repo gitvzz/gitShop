@@ -73,10 +73,12 @@ class default_1 extends issue_1.default {
         if (!category) {
             return { success: false, message: 'Category not found' };
         }
-        const product_list = await this.getProductData(category_id);
-        const item = product_list.find((item) => item.id === id);
-        if (item) {
-            return { success: false, message: 'Product already exists' };
+        let product_list = await this.getProductData(category_id);
+        if (product_list) {
+            const item = product_list.find((item) => item.id === id);
+            if (item) {
+                return { success: false, message: 'Product already exists' };
+            }
         }
         const product = {
             id,
@@ -96,7 +98,12 @@ class default_1 extends issue_1.default {
             promotions,
             merchant_id: this.username
         };
-        product_list.push(product);
+        if (product_list) {
+            product_list.push(product);
+        }
+        else {
+            product_list = [product];
+        }
         const projectRoot = process.cwd();
         const outputPath = path_1.default.join(projectRoot, `frontend/public/products/${category_id}.json`);
         fs_1.default.writeFileSync(outputPath, JSON.stringify(product_list, null, 4));

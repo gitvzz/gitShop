@@ -8,7 +8,7 @@ export default class extends Issue {
         super(github, context);
         this.type = type;
     }
-    
+
     private async getCategoryData() {
         const projectRoot = process.cwd();
         let url = path.join(projectRoot, 'frontend/public/products/index.json');
@@ -25,10 +25,10 @@ export default class extends Issue {
 
     private async saveProductData(data: any) {
         console.log(data);
-        let { id, name, description, price, 
+        let { id, name, description, price,
             images, category_id, requires_shipping,
-            features, stock, tags, 
-            related_products, promotions 
+            features, stock, tags,
+            related_products, promotions
         } = data;
         if (!id || !name || !description || !price || !images || !category_id) {
             return { success: false, message: 'Invalid product data' };
@@ -51,36 +51,38 @@ export default class extends Issue {
         if (typeof category_id !== 'string' || !/^[\w-]{3,15}$/.test(category_id)) {
             return { success: false, message: 'Invalid product category id' };
         }
-        if(requires_shipping!==undefined && typeof requires_shipping !== 'boolean'){
+        if (requires_shipping !== undefined && typeof requires_shipping !== 'boolean') {
             return { success: false, message: 'Invalid product requires_shipping' };
         }
-        if(features!==undefined && (!Array.isArray(features) || features.length === 0)){
+        if (features !== undefined && (!Array.isArray(features) || features.length === 0)) {
             return { success: false, message: 'Invalid product features' };
         }
-        if(stock!==undefined && (typeof stock !== 'number' || stock < 0 || stock > 1000000)){
+        if (stock !== undefined && (typeof stock !== 'number' || stock < 0 || stock > 1000000)) {
             return { success: false, message: 'Invalid product stock' };
         }
-        if(tags!==undefined && (!Array.isArray(tags) || tags.length === 0)){
+        if (tags !== undefined && (!Array.isArray(tags) || tags.length === 0)) {
             return { success: false, message: 'Invalid product tags' };
         }
-        if(related_products!==undefined && (!Array.isArray(related_products) || related_products.length === 0)){
+        if (related_products !== undefined && (!Array.isArray(related_products) || related_products.length === 0)) {
             return { success: false, message: 'Invalid product related_products' };
         }
-        if(promotions!==undefined && typeof promotions !== 'object'){
+        if (promotions !== undefined && typeof promotions !== 'object') {
             return { success: false, message: 'Invalid product promotions' };
         }
-        if(images.some((image: any) => typeof image !== 'object' || !image.src || !image.alt || typeof image.src !== 'string' || !/^https?:\/\/[^\s]+$/.test(image.src) || typeof image.alt !== 'string' || image.alt.length < 3 || image.alt.length > 100)){
+        if (images.some((image: any) => typeof image !== 'object' || !image.src || !image.alt || typeof image.src !== 'string' || !/^https?:\/\/[^\s]+$/.test(image.src) || typeof image.alt !== 'string' || image.alt.length < 3 || image.alt.length > 100)) {
             return { success: false, message: 'Invalid product images' };
         }
         const category_list = await this.getCategoryData();
         const category = category_list.find((item: any) => item.id === category_id);
-        if(!category){
+        if (!category) {
             return { success: false, message: 'Category not found' };
         }
-        const product_list = await this.getProductData(category_id);
-        const item = product_list.find((item: any) => item.id === id);
-        if(item){
-            return { success: false, message: 'Product already exists' };
+        let product_list = await this.getProductData(category_id);
+        if (product_list) {
+            const item = product_list.find((item: any) => item.id === id);
+            if (item) {
+                return { success: false, message: 'Product already exists' };
+            }
         }
         const product = {
             id,
@@ -88,7 +90,7 @@ export default class extends Issue {
             description,
             price,
             currency: 'USDT',
-            images:images.filter((_,index) => index < 5).map((image: any) => ({src: image.src, alt: image.alt})),
+            images: images.filter((_, index) => index < 5).map((image: any) => ({ src: image.src, alt: image.alt })),
             category_id,
             requires_shipping,
             features,
@@ -96,11 +98,15 @@ export default class extends Issue {
             reviews: 0,
             rating: 0,
             tags,
-            related_products:related_products || [],
+            related_products: related_products || [],
             promotions,
             merchant_id: this.username
         }
-        product_list.push(product);
+        if (product_list) {
+            product_list.push(product);
+        } else {
+            product_list = [product];
+        }
         const projectRoot = process.cwd();
         const outputPath = path.join(projectRoot, `frontend/public/products/${category_id}.json`);
         fs.writeFileSync(outputPath, JSON.stringify(product_list, null, 4));
@@ -132,9 +138,9 @@ export default class extends Issue {
             return { success: false, message: 'Invalid category image alt' };
         }
         const category_list = await this.getCategoryData();
-        if(category_list.find((item: any) => item.id === id)){
+        if (category_list.find((item: any) => item.id === id)) {
             return { success: false, message: 'Category already exists' };
-        }else{
+        } else {
             category_list.push(data);
         }
         const projectRoot = process.cwd();
@@ -166,7 +172,7 @@ export default class extends Issue {
             if (result.success) {
                 await this.createComment(result.message);
                 await this.updateIssue('closed', ['success']);
-                return {products:true};
+                return { products: true };
             } else {
                 await this.createComment(result.message);
                 await this.updateIssue('closed', ['invalid']);
