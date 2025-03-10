@@ -11,7 +11,7 @@ permissions:
   actions: write
 
 jobs:
-  process-new-order:
+  process-order:
     runs-on: ubuntu-latest
     if: startsWith(toLower(github.event.issue.title), 'order')
     steps:
