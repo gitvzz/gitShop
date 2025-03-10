@@ -1,0 +1,675 @@
+[
+  {
+    "id": "electronics",
+    "name": "Electronics",
+    "description": {
+      "zh": "精选优质数码电子产品，提升您的科技生活体验",
+      "en": "Selected high-quality electronic products to enhance your tech life experience"
+    },
+    "image": {
+      "src": "/assets/categories/electronics.png",
+      "alt": ""
+    },
+    "products": [
+      {
+        "id": "bluetooth-speaker",
+        "name": {
+          "en": "Bluetooth Speaker",
+          "zh": "蓝牙音箱"
+        },
+        "description": {
+          "en": "Portable Bluetooth speaker with 360° sound, deep bass and 12-hour battery life. Waterproof design makes it perfect for outdoor activities, beach trips and pool parties.",
+          "zh": "便携式蓝牙音箱，具有360°环绕声、深沉低音和12小时电池续航。防水设计使其完美适合户外活动、海滩旅行和泳池派对。"
+        },
+        "price": 129,
+        "currency": "USDT",
+        "images": [
+          {
+            "src": "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?q=80&w=2936&auto=format&fit=crop",
+            "alt": "Portable bluetooth s"
+          },
+          {
+            "src": "https://images.unsplash.com/photo-1589003077984-894e133dabab?q=80&w=2787&auto=format&fit=crop",
+            "alt": "Bluetooth speaker by"
+          }
+        ],
+        "requires_shipping": true,
+        "features": [
+          {
+            "en": "360° Sound",
+            "zh": "360°环绕声"
+          },
+          {
+            "en": "12-hour Battery Life",
+            "zh": "12小时电池续航"
+          },
+          {
+            "en": "Waterproof Design",
+            "zh": "防水设计"
+          },
+          {
+            "en": "Bluetooth 5.0",
+            "zh": "蓝牙5.0"
+          },
+          {
+            "en": "Built-in Microphone",
+            "zh": "内置麦克风"
+          }
+        ],
+        "stock": 180,
+        "rating": 4.8,
+        "reviews": 64,
+        "tags": [
+          {
+            "_": "音箱"
+          },
+          {
+            "_": "蓝牙"
+          },
+          {
+            "_": "防水"
+          }
+        ],
+        "related_products": [
+          "smartphone-pro",
+          "portable-charger"
+        ],
+        "promotions": {
+          "tier_pricing": [
+            {
+              "min_quantity": 2,
+              "discount_percent": 15,
+              "description": {
+                "zh": "购买2个或以上享85折",
+                "en": "Buy 2 or more get 15% off"
+              }
+            }
+          ]
+        },
+        "distribution_percent": 0
+      },
+      {
+        "id": "portable-charger",
+        "name": {
+          "en": "Portable Power Bank",
+          "zh": "便携式充电宝"
+        },
+        "description": {
+          "en": "High-capacity 20000mAh portable power bank with fast charging technology. Charge multiple devices simultaneously with USB-C and USB-A ports. Perfect for travel and daily use.",
+          "zh": "大容量20000mAh便携式充电宝，配备快速充电技术。通过USB-C和USB-A端口同时为多个设备充电。完美适合旅行和日常使用。"
+        },
+        "price": 79,
+        "currency": "USDT",
+        "images": [
+          {
+            "src": "https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?q=80&w=2787&auto=format&fit=crop",
+            "alt": "Portable power bank "
+          },
+          {
+            "src": "https://images.unsplash.com/photo-1618410320928-25228d811631?q=80&w=2940&auto=format&fit=crop",
+            "alt": "Power bank charging "
+          }
+        ],
+        "requires_shipping": true,
+        "features": [
+          {
+            "en": "20000mAh Capacity",
+            "zh": "20000mAh容量"
+          },
+          {
+            "en": "Fast Charging",
+            "zh": "快速充电"
+          },
+          {
+            "en": "Multiple Ports",
+            "zh": "多个端口"
+          },
+          {
+            "en": "Compact Design",
+            "zh": "紧凑设计"
+          }
+        ],
+        "stock": 300,
+        "rating": 4.5,
+        "reviews": 95,
+        "tags": [
+          {
+            "_": "充电宝"
+          },
+          {
+            "_": "便携"
+          },
+          {
+            "_": "快充"
+          }
+        ],
+        "related_products": [
+          "smartphone-pro",
+          "wireless-earbuds"
+        ],
+        "promotions": {},
+        "distribution_percent": 0
+      },
+      {
+        "id": "smartphone-pro",
+        "name": {
+          "en": "Smartphone Pro",
+          "zh": "智能手机Pro"
+        },
+        "description": {
+          "en": "Latest flagship smartphone with advanced camera system, powerful processor and all-day battery life. Features a stunning 6.7-inch OLED display and 5G connectivity.",
+          "zh": "最新旗舰智能手机，配备先进的相机系统、强大的处理器和全天候电池续航。拥有惊艳的6.7英寸OLED显示屏和5G连接功能。"
+        },
+        "price": 800,
+        "currency": "USDT",
+        "images": [
+          {
+            "src": "https://images.unsplash.com/photo-1598327105666-5b89351aff97?q=80&w=2942&auto=format&fit=crop",
+            "alt": "Modern smartphone wi"
+          },
+          {
+            "src": "https://images.unsplash.com/photo-1605236453806-6ff36851218e?q=80&w=2274&auto=format&fit=crop",
+            "alt": "Smartphone showing h"
+          }
+        ],
+        "requires_shipping": true,
+        "features": [
+          {
+            "en": "6.7-inch OLED Display",
+            "zh": "6.7英寸OLED显示屏"
+          },
+          {
+            "en": "Triple Camera System",
+            "zh": "三摄像头系统"
+          },
+          {
+            "en": "5G Connectivity",
+            "zh": "5G连接"
+          },
+          {
+            "en": "All-day Battery Life",
+            "zh": "全天候电池续航"
+          },
+          {
+            "en": "Water and Dust Resistant",
+            "zh": "防水防尘"
+          }
+        ],
+        "stock": 100,
+        "rating": 4.9,
+        "reviews": 128,
+        "tags": [
+          {
+            "_": "智能手机"
+          },
+          {
+            "_": "5G"
+          },
+          {
+            "_": "旗舰"
+          }
+        ],
+        "related_products": [
+          "wireless-earbuds",
+          "smartphone-case"
+        ],
+        "promotions": {
+          "discount_percent": 5
+        },
+        "distribution_percent": 0
+      },
+      {
+        "id": "smartwatch",
+        "name": {
+          "en": "Smart Watch",
+          "zh": "智能手表"
+        },
+        "description": {
+          "en": "Advanced smartwatch with health monitoring, fitness tracking and smartphone notifications. Features a bright AMOLED display and up to 14 days of battery life.",
+          "zh": "先进的智能手表，具有健康监测、健身追踪和智能手机通知功能。配备明亮的AMOLED显示屏，电池续航可达14天。"
+        },
+        "price": 249,
+        "currency": "USDT",
+        "images": [
+          {
+            "src": "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?q=80&w=2872&auto=format&fit=crop",
+            "alt": "Smart watch on wrist"
+          },
+          {
+            "src": "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?q=80&w=2127&auto=format&fit=crop",
+            "alt": "Smart watch showing "
+          }
+        ],
+        "requires_shipping": true,
+        "features": [
+          {
+            "en": "Health Monitoring",
+            "zh": "健康监测"
+          },
+          {
+            "en": "Fitness Tracking",
+            "zh": "健身追踪"
+          },
+          {
+            "en": "14-day Battery Life",
+            "zh": "14天电池续航"
+          },
+          {
+            "en": "Water Resistant",
+            "zh": "防水设计"
+          },
+          {
+            "en": "Smartphone Notifications",
+            "zh": "智能手机通知"
+          }
+        ],
+        "stock": 150,
+        "rating": 4.6,
+        "reviews": 72,
+        "tags": [
+          {
+            "_": "智能手表"
+          },
+          {
+            "_": "健康"
+          },
+          {
+            "_": "健身"
+          }
+        ],
+        "related_products": [
+          "smartphone-pro",
+          "wireless-earbuds"
+        ],
+        "promotions": {
+          "threshold_discounts": [
+            {
+              "threshold": 500,
+              "discount_amount": 50,
+              "description": {
+                "zh": "满500减50",
+                "en": "Get $50 off when you spend $500"
+              }
+            }
+          ]
+        },
+        "distribution_percent": 0
+      },
+      {
+        "id": "wireless-earbuds",
+        "name": {
+          "en": "Wireless Earbuds",
+          "zh": "无线耳机"
+        },
+        "description": {
+          "en": "Premium wireless earbuds with active noise cancellation, crystal clear sound quality and 24-hour battery life with charging case. Perfect for music, calls and workouts.",
+          "zh": "高端无线耳机，配备主动降噪功能，水晶般清晰的音质，充电盒可提供24小时电池续航。完美适合音乐、通话和运动使用。"
+        },
+        "price": 153,
+        "currency": "USDT",
+        "images": [
+          {
+            "src": "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?q=80&w=2832&auto=format&fit=crop",
+            "alt": "White wireless earbu"
+          },
+          {
+            "src": "https://images.unsplash.com/photo-1606220588913-b3aacb4d2f37?q=80&w=2940&auto=format&fit=crop",
+            "alt": "Wireless earbuds in "
+          }
+        ],
+        "requires_shipping": true,
+        "features": [
+          {
+            "en": "Active Noise Cancellation",
+            "zh": "主动降噪"
+          },
+          {
+            "en": "24-hour Battery Life",
+            "zh": "24小时电池续航"
+          },
+          {
+            "en": "Water Resistant",
+            "zh": "防水设计"
+          },
+          {
+            "en": "Touch Controls",
+            "zh": "触控操作"
+          }
+        ],
+        "stock": 200,
+        "rating": 4.7,
+        "reviews": 86,
+        "tags": [
+          {
+            "_": "耳机"
+          },
+          {
+            "_": "无线"
+          },
+          {
+            "_": "降噪"
+          }
+        ],
+        "related_products": [
+          "smartphone-pro",
+          "smartwatch"
+        ],
+        "promotions": {
+          "tier_pricing": [
+            {
+              "min_quantity": 2,
+              "discount_percent": 10,
+              "description": {
+                "zh": "购买2个或以上享9折",
+                "en": "Buy 2 or more get 10% off"
+              }
+            }
+          ]
+        },
+        "distribution_percent": 0
+      }
+    ]
+  },
+  {
+    "id": "girl",
+    "name": "GIRL",
+    "description": {
+      "_": "美女套图"
+    },
+    "image": {
+      "src": "https://cdn.pixabay.com/photo/2022/04/06/11/30/girl-7115394_1280.jpg",
+      "alt": "girl"
+    },
+    "products": [
+      {
+        "id": "girl-1",
+        "name": {
+          "_": "GIRL-1"
+        },
+        "description": {
+          "_": "这个不错啊"
+        },
+        "price": 10,
+        "currency": "USDT",
+        "images": [
+          {
+            "src": "https://cdn.pixabay.com/photo/2022/04/06/11/30/girl-7115394_1280.jpg",
+            "alt": "girl"
+          }
+        ],
+        "requires_shipping": false,
+        "features": [
+          {
+            "_": "10次一对一在线指导"
+          },
+          {
+            "_": "实战项目开发"
+          },
+          {
+            "_": "源码讲解"
+          },
+          {
+            "_": "部署与维护指导"
+          },
+          {
+            "_": "6个月技术支持"
+          }
+        ],
+        "stock": 0,
+        "rating": 0,
+        "reviews": 0,
+        "tags": [
+          {
+            "_": "Girl"
+          }
+        ],
+        "related_products": [],
+        "promotions": {
+          "discount_percent": 2
+        },
+        "distribution_percent": 0,
+        "merchant_id": "netferes"
+      }
+    ]
+  },
+  {
+    "id": "learning",
+    "name": "学艺",
+    "description": {
+      "_": "专业人工教学服务，提升您的技能"
+    },
+    "image": {
+      "src": "/assets/categories/learning.png",
+      "alt": ""
+    },
+    "products": [
+      {
+        "id": "telegram-dev",
+        "name": {
+          "_": "Telegram开发教学1"
+        },
+        "description": {
+          "_": "专业的Telegram机器人和应用开发教学服务，由资深开发者一对一指导。学习如何创建、部署和管理Telegram机器人，掌握API调用和高级功能开发。"
+        },
+        "price": 130,
+        "currency": "USDT",
+        "images": [
+          {
+            "src": "/assets/products/telegram-dev.png",
+            "alt": ""
+          }
+        ],
+        "requires_shipping": false,
+        "features": [
+          {
+            "_": "10次一对一在线指导"
+          },
+          {
+            "_": "实战项目开发"
+          },
+          {
+            "_": "源码讲解"
+          },
+          {
+            "_": "部署与维护指导"
+          },
+          {
+            "_": "6个月技术支持"
+          }
+        ],
+        "stock": 0,
+        "rating": 4.9,
+        "reviews": 18,
+        "tags": [
+          {
+            "_": "Telegram"
+          },
+          {
+            "_": "开发"
+          },
+          {
+            "_": "教学"
+          },
+          {
+            "_": "机器人"
+          }
+        ],
+        "related_products": [],
+        "promotions": {
+          "tier_pricing": [
+            {
+              "min_quantity": 3,
+              "discount_percent": 10,
+              "description": {
+                "_": "购买3个课程享9折"
+              }
+            },
+            {
+              "min_quantity": 2,
+              "discount_percent": 5,
+              "description": {
+                "zh": "购买2个课程享95折",
+                "en": "Buy 2 courses get 5% off"
+              }
+            }
+          ]
+        },
+        "distribution_percent": 0,
+        "merchant_id": "lingang"
+      }
+    ]
+  },
+  {
+    "id": "tea",
+    "name": "Tea",
+    "description": {
+      "zh": "精选优质茶叶，源自天然茶园",
+      "en": "Select high-quality tea, sourced from natural tea gardens"
+    },
+    "image": {
+      "src": "/assets/categories/tea.png",
+      "alt": ""
+    },
+    "products": [
+      {
+        "id": "black-tea",
+        "name": {
+          "_": "正山小种红茶"
+        },
+        "description": {
+          "_": "来自福建武夷山的正山小种红茶，采用优质茶叶嫩芽，经过传统工艺烘焙而成。具有独特的松烟香和甜香，口感醇厚回甘。"
+        },
+        "price": 50,
+        "currency": "USDT",
+        "images": [
+          {
+            "src": "/assets/products/black-tea.png",
+            "alt": ""
+          }
+        ],
+        "requires_shipping": true,
+        "features": [
+          {
+            "_": "正宗武夷山原产"
+          },
+          {
+            "_": "松烟熏制工艺"
+          },
+          {
+            "_": "独特松香味"
+          },
+          {
+            "_": "甜香醇厚"
+          },
+          {
+            "_": "200g传统竹篓装"
+          }
+        ],
+        "stock": 80,
+        "rating": 4.7,
+        "reviews": 42,
+        "tags": [
+          {
+            "_": "红茶"
+          },
+          {
+            "_": "小种"
+          },
+          {
+            "_": "竹篓"
+          }
+        ],
+        "related_products": [
+          "rock-tea"
+        ],
+        "promotions": {
+          "discount_percent": 5
+        },
+        "distribution_percent": 0
+      },
+      {
+        "id": "rock-tea",
+        "name": {
+          "en": "Rock Tea",
+          "zh": "武夷岩茶"
+        },
+        "description": {
+          "en": "Produced in the Wuyi Mountains of Fujian, this rock tea has a rich flavor and long-lasting aroma. It is made using traditional craftsmanship, preserving the unique characteristics of Wuyi rock tea.",
+          "zh": "产自福建武夷山的优质岩茶，口感醇厚，香气持久。采用传统工艺精制而成，保留了岩茶独特的岩韵和香气。"
+        },
+        "price": 80,
+        "currency": "USDT",
+        "images": [
+          {
+            "src": "https://img1.baidu.com/it/u=2288590788,3996478196&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500",
+            "alt": "Two each of gray, wh"
+          },
+          {
+            "src": "https://youimg1.c-ctrip.com/target/1002180000014khzk43E1.jpg",
+            "alt": "Model wearing plain "
+          },
+          {
+            "src": "https://shoplineimg.com/617f4eca0fbbdc00389f1e14/64ec87f916da4700117734b3/800x.jpg?",
+            "alt": "Model wearing plain "
+          }
+        ],
+        "requires_shipping": true,
+        "features": [
+          {
+            "_": "产自武夷山核心产区"
+          },
+          {
+            "en": "Traditional craftsmanship",
+            "zh": "传统工艺制作"
+          },
+          {
+            "en": "Unique岩韵",
+            "zh": "独特岩韵"
+          },
+          {
+            "_": "耐泡度高"
+          },
+          {
+            "_": "250g精美礼盒装"
+          }
+        ],
+        "stock": 50,
+        "rating": 4.8,
+        "reviews": 36,
+        "tags": [
+          {
+            "_": "岩茶"
+          },
+          {
+            "_": "乌龙茶"
+          },
+          {
+            "_": "礼盒"
+          }
+        ],
+        "related_products": [
+          "black-tea"
+        ],
+        "promotions": {
+          "threshold_discounts": [
+            {
+              "threshold": 500,
+              "discount_amount": 60,
+              "description": {
+                "_": "满500减60"
+              }
+            },
+            {
+              "threshold": 300,
+              "discount_amount": 30,
+              "description": {
+                "_": "满300减30"
+              }
+            }
+          ]
+        },
+        "distribution_percent": 0
+      }
+    ]
+  }
+]
