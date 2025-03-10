@@ -350,6 +350,47 @@ class OrderAction extends base_action_1.BaseAction {
         });
         this.log(`已添加编辑警告评论到Issue #${issueNumber}`);
     }
+    async addIssueToProject(issueNumber, projectNumber) {
+        try {
+            // 1. 获取项目ID和Issue的Node ID (需要使用GraphQL API)
+            const query = `
+        query {
+          repository(owner: "${github.context.repo.owner}", name: "${github.context.repo.repo}") {
+            issue(number: ${issueNumber}) {
+              id
+            }
+            projectV2(number: ${projectNumber}) {
+              id
+            }
+          }
+        }
+      `;
+            const response = await this.octokit.graphql(query);
+            console.log('addIssueToProject', response);
+            const issueId = response.repository.issue.id;
+            const projectId = response.repository.projectV2.id;
+            console.log('issueId', issueId);
+            console.log('projectId', projectId);
+            // 2. 将Issue添加到项目中
+            const mutation = `
+        mutation {
+          addProjectV2ItemById(input: {
+            projectId: "${projectId}",
+            contentId: "${issueId}"
+          }) {
+            item {
+              id
+            }
+          }
+        }
+      `;
+            await this.octokit.graphql(mutation);
+            this.log(`已将Issue #${issueNumber}添加到项目 #${projectNumber}`);
+        }
+        catch (error) {
+            this.warn(`将Issue添加到项目失败: ${error instanceof Error ? error.message : String(error)}`);
+        }
+    }
     /**
      * 处理订单逻辑
      */
@@ -383,6 +424,7 @@ class OrderAction extends base_action_1.BaseAction {
         replyBody += `- 收到付款后，我们将尽快处理您的订单\n`;
         replyBody += `- 如有任何问题，请在此Issue下留言`;
         await this.createComment(issue.number, { body: replyBody, labels: ['order-processing'] });
+        await this.addIssueToProject(issue.number, 1);
     }
     /**
      * 处理评论逻辑
