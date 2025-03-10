@@ -80,10 +80,9 @@ export const useStore = defineStore('store', {
         for(const category of res.data){
           const products = category.products
           delete category.products
-          this.product_full.push(...products.map((p: Product) => ({...p, categoryId: category.id})))
+          this.product_full.push(...products.map((p: Product) => ({...p, category_id: category.id})))
           this.category_full.push(category)
         }
-        console.log('product_full:', this.product_full)
         const cartStore = useCartStore()
         cartStore.load(id => this.products.some(p => p.id === id))
       } catch (error) {
