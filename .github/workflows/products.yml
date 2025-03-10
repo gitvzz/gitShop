@@ -6,7 +6,7 @@ on:
       - main
       - dev
     paths:
-      - 'frontend/public/products/**'
+      - 'products/**'
   workflow_dispatch:
     inputs:
       reason:

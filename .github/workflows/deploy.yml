@@ -5,8 +5,7 @@ on:
     branches: [ main, dev ]
     paths:
       - 'frontend/**'
-      - '_data/**'
-      - '!frontend/public/products/**'
+      - 'products/**'
   workflow_dispatch:
     inputs:
       deploy_message:
