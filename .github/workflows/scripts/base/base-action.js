@@ -45,7 +45,7 @@ class BaseAction {
      * 构造函数
      */
     constructor() {
-        const token = core.getInput('github-token', { required: true });
+        const token = core.getInput('GITHUB_TOKEN', { required: true });
         this.octokit = github.getOctokit(token);
         this.context = github.context;
     }
