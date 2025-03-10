@@ -36,11 +36,7 @@ jobs:
       
       - name: 同步商品信息及摘要 📊
         run: |
-             
-          # 安装依赖
-          npm install --no-save fs path
-          
-          # 执行同步脚本
+        
           node .github/workflows/scripts/products.js
           
         env:
