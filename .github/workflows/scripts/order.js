@@ -216,7 +216,7 @@ class OrderAction extends base_action_1.BaseAction {
         const shippingDataMatch = body.match(shippingDataRegex);
         if (shippingDataMatch) {
             try {
-                utils.decrypt(shippingDataMatch[1].trim(), process.env.PUBLIC_KEY);
+                utils.decrypt(shippingDataMatch[1].trim(), process.env.PRIVATE_KEY);
             }
             catch (e) {
                 await this.createComment(issue.number, { body: `收货信息解密失败:${e.message}`, state: 'closed', labels: ['invalid'] });
@@ -225,7 +225,7 @@ class OrderAction extends base_action_1.BaseAction {
         }
         let orderData = null;
         try {
-            orderData = utils.decrypt(encryptedDataMatch[1].trim(), process.env.PUBLIC_KEY);
+            orderData = utils.decrypt(encryptedDataMatch[1].trim(), process.env.PRIVATE_KEY);
             console.log(orderData);
             try {
                 this.validateOrderData(orderData);
