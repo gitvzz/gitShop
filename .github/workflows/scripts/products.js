@@ -134,11 +134,12 @@ class ProductAction extends base_action_1.BaseAction {
             // 添加商品数据文件
             this.log('添加商品摘要文件到暂存区');
             (0, child_process_1.execSync)('git add products/.summary.json', { stdio: 'pipe' });
+            (0, child_process_1.execSync)('git add products/_.json', { stdio: 'pipe' });
             // 检查是否有变更需要提交
             let hasChanges = false;
             try {
                 (0, child_process_1.execSync)('git diff --staged --quiet', { stdio: 'pipe' });
-                this.log('.summary.json 没有变化，跳过提交');
+                this.log('文件没有变化，跳过提交');
             }
             catch (error) {
                 // 如果命令返回非零退出码，表示有变更

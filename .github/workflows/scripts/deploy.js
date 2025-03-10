@@ -107,7 +107,6 @@ class DeployAction extends base_action_1.BaseAction {
                 throw new Error(`前端构建失败: ${error}`);
             }
         }
-        this.log('前端构建完成');
     }
     /**
      * 复制产品数据到构建输出目录
@@ -118,7 +117,7 @@ class DeployAction extends base_action_1.BaseAction {
         const targetDir = path.resolve(process.cwd(), 'dist/products.json');
         // 检查源目录是否存在
         if (!(0, fs_1.existsSync)(sourceDir)) {
-            this.warn(`警告：${sourceDir} 目录不存在！`);
+            this.warn(`警告：${sourceDir} 不存在！`);
             return;
         }
         (0, fs_1.copyFileSync)(sourceDir, targetDir);
