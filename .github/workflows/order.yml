@@ -13,7 +13,7 @@ permissions:
 jobs:
   process-order:
     runs-on: ubuntu-latest
-    if: startsWith(toLower(github.event.issue.title), 'order')
+    if: startsWith(github.event.issue.title, 'Order')
     steps:
       - name: 检出代码
         uses: actions/checkout@v3
