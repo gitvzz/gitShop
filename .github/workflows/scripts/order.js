@@ -1,22 +1,443 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OrderAction = void 0;
-const issue_action_1 = require("./base/issue-action");
+const github = __importStar(require("@actions/github"));
+const base_action_1 = require("./base/base-action");
+const utils = __importStar(require("./utils"));
+const fs = __importStar(require("fs"));
+const path = __importStar(require("path"));
 /**
- * 订单处理
+ * 处理订单的Action类
  */
-class OrderAction extends issue_action_1.IssueAction {
+class OrderAction extends base_action_1.BaseAction {
     async execute() {
         try {
-            this.log('开始处理新订单...');
-            console.log(this.context.payload);
+            const context = github.context;
+            const eventName = context.eventName;
+            this.log(`处理事件: ${eventName}`);
+            if (eventName === 'issues') {
+                const action = context.payload.action;
+                if (action === 'opened') {
+                    // 处理新创建的Issue
+                    await this.handleNewIssue();
+                }
+                else if (action === 'edited') {
+                    // 处理编辑的Issue
+                    await this.handleEditedIssue();
+                }
+            }
+            else if (eventName === 'issue_comment') {
+                // 处理Issue评论
+                await this.handleIssueComment();
+            }
         }
         catch (error) {
-            this.fail(`处理新订单时出错: ${error instanceof Error ? error.message : String(error)}`);
+            this.fail(`处理订单失败: ${error instanceof Error ? error.message : String(error)}`);
         }
+    }
+    /**
+     * 处理新创建的Issue
+     */
+    async handleNewIssue() {
+        const issue = github.context.payload.issue;
+        if (!issue) {
+            this.fail('无法获取Issue信息');
+            return;
+        }
+        this.log(`处理新Issue: #${issue.number} - ${issue.title}`);
+        // 验证Issue内容
+        const orderData = await this.validateIssueContent(issue);
+        if (orderData) {
+            // 如果验证通过，保存原始内容并添加标签
+            await this.saveOriginalContent(issue);
+            // 处理订单逻辑
+            await this.processOrder(issue, orderData);
+        }
+    }
+    /**
+     * 处理编辑的Issue
+     */
+    async handleEditedIssue() {
+        const issue = github.context.payload.issue;
+        if (!issue) {
+            this.fail('无法获取Issue信息');
+            return;
+        }
+        this.log(`处理编辑的Issue: #${issue.number} - ${issue.title}`);
+        // 检查Issue是否已经被验证
+        const isRestored = await this.restoreOriginalContent(issue);
+        if (isRestored) {
+            // 添加警告评论
+            await this.addEditWarningComment(issue.number);
+        }
+        else {
+            // 如果Issue尚未被验证，重新验证
+            const orderData = await this.validateIssueContent(issue);
+            if (orderData) {
+                // 如果验证通过，保存原始内容并添加标签
+                await this.saveOriginalContent(issue);
+                // 处理订单逻辑
+                await this.processOrder(issue, orderData);
+            }
+        }
+    }
+    /**
+     * 处理Issue评论
+     */
+    async handleIssueComment() {
+        const comment = github.context.payload.comment;
+        const issue = github.context.payload.issue;
+        if (!comment || !issue) {
+            this.fail('无法获取评论或Issue信息');
+            return;
+        }
+        this.log(`处理Issue评论: #${issue.number} - ${comment.id}`);
+        // 处理评论逻辑
+        await this.processComment(issue, comment);
+    }
+    /**
+     * 验证订单数据
+     */
+    validateOrderData(orderData) {
+        //console.log(data);
+        // 获取当前工作目录
+        const projectRoot = process.cwd();
+        for (const item of orderData.items) {
+            let _path = path.join(projectRoot, `products/${item.category_id}/${item.id}.json`);
+            if (!fs.existsSync(_path)) {
+                throw new Error(`${item.name} 商品不存在`);
+            }
+            const product = JSON.parse(fs.readFileSync(_path, 'utf8'));
+            console.log(product);
+            if (product.merchant_id !== item.merchant_id) {
+                throw new Error(`${item.name} 商户不一致`);
+            }
+            if (product.price.toFixed(2) !== item.price) {
+                throw new Error(`${item.name} 商品价格不一致`);
+            }
+            let amount = 0;
+            let type = '';
+            const quantity = item.quantity;
+            const { discount_percent, tier_pricing, threshold_discounts } = product.promotions;
+            if (discount_percent) {
+                amount = (product.price * discount_percent / 100) * quantity;
+                type = 'discount_percent';
+            }
+            else if (tier_pricing) {
+                const tier_item = tier_pricing.find(({ min_quantity }) => {
+                    return quantity >= min_quantity;
+                });
+                if (tier_item) {
+                    amount = product.price * quantity * (tier_item.discount_percent / 100);
+                    type = 'tier_pricing';
+                }
+            }
+            else if (threshold_discounts) {
+                const threshold_item = threshold_discounts.find(({ threshold }) => {
+                    return (quantity * product.price) >= threshold;
+                });
+                if (threshold_item) {
+                    amount = threshold_item.discount_amount;
+                    type = 'threshold_discount';
+                }
+            }
+            if (amount === 0 && !utils.isEmpty(item.promotions)) {
+                throw new Error(`${item.name} 优惠金额不一致`);
+            }
+            else if (amount.toFixed(2) !== item.amount || type !== item.type) {
+                throw new Error(`${item.name} 优惠金额不一致`);
+            }
+        }
+    }
+    /**
+     * 验证Issue内容
+     */
+    async validateIssueContent(issue) {
+        // 这里实现您的验证逻辑
+        const title = issue.title || '';
+        const body = issue.body || '';
+        if (!/^Order ORDER-\d{8}-[A-Z0-9]{6}$/.test(title)) {
+            await this.createComment(issue.number, { body: '订单标题不正确', state: 'closed', labels: ['invalid'] });
+            return false;
+        }
+        const encryptedDataRegex = /\[ENCRYPTED_ORDER_DATA\]\s*([\s\S]*?)\s*\[\/ENCRYPTED_ORDER_DATA\]/;
+        const encryptedDataMatch = body.match(encryptedDataRegex);
+        if (!encryptedDataMatch) {
+            await this.createComment(issue.number, { body: '订单内容不正确', state: 'closed', labels: ['invalid'] });
+            return false;
+        }
+        const signatureRegex = /MD5:([a-f0-9]{32})/i;
+        let signatureMatch = body.match(signatureRegex);
+        if (signatureMatch) {
+            const signature = signatureMatch[1];
+            const contentWithoutSignature = body.replace(/\nMD5:[a-f0-9]{32}/i, '');
+            const contentToSign = title + contentWithoutSignature;
+            const calculatedSignature = utils.md5(contentToSign);
+            signatureMatch = calculatedSignature === signature;
+        }
+        if (!signatureMatch) {
+            await this.createComment(issue.number, { body: '订单签名无效', state: 'closed', labels: ['invalid'] });
+            return false;
+        }
+        const shippingDataRegex = /\[ENCRYPTED_SHIPPING_DATA\]\s*([\s\S]*?)\s*\[\/ENCRYPTED_SHIPPING_DATA\]/;
+        const shippingDataMatch = body.match(shippingDataRegex);
+        if (shippingDataMatch) {
+            try {
+                utils.decrypt(shippingDataMatch[1].trim(), process.env.PUBLIC_KEY);
+            }
+            catch (e) {
+                await this.createComment(issue.number, { body: `收货信息解密失败:${e.message}`, state: 'closed', labels: ['invalid'] });
+                return false;
+            }
+        }
+        let orderData = null;
+        try {
+            orderData = utils.decrypt(encryptedDataMatch[1].trim(), process.env.PUBLIC_KEY);
+            console.log(orderData);
+            try {
+                this.validateOrderData(orderData);
+            }
+            catch (e) {
+                await this.createComment(issue.number, { body: `订单数据验证失败:${e.message}`, state: 'closed', labels: ['invalid'] });
+                return false;
+            }
+        }
+        catch (e) {
+            await this.createComment(issue.number, { body: `订单解密失败:${e.message}`, state: 'closed', labels: ['invalid'] });
+            return false;
+        }
+        return orderData;
+    }
+    /**
+     * 保存Issue的原始内容
+     */
+    async saveOriginalContent(issue) {
+        const issueNumber = issue.number;
+        const originalContent = issue.body || '';
+        const content = Buffer.from(originalContent).toString('base64');
+        await this.octokit.rest.repos.createOrUpdateFileContents({
+            owner: github.context.repo.owner,
+            repo: github.context.repo.repo,
+            path: `.github/verified-issues/${issueNumber}.txt`,
+            message: `保存Issue #${issueNumber}的原始内容`,
+            content
+        });
+    }
+    /**
+     * 恢复Issue的原始内容
+     */
+    async restoreOriginalContent(issue) {
+        const issueNumber = issue.number;
+        const path = `.github/verified-issues/${issueNumber}.txt`;
+        try {
+            const fileData = await this.octokit.rest.repos.getContent({
+                owner: github.context.repo.owner,
+                repo: github.context.repo.repo,
+                path: path
+            });
+            if ('content' in fileData.data) {
+                const content = Buffer.from(fileData.data.content, 'base64').toString();
+                // 更新Issue内容
+                await this.octokit.rest.issues.update({
+                    owner: github.context.repo.owner,
+                    repo: github.context.repo.repo,
+                    issue_number: issueNumber,
+                    body: content
+                });
+                this.log(`已从文件恢复Issue #${issueNumber}的原始内容`);
+                return true;
+            }
+            else {
+                this.warn(`从文件恢复Issue #${issueNumber}的原始内容失败: 文件不存在`);
+                return false;
+            }
+        }
+        catch (error) {
+            this.warn(`从文件恢复Issue #${issueNumber}的原始内容失败: ${error instanceof Error ? error.message : String(error)}`);
+            return false;
+        }
+    }
+    async createComment(issueNumber, data) {
+        if (typeof data === 'string') {
+            data = { body: data };
+        }
+        if (utils.has(data, 'body')) {
+            if (data.body) {
+                const repo = github.context.repo.repo;
+                await this.octokit.rest.issues.createComment({
+                    owner: github.context.repo.owner,
+                    repo,
+                    issue_number: issueNumber,
+                    body: `${data.body}\n\n--- *此回复由${repo}系统自动生成*`
+                });
+                delete data.body;
+            }
+        }
+        if (!utils.isEmpty(data)) {
+            await this.octokit.rest.issues.update({
+                owner: github.context.repo.owner,
+                repo: github.context.repo.repo,
+                issue_number: issueNumber,
+                ...data
+            });
+        }
+    }
+    /**
+     * 添加编辑警告的评论
+     */
+    async addEditWarningComment(issueNumber) {
+        const repo = github.context.repo.repo;
+        const comment = `
+## ⚠️ 警告：已验证的订单不可修改
+
+您尝试修改已验证的订单内容。系统已自动恢复原始内容。
+
+如需添加更多信息或有任何问题，请通过评论与我们联系，而不是修改原始Issue。
+
+---
+*此回复由${repo}系统自动生成*
+`;
+        await this.octokit.rest.issues.createComment({
+            owner: github.context.repo.owner,
+            repo,
+            issue_number: issueNumber,
+            body: comment
+        });
+        this.log(`已添加编辑警告评论到Issue #${issueNumber}`);
+    }
+    /**
+     * 处理订单逻辑
+     */
+    async processOrder(issue, orderData) {
+        // 这里实现您的订单处理逻辑
+        // 例如，解析订单信息，创建订单记录，发送通知等
+        this.log(`处理订单: #${issue.number}`);
+        const wallet = utils.generateWallet(issue.user.login, process.env.MNEMONIC);
+        const { tron, bsc, path } = wallet;
+        const now = new Date();
+        const paymentDeadline = new Date(now.getTime() + 48 * 60 * 60 * 1000);
+        const formattedDeadline = paymentDeadline.toISOString().replace(/T/, ' ').replace(/\..+/, '') + ' UTC';
+        // 构建回复内容
+        let replyBody = `## 您的订单已成功提交！\n\n`;
+        replyBody += `### 订单信息\n`;
+        replyBody += `- 订单ID: ${orderData.orderId}\n`;
+        replyBody += `- 订单总额: ${orderData.summary.total} USDT\n`;
+        replyBody += `- 创建时间: ${new Date(orderData.timestamp).toISOString().replace(/T/, ' ').replace(/\..+/, '') + ' UTC'}\n\n`;
+        replyBody += `### 支付信息\n`;
+        replyBody += `- 支付币种: USDT\n`;
+        replyBody += `- 支付金额: ${orderData.summary.total} USDT\n`;
+        replyBody += `- 收款地址: \n  - BSC:\`${bsc}\`\n  - TRON:\`${tron}\`\n  - 钱包路径: \`${path}\`\n`;
+        replyBody += `- 支付截止时间: ${formattedDeadline}\n\n`;
+        replyBody += `### 支付说明\n`;
+        replyBody += `1. 请在支付截止时间前完成转账\n`;
+        replyBody += `2. 请确保转账金额准确，不要多付或少付\n`;
+        replyBody += `3. 转账时请正确选择网络\n`;
+        replyBody += `4. 转账完成后，请在此Issue下回复转账交易ID\n\n`;
+        replyBody += `### 注意事项\n`;
+        replyBody += `- 如果在支付截止时间内未收到付款，订单将自动取消\n`;
+        replyBody += `- 收到付款后，我们将尽快处理您的订单\n`;
+        replyBody += `- 如有任何问题，请在此Issue下留言`;
+        await this.createComment(issue.number, { body: replyBody, labels: ['order-processing'] });
+    }
+    /**
+     * 处理评论逻辑
+     */
+    async processComment(issue, comment) {
+        // 这里实现您的评论处理逻辑
+        // 例如，解析评论内容，更新订单状态等
+        this.log(`处理评论: #${comment.id} on Issue #${issue.number}`);
+        // 示例：检查评论是否包含特定命令
+        const commentBody = comment.body || '';
+        if (commentBody.includes('/status')) {
+            // 回复订单状态
+            await this.replyWithOrderStatus(issue.number, comment.id);
+        }
+        else if (commentBody.includes('/cancel')) {
+            // 处理取消订单请求
+            await this.handleCancelRequest(issue.number, comment.id);
+        }
+    }
+    /**
+     * 回复订单状态
+     */
+    async replyWithOrderStatus(issueNumber, commentId) {
+        const statusComment = `
+## 订单状态
+
+当前状态: **处理中**
+
+预计完成时间: 1-2个工作日
+
+---
+*此状态更新由自动化系统生成*
+`;
+        await this.octokit.rest.issues.createComment({
+            owner: github.context.repo.owner,
+            repo: github.context.repo.repo,
+            issue_number: issueNumber,
+            body: statusComment
+        });
+        this.log(`已回复订单状态到Issue #${issueNumber}`);
+    }
+    /**
+     * 处理取消订单请求
+     */
+    async handleCancelRequest(issueNumber, commentId) {
+        const cancelComment = `
+## 取消订单请求已收到
+
+我们已收到您的取消订单请求。请确认是否要取消此订单：
+
+- 回复 \`/confirm-cancel\` 确认取消
+- 回复 \`/keep-order\` 保留订单
+
+---
+*此消息由自动化系统生成*
+`;
+        await this.octokit.rest.issues.createComment({
+            owner: github.context.repo.owner,
+            repo: github.context.repo.repo,
+            issue_number: issueNumber,
+            body: cancelComment
+        });
+        this.log(`已回复取消订单请求到Issue #${issueNumber}`);
     }
 }
 exports.OrderAction = OrderAction;
+// 执行Action
 if (require.main === module) {
     const action = new OrderAction();
     action.execute().catch(error => {

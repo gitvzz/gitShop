@@ -509,6 +509,7 @@ const checkout = () => {
     const { type, amount, description } = cartStore.promotions(item,item.quantity)
     return {
       id: item.id,
+      category_id: item.category_id,
       name: item.name,
       price: item.price.toFixed(2),
       quantity: item.quantity,

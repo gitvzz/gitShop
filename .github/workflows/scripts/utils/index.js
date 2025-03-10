@@ -1,8 +1,14 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.formatId = exports.formatImage = exports.formatStringOrObject = exports.isEmpty = void 0;
+exports.decrypt = exports.md5 = exports.formatId = exports.formatImage = exports.formatStringOrObject = exports.isEmpty = exports.generateWallet = void 0;
 exports.has = has;
 exports.is = is;
+const node_forge_1 = __importDefault(require("node-forge"));
+const wallet_1 = require("./wallet");
+Object.defineProperty(exports, "generateWallet", { enumerable: true, get: function () { return wallet_1.generateWallet; } });
 function has(source, key) {
     return Object.prototype.hasOwnProperty.call(source, key);
 }
@@ -103,3 +109,33 @@ const formatId = (id) => {
     return id;
 };
 exports.formatId = formatId;
+const md5 = (str) => {
+    return node_forge_1.default.md.md5.create().update(str).digest().toHex();
+};
+exports.md5 = md5;
+/**
+ * 解密数据
+ * @param data 加密数据
+ * @param pub_key 公钥
+ * @returns 解密后的数据
+ */
+const decrypt = (data, pub_key) => {
+    const [encryptedKeyBase64, encryptedDataBase64] = data.split('.');
+    // Base64 解码
+    const encryptedKey = node_forge_1.default.util.decode64(encryptedKeyBase64);
+    const encryptedDataWithIv = node_forge_1.default.util.decode64(encryptedDataBase64);
+    // 提取 IV (前16字节) 和加密数据
+    const iv = encryptedDataWithIv.substring(0, 16);
+    const encryptedData = encryptedDataWithIv.substring(16);
+    // 使用 RSA 解密 AES 密钥
+    const privateKey = node_forge_1.default.pki.privateKeyFromPem(pub_key);
+    const aesKey = privateKey.decrypt(encryptedKey);
+    // 使用 AES 解密数据
+    const decipher = node_forge_1.default.cipher.createDecipher('AES-CBC', aesKey);
+    decipher.start({ iv: iv });
+    decipher.update(node_forge_1.default.util.createBuffer(encryptedData));
+    decipher.finish();
+    const decryptedData = decipher.output.toString();
+    return JSON.parse(decryptedData);
+};
+exports.decrypt = decrypt;
