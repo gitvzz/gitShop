@@ -9,7 +9,7 @@ class OrderAction extends issue_action_1.IssueAction {
     async execute() {
         try {
             this.log('开始处理新订单...');
-            console.log(this.context.issue);
+            console.log(this.context.payload);
         }
         catch (error) {
             this.fail(`处理新订单时出错: ${error instanceof Error ? error.message : String(error)}`);
