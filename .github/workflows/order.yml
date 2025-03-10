@@ -1,0 +1,30 @@
+name: 处理新订单
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  process-new-order:
+    runs-on: ubuntu-latest
+    if: startsWith(toLower(github.event.issue.title), 'order')
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: 安装依赖
+        run: npm install @actions/core @actions/github node-forge ethers@5.7.2 bs58 crypto
+          
+      - name: 处理Issue
+        id: handle_issue
+        uses: actions/github-script@v6
+        env:
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          WALLET_MNEMONIC: ${{ secrets.WALLET_MNEMONIC }}
+          TG_TOKEN_API: ${{ secrets.TG_TOKEN_API }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+        run: node .github/workflows/scripts/order.js
+        
