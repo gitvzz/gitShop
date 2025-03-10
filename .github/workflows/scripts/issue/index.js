@@ -23,5 +23,8 @@ const handleIssue = async (github, context) => {
         const match = title.match(distributorTitleRegex);
         return await new distributor_1.default(github, context, tgTokenApi, match[1]).start();
     }
+    else {
+        return {};
+    }
 };
 exports.handleIssue = handleIssue;

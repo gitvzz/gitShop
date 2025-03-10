@@ -39,7 +39,7 @@ export default class Issue {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(payload)
-            }).then(res => console.log(res.json()));
+            });
         } catch (e) {
             console.log(e);
         }

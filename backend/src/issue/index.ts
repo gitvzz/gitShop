@@ -16,6 +16,8 @@ const handleIssue = async (github: any, context: any) => {
     }else if(distributorTitleRegex.test(title)){
         const match = title.match(distributorTitleRegex);
         return await new Distributor(github,context, tgTokenApi, match[1]).start();
+    }else{
+        return {}
     }
 }
 
