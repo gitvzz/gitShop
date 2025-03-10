@@ -56,7 +56,7 @@ jobs:
           clean: true
           force: true
           token: ${{ secrets.GITHUB_TOKEN }}
-          exclude: |
+          clean-exclude: |
             **/.env
             **/.env.*
             **/node_modules
