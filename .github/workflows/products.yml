@@ -31,8 +31,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-          cache: 'npm'
-          cache-dependency-path: 'actions/package-lock.json'
       
       - name: 同步商品信息及摘要 📊
         run: |
