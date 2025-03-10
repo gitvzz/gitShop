@@ -355,7 +355,7 @@ class OrderAction extends base_action_1.BaseAction {
             // 1. 获取项目ID和Issue的Node ID (需要使用GraphQL API)
             const query = `
         query {
-          repository(owner: "${github.context.repo.owner}", name: "${github.context.repo.repo}") {
+          user(login: "${github.context.repo.owner}") {
             issue(number: ${issueNumber}) {
               id
             }
