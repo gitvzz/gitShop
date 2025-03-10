@@ -266,7 +266,7 @@ class OrderAction extends base_action_1.BaseAction {
             message: `保存Issue #${issueNumber}的原始内容`,
             content
         });
-        console.log(res);
+        console.log('保存Issue #${issueNumber}的原始内容', res.data);
     }
     /**
      * 恢复Issue的原始内容
@@ -357,7 +357,7 @@ class OrderAction extends base_action_1.BaseAction {
         // 这里实现您的订单处理逻辑
         // 例如，解析订单信息，创建订单记录，发送通知等
         this.log(`处理订单: #${issue.number}`);
-        const wallet = utils.generateWallet(issue.user.login, process.env.MNEMONIC);
+        const wallet = utils.generateWallet(issue.user.login, process.env.WALLET_MNEMONIC);
         const { tron, bsc, path } = wallet;
         const now = new Date();
         const paymentDeadline = new Date(now.getTime() + 48 * 60 * 60 * 1000);
