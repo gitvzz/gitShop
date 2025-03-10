@@ -15,8 +15,11 @@ jobs:
     runs-on: ubuntu-latest
     if: startsWith(toLower(github.event.issue.title), 'order')
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: 检出代码
+        uses: actions/checkout@v3
+
+      - name: 设置Node.js
+        uses: actions/setup-node@v3
         with:
           node-version: '18'
           cache: 'npm'
