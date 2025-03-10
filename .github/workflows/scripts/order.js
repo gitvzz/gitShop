@@ -313,7 +313,7 @@ class OrderAction extends base_action_1.BaseAction {
                     owner: github.context.repo.owner,
                     repo,
                     issue_number: issueNumber,
-                    body: `${data.body}\n\n--- *此回复由${repo}系统自动生成*`
+                    body: `${data.body}\n\n---\n*此回复由${repo}系统自动生成*`
                 });
                 delete data.body;
             }
@@ -359,7 +359,7 @@ class OrderAction extends base_action_1.BaseAction {
             issue(number: ${issueNumber}) {
               id
             }
-            projectV2(number: ${projectNumber}) {
+            project(number: ${projectNumber}) {
               id
             }
           }
