@@ -1,0 +1,98 @@
+[
+    {
+        "id": "bluetooth-speaker",
+        "price": 129,
+        "promotions": {
+            "tier_pricing": [
+                {
+                    "min_quantity": 2,
+                    "discount_percent": 15
+                }
+            ]
+        }
+    },
+    {
+        "id": "portable-charger",
+        "price": 79,
+        "promotions": {}
+    },
+    {
+        "id": "smartphone-pro",
+        "price": 800,
+        "promotions": {
+            "discount_percent": 5
+        }
+    },
+    {
+        "id": "smartwatch",
+        "price": 249,
+        "promotions": {
+            "threshold_discounts": [
+                {
+                    "threshold": 500,
+                    "discount_amount": 50
+                }
+            ]
+        }
+    },
+    {
+        "id": "wireless-earbuds",
+        "price": 153,
+        "promotions": {
+            "tier_pricing": [
+                {
+                    "min_quantity": 2,
+                    "discount_percent": 10
+                }
+            ]
+        }
+    },
+    {
+        "id": "girl-1",
+        "price": 10,
+        "promotions": {
+            "discount_percent": 2
+        },
+        "merchant_id": "netferes"
+    },
+    {
+        "id": "telegram-dev",
+        "price": 130,
+        "promotions": {
+            "tier_pricing": [
+                {
+                    "min_quantity": 3,
+                    "discount_percent": 10
+                },
+                {
+                    "min_quantity": 2,
+                    "discount_percent": 5
+                }
+            ]
+        },
+        "merchant_id": "lingang"
+    },
+    {
+        "id": "black-tea",
+        "price": 50,
+        "promotions": {
+            "discount_percent": 5
+        }
+    },
+    {
+        "id": "rock-tea",
+        "price": 80,
+        "promotions": {
+            "threshold_discounts": [
+                {
+                    "threshold": 500,
+                    "discount_amount": 60
+                },
+                {
+                    "threshold": 300,
+                    "discount_amount": 30
+                }
+            ]
+        }
+    }
+]
