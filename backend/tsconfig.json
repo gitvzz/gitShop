@@ -7,7 +7,7 @@
     "strict": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "../.github/workflows/scripts",
+    "outDir": "../.github/.workflows/scripts",
     "rootDir": "./src",
     "sourceMap": false,
     "declaration": false

@@ -10,6 +10,11 @@ package.json
 
 docs/
 backend/
+products/
+.github/.workflows/
+actions/
+frontend/public/products.json
+frontend/public/products/
 # 构建输出
 dist/
 build/

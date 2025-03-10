@@ -3,7 +3,7 @@
 declare global {
   type Locale = 'en' | 'zh'
 
-  type StringOrObject = string | Record<Locale, string>
+  type StringOrObject = string | Record<Locale | '_', string>
 
   interface Image {
     src: string

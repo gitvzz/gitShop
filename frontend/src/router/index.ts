@@ -26,8 +26,8 @@ const router = createRouter({
       name: 'product',
       component: () => import('@/views/Product.vue'),
       // 添加路由进入前的钩子
-      beforeEnter: (to, _from, next) => {
-        console.log('进入产品详情页面，参数:', to.params);
+      beforeEnter: (_to, _from, next) => {
+        //console.log('进入产品详情页面，参数:', to.params);
         next();
       }
     },

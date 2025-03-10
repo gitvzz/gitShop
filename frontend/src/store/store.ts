@@ -8,7 +8,7 @@ const getValue = (value: StringOrObject, locale: Locale) => {
   if (typeof value === 'string') {
     return value
   }
-  return value[locale] || Object.values(value)[0]
+  return value[locale] || value['_'] || Object.values(value)[0]
 }
 
 export const useStore = defineStore('store', {
@@ -36,6 +36,24 @@ export const useStore = defineStore('store', {
     products(state): Product[] {
       return state.product_full.map(p => {
         const discount_price = p.promotions?.discount_percent ? parseFloat((p.price * (1 - p.promotions.discount_percent! / 100)).toFixed(2)) : undefined
+        const promotions = {} as any
+        if(p.promotions){
+          if(p.promotions.discount_percent){
+            promotions.discount_percent = p.promotions.discount_percent
+          }else if(p.promotions.tier_pricing){
+            promotions.tier_pricing = p.promotions.tier_pricing.map(tp => ({
+              min_quantity: tp.min_quantity,
+              discount_percent: tp.discount_percent,
+              description: getValue(tp.description, state.locale) 
+            }))
+          }else if(p.promotions.threshold_discounts){
+            promotions.threshold_discounts = p.promotions.threshold_discounts.map(td => ({
+              threshold: td.threshold,
+              discount_amount: td.discount_amount,
+              description: getValue(td.description, state.locale)
+            }))
+          }
+        }
         return {
           ...p,
           name: getValue(p.name, state.locale),
@@ -44,17 +62,7 @@ export const useStore = defineStore('store', {
           tags: p.tags ? p.tags.map(t => getValue(t, state.locale)) : undefined,
           main_image: p.images[0],
           discount_price,
-          promotions: p.promotions ? {
-            discount_percent: p.promotions.discount_percent,
-            tier_pricing: p.promotions.tier_pricing ? p.promotions.tier_pricing.map(tp => ({
-              ...tp,
-              description: getValue(tp.description, state.locale)
-            })).filter((_, index) => index < 2).sort((a, b) => b.min_quantity - a.min_quantity) : undefined,
-            threshold_discounts: p.promotions.threshold_discounts ? p.promotions.threshold_discounts.map(td => ({
-              ...td,
-              description: getValue(td.description, state.locale)
-            })).filter((_, index) => index < 2).sort((a, b) => b.threshold - a.threshold) : undefined,
-          } : undefined
+          promotions
         }
       })
     },
@@ -68,19 +76,12 @@ export const useStore = defineStore('store', {
       }
       this.loading = true
       try {
-        const categoriesRes = await axios.get(`${import.meta.env.BASE_URL}products/index.json`)
-        for (const category of categoriesRes.data) {
-          const productsRes = await axios.get(`${import.meta.env.BASE_URL}products/${category.id}.json`)
-          if (productsRes.data) {
-            const products = productsRes.data.filter((p:any) => p.images && p.images.length > 0).map((product: Product) => {
-              const images = product.images.map(i => typeof i === 'string' ? { src: i, alt: product.name } : Object.assign({ alt: product.name }, i))
-              return { ...product, category_id: category.id, images }
-            })
-            if (products.length > 0) {
-              this.product_full.push(...products)
-              this.category_full.push(category)
-            }
-          }
+        const res = await axios.get(`${import.meta.env.BASE_URL}products.json`)
+        for(const category of res.data){
+          const products = category.products
+          delete category.products
+          this.product_full.push(...products)
+          this.category_full.push(category)
         }
         const cartStore = useCartStore()
         cartStore.load(id => this.products.some(p => p.id === id))
