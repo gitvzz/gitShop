@@ -8,7 +8,8 @@ bower_components/
 package-lock.json
 package.json
 
-
+docs/
+backend/
 # 构建输出
 dist/
 build/
