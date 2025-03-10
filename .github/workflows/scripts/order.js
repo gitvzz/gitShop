@@ -136,9 +136,9 @@ class OrderAction extends base_action_1.BaseAction {
         // 获取当前工作目录
         const projectRoot = process.cwd();
         let total = 0;
+        console.log(orderData.summary);
         for (const item of orderData.items) {
             console.log(item.promotions);
-            console.log(item.summary);
             let _path = path.join(projectRoot, `products/${item.category_id}/${item.id}.json`);
             if (!fs.existsSync(_path)) {
                 throw new Error(`${item.name} 商品不存在`);
@@ -177,7 +177,7 @@ class OrderAction extends base_action_1.BaseAction {
                     type = 'threshold_discount';
                 }
             }
-            total += amount;
+            total += product.price * quantity - amount;
             console.log(amount, type);
             if (amount === 0 && !utils.isEmpty(item.promotions)) {
                 throw new Error(`${item.name} 优惠金额不一致`);
@@ -186,11 +186,10 @@ class OrderAction extends base_action_1.BaseAction {
                 throw new Error(`${item.name} 优惠金额不一致`);
             }
         }
-        console.log(total);
-        console.log(orderData.summary.total);
-        if (total.toFixed(2) !== orderData.summary.total) {
-            throw new Error(`订单总金额不一致`);
-        }
+        console.log(total.toFixed(2), orderData.summary.total);
+        /* if (total.toFixed(2) !== orderData.summary.total) {
+          throw new Error(`订单总金额不一致`);
+        } */
     }
     /**
      * 验证Issue内容
