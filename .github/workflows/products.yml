@@ -1,4 +1,4 @@
-name: 同步商品价格
+name: 同步商品数据及摘要
 
 on:
   push:
@@ -36,7 +36,7 @@ jobs:
       
       - name: 同步商品信息及摘要 📊
         run: |
-        
+
           node .github/workflows/scripts/products.js
           
         env:
