@@ -29,7 +29,6 @@ jobs:
           
       - name: 处理Issue
         id: handle_issue
-        uses: actions/github-script@v6
         env:
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
           WALLET_MNEMONIC: ${{ secrets.WALLET_MNEMONIC }}
