@@ -135,13 +135,15 @@ class OrderAction extends base_action_1.BaseAction {
         //console.log(data);
         // 获取当前工作目录
         const projectRoot = process.cwd();
+        let total = 0;
         for (const item of orderData.items) {
+            console.log(item.promotions);
+            console.log(item.summary);
             let _path = path.join(projectRoot, `products/${item.category_id}/${item.id}.json`);
             if (!fs.existsSync(_path)) {
                 throw new Error(`${item.name} 商品不存在`);
             }
             const product = JSON.parse(fs.readFileSync(_path, 'utf8'));
-            console.log(product);
             if (product.merchant_id !== item.merchant_id) {
                 throw new Error(`${item.name} 商户不一致`);
             }
@@ -152,6 +154,7 @@ class OrderAction extends base_action_1.BaseAction {
             let type = '';
             const quantity = item.quantity;
             const { discount_percent, tier_pricing, threshold_discounts } = product.promotions;
+            console.log(discount_percent, tier_pricing, threshold_discounts);
             if (discount_percent) {
                 amount = (product.price * discount_percent / 100) * quantity;
                 type = 'discount_percent';
@@ -174,12 +177,19 @@ class OrderAction extends base_action_1.BaseAction {
                     type = 'threshold_discount';
                 }
             }
+            total += amount;
+            console.log(amount, type);
             if (amount === 0 && !utils.isEmpty(item.promotions)) {
                 throw new Error(`${item.name} 优惠金额不一致`);
             }
-            else if (amount.toFixed(2) !== item.amount || type !== item.type) {
+            else if (amount.toFixed(2) !== item.promotions.amount || type !== item.promotions.type) {
                 throw new Error(`${item.name} 优惠金额不一致`);
             }
+        }
+        console.log(total);
+        console.log(orderData.summary.total);
+        if (total.toFixed(2) !== orderData.summary.total) {
+            throw new Error(`订单总金额不一致`);
         }
     }
     /**
@@ -190,12 +200,14 @@ class OrderAction extends base_action_1.BaseAction {
         const title = issue.title || '';
         const body = issue.body || '';
         if (!/^Order ORDER-\d{8}-[A-Z0-9]{6}$/.test(title)) {
+            this.fail(`订单标题不正确`);
             await this.createComment(issue.number, { body: '订单标题不正确', state: 'closed', labels: ['invalid'] });
             return false;
         }
         const encryptedDataRegex = /\[ENCRYPTED_ORDER_DATA\]\s*([\s\S]*?)\s*\[\/ENCRYPTED_ORDER_DATA\]/;
         const encryptedDataMatch = body.match(encryptedDataRegex);
         if (!encryptedDataMatch) {
+            this.fail(`订单内容不正确`);
             await this.createComment(issue.number, { body: '订单内容不正确', state: 'closed', labels: ['invalid'] });
             return false;
         }
@@ -209,6 +221,7 @@ class OrderAction extends base_action_1.BaseAction {
             signatureMatch = calculatedSignature === signature;
         }
         if (!signatureMatch) {
+            this.fail(`订单签名无效`);
             await this.createComment(issue.number, { body: '订单签名无效', state: 'closed', labels: ['invalid'] });
             return false;
         }
@@ -219,7 +232,8 @@ class OrderAction extends base_action_1.BaseAction {
                 utils.decrypt(shippingDataMatch[1].trim(), process.env.PRIVATE_KEY);
             }
             catch (e) {
-                await this.createComment(issue.number, { body: `收货信息解密失败:${e.message}`, state: 'closed', labels: ['invalid'] });
+                this.fail(`收货信息解密失败:${e.message}`);
+                await this.createComment(issue.number, { body: `收货信息解密失败`, state: 'closed', labels: ['invalid'] });
                 return false;
             }
         }
@@ -231,11 +245,13 @@ class OrderAction extends base_action_1.BaseAction {
                 this.validateOrderData(orderData);
             }
             catch (e) {
+                this.fail(`订单数据验证失败:${e.message}`);
                 await this.createComment(issue.number, { body: `订单数据验证失败:${e.message}`, state: 'closed', labels: ['invalid'] });
                 return false;
             }
         }
         catch (e) {
+            this.fail(`订单解密失败:${e.message}`);
             await this.createComment(issue.number, { body: `订单解密失败:${e.message}`, state: 'closed', labels: ['invalid'] });
             return false;
         }
