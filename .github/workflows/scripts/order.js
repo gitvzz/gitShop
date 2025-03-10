@@ -359,7 +359,7 @@ class OrderAction extends base_action_1.BaseAction {
             issue(number: ${issueNumber}) {
               id
             }
-            project(number: ${projectNumber}) {
+            projectV2(number: ${projectNumber}) {
               id
             }
           }
@@ -368,14 +368,12 @@ class OrderAction extends base_action_1.BaseAction {
             const response = await this.octokit.graphql(query);
             console.log('addIssueToProject', response);
             const issueId = response.repository.issue.id;
-            const projectId = response.repository.projectV2.id;
             console.log('issueId', issueId);
-            console.log('projectId', projectId);
             // 2. 将Issue添加到项目中
             const mutation = `
         mutation {
           addProjectV2ItemById(input: {
-            projectId: "${projectId}",
+            projectId: "${projectNumber}",
             contentId: "${issueId}"
           }) {
             item {
@@ -384,7 +382,8 @@ class OrderAction extends base_action_1.BaseAction {
           }
         }
       `;
-            await this.octokit.graphql(mutation);
+            const res = await this.octokit.graphql(mutation);
+            console.log('addIssueToProject', res);
             this.log(`已将Issue #${issueNumber}添加到项目 #${projectNumber}`);
         }
         catch (error) {
@@ -424,7 +423,7 @@ class OrderAction extends base_action_1.BaseAction {
         replyBody += `- 收到付款后，我们将尽快处理您的订单\n`;
         replyBody += `- 如有任何问题，请在此Issue下留言`;
         await this.createComment(issue.number, { body: replyBody, labels: ['order-processing'] });
-        await this.addIssueToProject(issue.number, 1);
+        await this.addIssueToProject(issue.number, 4);
     }
     /**
      * 处理评论逻辑
