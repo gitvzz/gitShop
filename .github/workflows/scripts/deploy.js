@@ -113,7 +113,7 @@ class DeployAction extends base_action_1.BaseAction {
      */
     async copyProductsData() {
         this.log('复制产品数据到构建输出目录...');
-        const sourceDir = path.resolve(process.cwd(), 'products/_.json');
+        const sourceDir = path.resolve(process.cwd(), '..', 'products/_.json');
         const targetDir = path.resolve(process.cwd(), 'dist/products.json');
         // 检查源目录是否存在
         if (!(0, fs_1.existsSync)(sourceDir)) {
