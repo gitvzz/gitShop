@@ -12,6 +12,7 @@ permissions:
   pull-requests: write
   contents: write
   actions: write
+  projects: write
 
 jobs:
   process-order:

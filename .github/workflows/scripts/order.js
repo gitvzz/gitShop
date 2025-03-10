@@ -368,12 +368,13 @@ class OrderAction extends base_action_1.BaseAction {
             const response = await this.octokit.graphql(query);
             console.log('addIssueToProject', response);
             const issueId = response.repository.issue.id;
-            console.log('issueId', issueId);
+            const projectId = response.user.projectV2 ? response.user.projectV2.id : projectNumber;
+            console.log('issueId', issueId, projectId);
             // 2. 将Issue添加到项目中
             const mutation = `
         mutation {
           addProjectV2ItemById(input: {
-            projectId: "${projectNumber}",
+            projectId: "${projectId}",
             contentId: "${issueId}"
           }) {
             item {
@@ -423,7 +424,7 @@ class OrderAction extends base_action_1.BaseAction {
         replyBody += `- 收到付款后，我们将尽快处理您的订单\n`;
         replyBody += `- 如有任何问题，请在此Issue下留言`;
         await this.createComment(issue.number, { body: replyBody, labels: ['order-processing'] });
-        await this.addIssueToProject(issue.number, 4);
+        await this.addIssueToProject(issue.number, 5);
     }
     /**
      * 处理评论逻辑
