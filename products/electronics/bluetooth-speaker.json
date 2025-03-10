@@ -1,0 +1,70 @@
+{
+  "id": "bluetooth-speaker",
+  "name": {
+    "en": "Bluetooth Speaker",
+    "zh": "蓝牙音箱"
+  },
+  "description": {
+    "en": "Portable Bluetooth speaker with 360° sound, deep bass and 12-hour battery life. Waterproof design makes it perfect for outdoor activities, beach trips and pool parties.",
+    "zh": "便携式蓝牙音箱，具有360°环绕声、深沉低音和12小时电池续航。防水设计使其完美适合户外活动、海滩旅行和泳池派对。"
+  },
+  "price": 129,
+  "currency": "USDT",
+  "images": [
+    {
+      "src": "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?q=80&w=2936&auto=format&fit=crop",
+      "alt": "Portable bluetooth speaker"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1589003077984-894e133dabab?q=80&w=2787&auto=format&fit=crop",
+      "alt": "Bluetooth speaker by the pool"
+    }
+  ],
+  "requires_shipping": true,
+  "features": [
+    {
+      "en": "360° Sound",
+      "zh": "360°环绕声"
+    },
+    {
+      "en": "12-hour Battery Life",
+      "zh": "12小时电池续航"
+    },
+    {
+      "en": "Waterproof Design",
+      "zh": "防水设计"
+    },
+    {
+      "en": "Bluetooth 5.0",
+      "zh": "蓝牙5.0"
+    },
+    {
+      "en": "Built-in Microphone",
+      "zh": "内置麦克风"
+    }
+  ],
+  "stock": 180,
+  "rating": 4.8,
+  "reviews": 64,
+  "tags": [
+    "音箱",
+    "蓝牙",
+    "防水"
+  ],
+  "promotions": {
+    "tier_pricing": [
+      {
+        "min_quantity": 2,
+        "discount_percent": 15,
+        "description": {
+          "zh": "购买2个或以上享85折",
+          "en": "Buy 2 or more get 15% off"
+        }
+      }
+    ]
+  },
+  "related_products": [
+    "smartphone-pro",
+    "portable-charger"
+  ]
+}

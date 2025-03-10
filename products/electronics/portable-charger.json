@@ -1,0 +1,54 @@
+{
+  "id": "portable-charger",
+  "name": {
+    "en": "Portable Power Bank",
+    "zh": "便携式充电宝"
+  },
+  "description": {
+    "en": "High-capacity 20000mAh portable power bank with fast charging technology. Charge multiple devices simultaneously with USB-C and USB-A ports. Perfect for travel and daily use.",
+    "zh": "大容量20000mAh便携式充电宝，配备快速充电技术。通过USB-C和USB-A端口同时为多个设备充电。完美适合旅行和日常使用。"
+  },
+  "price": 79,
+  "currency": "USDT",
+  "images": [
+    {
+      "src": "https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?q=80&w=2787&auto=format&fit=crop",
+      "alt": "Portable power bank with connected cable"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1618410320928-25228d811631?q=80&w=2940&auto=format&fit=crop",
+      "alt": "Power bank charging smartphone"
+    }
+  ],
+  "requires_shipping": true,
+  "features": [
+    {
+      "en": "20000mAh Capacity",
+      "zh": "20000mAh容量"
+    },
+    {
+      "en": "Fast Charging",
+      "zh": "快速充电"
+    },
+    {
+      "en": "Multiple Ports",
+      "zh": "多个端口"
+    },
+    {
+      "en": "Compact Design",
+      "zh": "紧凑设计"
+    }
+  ],
+  "stock": 300,
+  "rating": 4.5,
+  "reviews": 95,
+  "tags": [
+    "充电宝",
+    "便携",
+    "快充"
+  ],
+  "related_products": [
+    "smartphone-pro",
+    "wireless-earbuds"
+  ]
+}

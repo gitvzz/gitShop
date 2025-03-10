@@ -1,0 +1,61 @@
+{
+  "id": "smartphone-pro",
+  "name": {
+    "en": "Smartphone Pro",
+    "zh": "智能手机Pro"
+  },
+  "description": {
+    "en": "Latest flagship smartphone with advanced camera system, powerful processor and all-day battery life. Features a stunning 6.7-inch OLED display and 5G connectivity.",
+    "zh": "最新旗舰智能手机，配备先进的相机系统、强大的处理器和全天候电池续航。拥有惊艳的6.7英寸OLED显示屏和5G连接功能。"
+  },
+  "price": 800,
+  "currency": "USDT",
+  "images": [
+    {
+      "src": "https://images.unsplash.com/photo-1598327105666-5b89351aff97?q=80&w=2942&auto=format&fit=crop",
+      "alt": "Modern smartphone with dark screen on gradient background"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1605236453806-6ff36851218e?q=80&w=2274&auto=format&fit=crop",
+      "alt": "Smartphone showing home screen with apps"
+    }
+  ],
+  "requires_shipping": true,
+  "features": [
+    {
+      "en": "6.7-inch OLED Display",
+      "zh": "6.7英寸OLED显示屏"
+    },
+    {
+      "en": "Triple Camera System",
+      "zh": "三摄像头系统"
+    },
+    {
+      "en": "5G Connectivity",
+      "zh": "5G连接"
+    },
+    {
+      "en": "All-day Battery Life",
+      "zh": "全天候电池续航"
+    },
+    {
+      "en": "Water and Dust Resistant",
+      "zh": "防水防尘"
+    }
+  ],
+  "stock": 100,
+  "rating": 4.9,
+  "reviews": 128,
+  "tags": [
+    "智能手机",
+    "5G",
+    "旗舰"
+  ],
+  "promotions": {
+    "discount_percent": 5
+  },
+  "related_products": [
+    "wireless-earbuds",
+    "smartphone-case"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "id": "tea",
+  "name": {
+    "en": "Tea",
+    "zh": "茶叶"
+  },
+  "description": {
+    "zh": "精选优质茶叶，源自天然茶园",
+    "en": "Select high-quality tea, sourced from natural tea gardens"
+  },
+  "image": "/assets/categories/tea.png"
+}

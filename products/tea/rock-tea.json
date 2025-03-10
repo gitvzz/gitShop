@@ -1,0 +1,71 @@
+{
+  "id": "rock-tea",
+  "name": {
+    "en": "Rock Tea",
+    "zh": "武夷岩茶"
+  },
+  "description": {
+    "en": "Produced in the Wuyi Mountains of Fujian, this rock tea has a rich flavor and long-lasting aroma. It is made using traditional craftsmanship, preserving the unique characteristics of Wuyi rock tea.",
+    "zh": "产自福建武夷山的优质岩茶，口感醇厚，香气持久。采用传统工艺精制而成，保留了岩茶独特的岩韵和香气。"
+  },
+  "price": 80,
+  "currency": "USDT",
+  "images": [
+    {
+      "src": "https://img1.baidu.com/it/u=2288590788,3996478196&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500",
+      "alt": "Two each of gray, white, and black shirts laying flat."
+    },
+    {
+      "src": "https://youimg1.c-ctrip.com/target/1002180000014khzk43E1.jpg",
+      "alt": "Model wearing plain black basic tee."
+    },
+    {
+      "src": "https://shoplineimg.com/617f4eca0fbbdc00389f1e14/64ec87f916da4700117734b3/800x.jpg?",
+      "alt": "Model wearing plain gray basic tee."
+    }
+  ],
+  "requires_shipping": true,
+  "features": [
+    "产自武夷山核心产区",
+    {
+      "en": "Traditional craftsmanship",
+      "zh": "传统工艺制作"
+    },
+    {
+      "en": "Unique岩韵",
+      "zh": "独特岩韵"
+    },
+    "耐泡度高",
+    "250g精美礼盒装"
+  ],
+  "stock": 50,
+  "rating": 4.8,
+  "reviews": 36,
+  "tags": [
+    "岩茶",
+    "乌龙茶",
+    "礼盒"
+  ],
+  "promotions": {
+    "threshold_discounts": [
+      {
+        "threshold": 300,
+        "discount_amount": 30,
+        "description": "满300减30"
+      },
+      {
+        "threshold": 500,
+        "discount_amount": 60,
+        "description": "满500减60"
+      },
+      {
+        "threshold": 1000,
+        "discount_amount": 100,
+        "description": "满1000减100"
+      }
+    ]
+  },
+  "related_products": [
+    "black-tea"
+  ]
+}

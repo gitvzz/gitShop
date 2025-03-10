@@ -1,0 +1,66 @@
+{
+  "id": "wireless-earbuds",
+  "name": {
+    "en": "Wireless Earbuds",
+    "zh": "无线耳机"
+  },
+  "description": {
+    "en": "Premium wireless earbuds with active noise cancellation, crystal clear sound quality and 24-hour battery life with charging case. Perfect for music, calls and workouts.",
+    "zh": "高端无线耳机，配备主动降噪功能，水晶般清晰的音质，充电盒可提供24小时电池续航。完美适合音乐、通话和运动使用。"
+  },
+  "price": 153,
+  "currency": "USDT",
+  "images": [
+    {
+      "src": "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?q=80&w=2832&auto=format&fit=crop",
+      "alt": "White wireless earbuds with charging case"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1606220588913-b3aacb4d2f37?q=80&w=2940&auto=format&fit=crop",
+      "alt": "Wireless earbuds in ear"
+    }
+  ],
+  "requires_shipping": true,
+  "features": [
+    {
+      "en": "Active Noise Cancellation",
+      "zh": "主动降噪"
+    },
+    {
+      "en": "24-hour Battery Life",
+      "zh": "24小时电池续航"
+    },
+    {
+      "en": "Water Resistant",
+      "zh": "防水设计"
+    },
+    {
+      "en": "Touch Controls",
+      "zh": "触控操作"
+    }
+  ],
+  "stock": 200,
+  "rating": 4.7,
+  "reviews": 86,
+  "tags": [
+    "耳机",
+    "无线",
+    "降噪"
+  ],
+  "promotions": {
+    "tier_pricing": [
+      {
+        "min_quantity": 2,
+        "discount_percent": 10,
+        "description": {
+          "zh": "购买2个或以上享9折",
+          "en": "Buy 2 or more get 10% off"
+        }
+      }
+    ]
+  },
+  "related_products": [
+    "smartphone-pro",
+    "smartwatch"
+  ]
+}

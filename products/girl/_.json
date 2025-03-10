@@ -1,0 +1,9 @@
+{
+  "id": "girl",
+  "name": "GIRL",
+  "description": "美女套图",
+  "image": {
+    "src": "https://cdn.pixabay.com/photo/2022/04/06/11/30/girl-7115394_1280.jpg",
+    "alt": "girl"
+  }
+}

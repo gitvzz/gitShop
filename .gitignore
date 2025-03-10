@@ -10,7 +10,7 @@ package.json
 
 docs/
 backend/
-products/
+
 .github/.workflows/
 actions/
 frontend/public/products.json

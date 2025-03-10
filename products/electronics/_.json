@@ -1,0 +1,12 @@
+{
+  "id": "electronics",
+  "name": {
+    "en": "Electronics",
+    "zh": "数码电子"
+  },
+  "description": {
+    "zh": "精选优质数码电子产品，提升您的科技生活体验",
+    "en": "Selected high-quality electronic products to enhance your tech life experience"
+  },
+  "image": "/assets/categories/electronics.png"
+}

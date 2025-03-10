@@ -1,0 +1,70 @@
+{
+  "id": "smartwatch",
+  "name": {
+    "en": "Smart Watch",
+    "zh": "智能手表"
+  },
+  "description": {
+    "en": "Advanced smartwatch with health monitoring, fitness tracking and smartphone notifications. Features a bright AMOLED display and up to 14 days of battery life.",
+    "zh": "先进的智能手表，具有健康监测、健身追踪和智能手机通知功能。配备明亮的AMOLED显示屏，电池续航可达14天。"
+  },
+  "price": 249,
+  "currency": "USDT",
+  "images": [
+    {
+      "src": "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?q=80&w=2872&auto=format&fit=crop",
+      "alt": "Smart watch on wrist"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?q=80&w=2127&auto=format&fit=crop",
+      "alt": "Smart watch showing fitness tracking"
+    }
+  ],
+  "requires_shipping": true,
+  "features": [
+    {
+      "en": "Health Monitoring",
+      "zh": "健康监测"
+    },
+    {
+      "en": "Fitness Tracking",
+      "zh": "健身追踪"
+    },
+    {
+      "en": "14-day Battery Life",
+      "zh": "14天电池续航"
+    },
+    {
+      "en": "Water Resistant",
+      "zh": "防水设计"
+    },
+    {
+      "en": "Smartphone Notifications",
+      "zh": "智能手机通知"
+    }
+  ],
+  "stock": 150,
+  "rating": 4.6,
+  "reviews": 72,
+  "tags": [
+    "智能手表",
+    "健康",
+    "健身"
+  ],
+  "promotions": {
+    "threshold_discounts": [
+      {
+        "threshold": 500,
+        "discount_amount": 50,
+        "description": {
+          "zh": "满500减50",
+          "en": "Get $50 off when you spend $500"
+        }
+      }
+    ]
+  },
+  "related_products": [
+    "smartphone-pro",
+    "wireless-earbuds"
+  ]
+}

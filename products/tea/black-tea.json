@@ -1,0 +1,32 @@
+{
+  "id": "black-tea",
+  "name": "正山小种红茶",
+  "description": "来自福建武夷山的正山小种红茶，采用优质茶叶嫩芽，经过传统工艺烘焙而成。具有独特的松烟香和甜香，口感醇厚回甘。",
+  "price": 50,
+  "currency": "USDT",
+  "images": [
+    "/assets/products/black-tea.png"
+  ],
+  "requires_shipping": true,
+  "features": [
+    "正宗武夷山原产",
+    "松烟熏制工艺",
+    "独特松香味",
+    "甜香醇厚",
+    "200g传统竹篓装"
+  ],
+  "stock": 80,
+  "rating": 4.7,
+  "reviews": 42,
+  "tags": [
+    "红茶",
+    "小种",
+    "竹篓"
+  ],
+  "promotions": {
+    "discount_percent": 5
+  },
+  "related_products": [
+    "rock-tea"
+  ]
+}
