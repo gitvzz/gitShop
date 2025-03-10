@@ -365,10 +365,11 @@ class OrderAction extends base_action_1.BaseAction {
           }
         }
       `;
+            console.log('query', query);
             const response = await this.octokit.graphql(query);
             console.log('addIssueToProject', response);
             const issueId = response.repository.issue.id;
-            const projectId = response.user.projectV2 ? response.user.projectV2.id : projectNumber;
+            const projectId = response.repository.projectV2 ? response.repository.projectV2.id : projectNumber;
             console.log('issueId', issueId, projectId);
             // 2. 将Issue添加到项目中
             const mutation = `
