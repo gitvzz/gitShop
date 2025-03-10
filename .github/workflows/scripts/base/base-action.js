@@ -45,7 +45,15 @@ class BaseAction {
      * 构造函数
      */
     constructor() {
-        const token = core.getInput('GITHUB_TOKEN', { required: true });
+        // 尝试从输入参数获取token
+        let token = core.getInput('GITHUB_TOKEN', { required: false });
+        // 如果输入参数中没有token，则尝试从环境变量获取
+        if (!token) {
+            token = process.env.GITHUB_TOKEN || '';
+            if (!token) {
+                throw new Error('未提供GITHUB_TOKEN，请通过输入参数或环境变量提供');
+            }
+        }
         this.octokit = github.getOctokit(token);
         this.context = github.context;
     }

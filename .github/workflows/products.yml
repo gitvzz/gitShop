@@ -40,5 +40,5 @@ jobs:
 
           node .github/workflows/scripts/products.js
           
-        with:
+        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
