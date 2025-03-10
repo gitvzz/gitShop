@@ -114,14 +114,24 @@ class DeployAction extends base_action_1.BaseAction {
     async copyProductsData() {
         this.log('复制产品数据到构建输出目录...');
         const sourceDir = path.resolve(process.cwd(), '..', 'products/_.json');
+        const distDir = path.resolve(process.cwd(), 'dist');
         const targetDir = path.resolve(process.cwd(), 'dist/products.json');
         // 检查源目录是否存在
         if (!(0, fs_1.existsSync)(sourceDir)) {
             this.warn(`警告：${sourceDir} 不存在！`);
             return;
         }
-        (0, fs_1.copyFileSync)(sourceDir, targetDir);
-        this.log(`复制文件: ${sourceDir} -> ${targetDir}`);
+        if (!(0, fs_1.existsSync)(distDir)) {
+            this.log(`创建目录: ${distDir}`);
+            (0, fs_1.mkdirSync)(distDir);
+        }
+        try {
+            (0, fs_1.copyFileSync)(sourceDir, targetDir);
+            this.log(`复制文件: ${sourceDir} -> ${targetDir}`);
+        }
+        catch (error) {
+            this.fail(`复制文件失败: ${error instanceof Error ? error.message : String(error)}`);
+        }
     }
 }
 exports.DeployAction = DeployAction;
