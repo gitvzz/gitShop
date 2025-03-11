@@ -82,10 +82,10 @@ class OrderAction extends base_action_1.BaseAction {
         // 验证Issue内容
         const orderData = await this.validateIssueContent(issue);
         if (orderData) {
-            // 如果验证通过，保存原始内容并添加标签
-            await this.saveOriginalContent(issue);
             // 处理订单逻辑
             await this.processOrder(issue, orderData);
+            // 如果验证通过，保存原始内容并添加标签
+            await this.saveOriginalContent(issue);
         }
     }
     /**
@@ -97,6 +97,7 @@ class OrderAction extends base_action_1.BaseAction {
             this.fail('无法获取Issue信息');
             return;
         }
+        console.log(github.context.payload);
         this.log(`处理编辑的Issue: #${issue.number} - ${issue.title}`);
         // 检查Issue是否已经被验证
         const isRestored = await this.restoreOriginalContent(issue);
@@ -108,10 +109,10 @@ class OrderAction extends base_action_1.BaseAction {
             // 如果Issue尚未被验证，重新验证
             const orderData = await this.validateIssueContent(issue);
             if (orderData) {
-                // 如果验证通过，保存原始内容并添加标签
-                await this.saveOriginalContent(issue);
                 // 处理订单逻辑
                 await this.processOrder(issue, orderData);
+                // 如果验证通过，保存原始内容并添加标签
+                await this.saveOriginalContent(issue);
             }
         }
     }
@@ -266,7 +267,7 @@ class OrderAction extends base_action_1.BaseAction {
             message: `保存Issue #${issueNumber}的原始内容`,
             content
         });
-        console.log('保存Issue #${issueNumber}的原始内容', res.data);
+        //console.log('保存Issue #${issueNumber}的原始内容', res.data)
     }
     /**
      * 恢复Issue的原始内容
@@ -489,7 +490,7 @@ class OrderAction extends base_action_1.BaseAction {
         replyBody += `- 收到付款后，我们将尽快处理您的订单\n`;
         replyBody += `- 如有任何问题，请在此Issue下留言`;
         await this.createComment(issue.number, { body: replyBody, labels: ['order-processing'] });
-        await this.addIssueToProject(issue.number, 5);
+        //await this.addIssueToProject(issue.number, 5);
     }
     /**
      * 处理评论逻辑
