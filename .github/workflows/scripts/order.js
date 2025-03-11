@@ -184,7 +184,7 @@ class OrderAction extends base_action_1.BaseAction {
             if (amount === 0 && !utils.isEmpty(item.promotions)) {
                 throw new Error(`${item.name} 优惠金额不一致!`);
             }
-            else if (amount > 0 && amount.toFixed(2) !== item.promotions.amount || type !== item.promotions.type) {
+            else if (amount > 0 && (amount.toFixed(2) !== item.promotions.amount || type !== item.promotions.type)) {
                 throw new Error(`${item.name} 优惠金额不一致`);
             }
         }
