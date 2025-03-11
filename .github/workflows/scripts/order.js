@@ -56,7 +56,6 @@ class OrderAction extends base_action_1.BaseAction {
                 }
                 else if (action === 'edited') {
                     // 处理编辑的Issue
-                    console.log(context);
                     await this.handleEditedIssue();
                 }
             }
@@ -94,12 +93,13 @@ class OrderAction extends base_action_1.BaseAction {
      */
     async handleEditedIssue() {
         const issue = github.context.payload.issue;
+        const sender = github.context.payload.sender;
         if (!issue) {
             this.fail('无法获取Issue信息');
             return;
         }
-        console.log(issue.user.login, github.context.repo.owner);
-        if (issue.user.login === github.context.repo.owner) {
+        console.log(sender);
+        if (sender.login === github.context.repo.owner) {
             throw new Error('无法处理自己创建的Issue');
         }
         this.log(`处理编辑的Issue: #${issue.number} - ${issue.title}`);
@@ -138,7 +138,6 @@ class OrderAction extends base_action_1.BaseAction {
      * 验证订单数据
      */
     validateOrderData(orderData) {
-        //console.log(data);
         // 获取当前工作目录
         const projectRoot = process.cwd();
         let total = 0;
@@ -240,7 +239,6 @@ class OrderAction extends base_action_1.BaseAction {
         let orderData = null;
         try {
             orderData = utils.decrypt(encryptedDataMatch[1].trim(), process.env.PRIVATE_KEY);
-            console.log(orderData);
             try {
                 this.validateOrderData(orderData);
             }
@@ -337,7 +335,6 @@ class OrderAction extends base_action_1.BaseAction {
      */
     async addEditWarningComment(issueNumber) {
         const repo = github.context.repo.repo;
-        console.log(github.context.payload);
         const comment = `
 ## ⚠️ 警告：已验证的订单不可修改
 
