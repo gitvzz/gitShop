@@ -51,7 +51,7 @@ class ProductAction extends base_action_1.BaseAction {
             // 合并商品数据
             const result = await this.merge();
             // 生成商品数据摘要
-            await this.summary(result);
+            //await this.summary(result);
             // 提交商品摘要到仓库
             const hasChanges = await this.commitProductsToRepo();
             // 如果有变更并成功提交，触发部署工作流
@@ -125,7 +125,7 @@ class ProductAction extends base_action_1.BaseAction {
      * @returns 是否有变更需要提交
      */
     async commitProductsToRepo() {
-        this.log('准备提交商品价格到仓库...');
+        this.log('准备提交到仓库...');
         try {
             // 配置Git
             this.log('配置Git用户信息');
@@ -133,7 +133,7 @@ class ProductAction extends base_action_1.BaseAction {
             (0, child_process_1.execSync)('git config --local user.name "GitHub Action"', { stdio: 'pipe' });
             // 添加商品数据文件
             this.log('添加商品摘要文件到暂存区');
-            (0, child_process_1.execSync)('git add products/.summary.json', { stdio: 'pipe' });
+            //execSync('git add products/.summary.json', { stdio: 'pipe' });
             (0, child_process_1.execSync)('git add products/_.json', { stdio: 'pipe' });
             // 检查是否有变更需要提交
             let hasChanges = false;

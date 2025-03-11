@@ -356,10 +356,12 @@ class OrderAction extends base_action_1.BaseAction {
             const query = `
         query {
           user(login: "${github.context.repo.owner}") {
-            issue(number: ${issueNumber}) {
+            projectV2(number: ${projectNumber}) {
               id
             }
-            projectV2(number: ${projectNumber}) {
+          }
+          repository(owner: "${github.context.repo.owner}", name: "${github.context.repo.repo}") {
+            issue(number: ${issueNumber}) {
               id
             }
           }
@@ -369,7 +371,7 @@ class OrderAction extends base_action_1.BaseAction {
             const response = await this.octokit.graphql(query);
             console.log('addIssueToProject', response);
             const issueId = response.repository.issue.id;
-            const projectId = response.repository.projectV2 ? response.repository.projectV2.id : projectNumber;
+            const projectId = response.user.projectV2.id;
             console.log('issueId', issueId, projectId);
             // 2. 将Issue添加到项目中
             const mutation = `
