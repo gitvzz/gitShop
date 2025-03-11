@@ -98,6 +98,7 @@ class OrderAction extends base_action_1.BaseAction {
             this.fail('无法获取Issue信息');
             return;
         }
+        console.log(issue.user.login, github.context.repo.owner);
         if (issue.user.login === github.context.repo.owner) {
             throw new Error('无法处理自己创建的Issue');
         }
