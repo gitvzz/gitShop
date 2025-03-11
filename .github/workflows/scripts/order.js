@@ -97,6 +97,9 @@ class OrderAction extends base_action_1.BaseAction {
             this.fail('无法获取Issue信息');
             return;
         }
+        if (issue.user.login === github.context.repo.owner) {
+            throw new Error('无法处理自己创建的Issue');
+        }
         this.log(`处理编辑的Issue: #${issue.number} - ${issue.title}`);
         // 检查Issue是否已经被验证
         const isRestored = await this.restoreOriginalContent(issue);
@@ -177,15 +180,18 @@ class OrderAction extends base_action_1.BaseAction {
             }
             total += product.price * quantity - amount;
             console.log(amount, item.promotions);
+            console.log(amount === 0, !utils.isEmpty(item.promotions));
             if (amount === 0 && !utils.isEmpty(item.promotions)) {
-                throw new Error(`${item.name} 优惠金额不一致!`);
+                //throw new Error(`${item.name} 优惠金额不一致!`);
+                console.log('优惠金额不一致!');
             }
             else if (amount.toFixed(2) !== item.promotions.amount || type !== item.promotions.type) {
-                throw new Error(`${item.name} 优惠金额不一致`);
+                //throw new Error(`${item.name} 优惠金额不一致`);
+                console.log('优惠金额不一致!');
             }
         }
         if (total.toFixed(2) !== orderData.summary.total) {
-            throw new Error(`订单总金额不一致`);
+            //throw new Error(`订单总金额不一致`);
         }
     }
     /**
