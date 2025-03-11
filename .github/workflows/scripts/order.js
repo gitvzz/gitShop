@@ -97,7 +97,6 @@ class OrderAction extends base_action_1.BaseAction {
             this.fail('无法获取Issue信息');
             return;
         }
-        console.log(github.context.payload);
         this.log(`处理编辑的Issue: #${issue.number} - ${issue.title}`);
         // 检查Issue是否已经被验证
         const isRestored = await this.restoreOriginalContent(issue);
@@ -334,6 +333,7 @@ class OrderAction extends base_action_1.BaseAction {
      */
     async addEditWarningComment(issueNumber) {
         const repo = github.context.repo.repo;
+        console.log(github.context.payload);
         const comment = `
 ## ⚠️ 警告：已验证的订单不可修改
 
