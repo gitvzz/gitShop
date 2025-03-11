@@ -351,6 +351,7 @@ class OrderAction extends base_action_1.BaseAction {
         this.log(`已添加编辑警告评论到Issue #${issueNumber}`);
     }
     async addIssueToProject(issueNumber, projectNumber) {
+        // 使用此功能需要设置有权限的token
         try {
             // 1. 获取项目ID和Issue的Node ID (需要使用GraphQL API)
             const query = `
@@ -367,12 +368,9 @@ class OrderAction extends base_action_1.BaseAction {
           }
         }
       `;
-            console.log('query', query);
             const response = await this.octokit.graphql(query);
-            console.log('addIssueToProject', response);
             const issueId = response.repository.issue.id;
             const projectId = response.user.projectV2.id;
-            console.log('issueId', issueId, projectId);
             // 2. 将Issue添加到项目中
             const mutation = `
         mutation {
@@ -386,9 +384,36 @@ class OrderAction extends base_action_1.BaseAction {
           }
         }
       `;
-            const res = await this.octokit.graphql(mutation);
-            console.log('addIssueToProject', res);
+            const addResponse = await this.octokit.graphql(mutation);
             this.log(`已将Issue #${issueNumber}添加到项目 #${projectNumber}`);
+            const itemId = addResponse.addProjectV2ItemById.item.id;
+            // 3. 获取项目的状态字段ID和可用选项
+            const fieldsQuery = `
+      query {
+        user(login: "${github.context.repo.owner}") {
+          projectV2(number: ${projectNumber}) {
+            fields(first: 20) {
+              nodes {
+                ... on ProjectV2SingleSelectField {
+                  id
+                  name
+                  options {
+                    id
+                    name
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    `;
+            console.log('fieldsQuery', fieldsQuery);
+            const fieldsResponse = await this.octokit.graphql(fieldsQuery);
+            console.log('fieldsResponse', fieldsResponse);
+            // 找到状态字段
+            const statusField = fieldsResponse.user.projectV2.fields.nodes.find((field) => field.name === "Status");
+            console.log('statusField', statusField);
         }
         catch (error) {
             this.warn(`将Issue添加到项目失败: ${error instanceof Error ? error.message : String(error)}`);
