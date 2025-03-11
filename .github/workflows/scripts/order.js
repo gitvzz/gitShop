@@ -177,8 +177,9 @@ class OrderAction extends base_action_1.BaseAction {
                 }
             }
             total += product.price * quantity - amount;
+            console.log(amount, item.promotions);
             if (amount === 0 && !utils.isEmpty(item.promotions)) {
-                throw new Error(`${item.name} 优惠金额不一致`);
+                throw new Error(`${item.name} 优惠金额不一致!`);
             }
             else if (amount.toFixed(2) !== item.promotions.amount || type !== item.promotions.type) {
                 throw new Error(`${item.name} 优惠金额不一致`);
