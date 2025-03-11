@@ -86,6 +86,7 @@ class OrderAction extends base_action_1.BaseAction {
             await this.processOrder(issue, orderData);
             // 如果验证通过，保存原始内容并添加标签
             await this.saveOriginalContent(issue);
+            await this.addIssueToProject(issue.number, 5);
         }
     }
     /**
@@ -98,9 +99,8 @@ class OrderAction extends base_action_1.BaseAction {
             this.fail('无法获取Issue信息');
             return;
         }
-        console.log(sender);
         if (sender.login === github.context.repo.owner) {
-            throw new Error('无法处理自己创建的Issue');
+            return;
         }
         this.log(`处理编辑的Issue: #${issue.number} - ${issue.title}`);
         // 检查Issue是否已经被验证
@@ -305,6 +305,11 @@ class OrderAction extends base_action_1.BaseAction {
             return false;
         }
     }
+    /**
+     * 创建评论
+     * @param issueNumber
+     * @param data
+     */
     async createComment(issueNumber, data) {
         if (typeof data === 'string') {
             data = { body: data };
