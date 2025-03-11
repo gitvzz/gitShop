@@ -408,12 +408,49 @@ class OrderAction extends base_action_1.BaseAction {
         }
       }
     `;
-            console.log('fieldsQuery', fieldsQuery);
-            const fieldsResponse = await this.octokit.graphql(fieldsQuery);
-            console.log('fieldsResponse', fieldsResponse);
+            /* console.log('fieldsQuery',fieldsQuery)
+            const fieldsResponse: any = await this.octokit.graphql(fieldsQuery);
+            console.log('fieldsResponse',fieldsResponse)
             // 找到状态字段
-            const statusField = fieldsResponse.user.projectV2.fields.nodes.find((field) => field.name === "Status");
-            console.log('statusField', statusField);
+            const statusField = fieldsResponse.user.projectV2.fields.nodes.find(
+              (field: any) => field.name === "Status"
+            );
+            console.log('statusField',statusField)
+            // 找到指定状态选项
+            const statusOption = statusField.options.find(
+              (option: any) => option.name === statusName
+            );*/
+            /* {
+              id: 'PVTSSF_lAHOCf8MVs4A0DQuzgpvn-Q',
+              name: 'Status',
+              options: [
+                { id: 'f75ad846', name: 'Todo' },
+                { id: '47fc9ee4', name: 'In Progress' },
+                { id: '98236657', name: 'Done' }
+              ]
+            } */
+            const statusField = { id: 'PVTSSF_lAHOCf8MVs4A0DQuzgpvn-Q' };
+            const statusOption = { id: 'f75ad846', name: 'Todo' };
+            // 4. 更新项目项的状态
+            const updateMutation = `
+        mutation {
+          updateProjectV2ItemFieldValue(input: {
+            projectId: "${projectId}",
+            itemId: "${itemId}",
+            fieldId: "${statusField.id}",
+            value: {
+              singleSelectOptionId: "${statusOption.id}"
+            }
+          }) {
+            projectV2Item {
+              id
+            }
+          }
+        }
+      `;
+            const res = await this.octokit.graphql(updateMutation);
+            console.log('res', res);
+            this.log(`已将Issue #${issueNumber} 状态设置为 ${statusOption.name}`);
         }
         catch (error) {
             this.warn(`将Issue添加到项目失败: ${error instanceof Error ? error.message : String(error)}`);
