@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.decrypt = exports.md5 = exports.formatId = exports.formatImage = exports.formatStringOrObject = exports.isEmpty = exports.generateWallet = void 0;
+exports.send_message = exports.decrypt = exports.md5 = exports.formatId = exports.formatImage = exports.formatStringOrObject = exports.isEmpty = exports.generateWallet = void 0;
 exports.has = has;
 exports.is = is;
 const node_forge_1 = __importDefault(require("node-forge"));
@@ -139,3 +139,26 @@ const decrypt = (data, pub_key) => {
     return JSON.parse(decryptedData);
 };
 exports.decrypt = decrypt;
+/**
+ * 发送TG消息
+ * @param tgTokenApi TG Token API
+ * @param chat_id 聊天ID
+ * @param message 消息内容
+ */
+const send_message = (tgTokenApi, chat_id, message) => {
+    try {
+        const url = `https://api.telegram.org/bot${tgTokenApi}/sendMessage`;
+        const payload = { "chat_id": chat_id, "text": message, "parse_mode": "HTML", "link_preview_options": { "is_disabled": true } };
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+    }
+    catch (e) {
+        console.log(e);
+    }
+};
+exports.send_message = send_message;

@@ -46,7 +46,7 @@ jobs:
         run: node .github/workflows/scripts/deploy.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
+          PUBLIC_KEY: ${{ vars.PUBLIC_KEY }}
       
       - name: Force Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4

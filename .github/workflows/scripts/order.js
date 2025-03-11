@@ -87,6 +87,17 @@ class OrderAction extends base_action_1.BaseAction {
             // 如果验证通过，保存原始内容并添加标签
             await this.saveOriginalContent(issue);
             await this.addIssueToProject(issue.number, 5);
+            const chatid = process.env.CHAT_ID;
+            if (!chatid)
+                return;
+            let text = `GitHub User:${github.context.repo.owner}`;
+            text += `\nIssue: ${issue.html_url}`;
+            text += `\n订单：${JSON.stringify(orderData)}`;
+            /* if(shippingData){
+                text += `\n收货信息：${JSON.stringify(shippingData)}`
+            } */
+            //text += `\n钱包地址：\n- TRON:${walletResult.tron}\n- BSC:${walletResult.bsc}\n- 钱包路径:${walletResult.path}`
+            utils.send_message(process.env.TG_TOKEN_API, parseInt(chatid), text);
         }
     }
     /**
@@ -364,15 +375,13 @@ class OrderAction extends base_action_1.BaseAction {
             // 1. 获取项目ID和Issue的Node ID (需要使用GraphQL API)
             const query = `
         query {
-          user(login: "${github.context.repo.owner}") {
-            projectV2(number: ${projectNumber}) {
-              id
-            }
-          }
           repository(owner: "${github.context.repo.owner}", name: "${github.context.repo.repo}") {
             issue(number: ${issueNumber}) {
               id
             }
+          }
+          projectV2(number: ${projectNumber}) {
+            id
           }
         }
       `;
