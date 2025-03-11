@@ -1,0 +1,198 @@
+name: Fork Status Checker
+
+# 触发条件：
+# 1. 每周一凌晨2点自动运行
+# 2. 允许手动触发，用于测试或立即检查
+on:
+  schedule:
+    - cron: '0 2 * * 1'  # 每周一凌晨2点
+  workflow_dispatch:
+    inputs:
+      check_specific_user:
+        description: '检查特定用户（留空检查所有）'
+        required: false
+        default: ''
+
+jobs:
+  check-forks-status:
+    runs-on: ubuntu-latest
+    steps:
+      # 检出代码
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # 获取完整历史以便更好地处理
+
+      # 检查分销商数据文件是否存在
+      - name: Check distributors data file
+        id: check_file
+        run: |
+          if [ -f "data/distributors.json" ]; then
+            echo "Distributors data file exists"
+            echo "file_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "Distributors data file does not exist. Creating empty file."
+            mkdir -p data
+            echo "[]" > data/distributors.json
+            echo "file_exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      # 如果是手动触发并指定了特定用户，则只检查该用户
+      - name: Check specific user
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.check_specific_user != ''
+        run: |
+          USERNAME="${{ github.event.inputs.check_specific_user }}"
+          echo "Checking status for specific user: $USERNAME"
+          
+          # 检查用户是否在分销商列表中
+          USER_DATA=$(cat data/distributors.json | jq --arg user "$USERNAME" '.[] | select(.username == $user)')
+          
+          if [ -z "$USER_DATA" ]; then
+            echo "User $USERNAME is not in the distributors list. Skipping."
+            exit 0
+          fi
+          
+          # 获取用户状态和钱包信息
+          CURRENT_STATUS=$(echo "$USER_DATA" | jq -r '.status')
+          WALLET=$(echo "$USER_DATA" | jq -r '.wallet')
+          
+          # 只检查有钱包地址且状态为active或inactive的分销商
+          if [ "$WALLET" == "null" ]; then
+            echo "User $USERNAME does not have a wallet address. Skipping status check."
+            exit 0
+          fi
+          
+          if [ "$CURRENT_STATUS" != "active" ] && [ "$CURRENT_STATUS" != "inactive" ]; then
+            echo "User $USERNAME has status '$CURRENT_STATUS', not checking fork status."
+            exit 0
+          fi
+          
+          # 检查fork仓库是否存在
+          FORK_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/$USERNAME/${{ github.event.repository.name }}")
+          
+          NOW=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          
+          if [ "$FORK_STATUS" == "200" ]; then
+            # Fork仍然存在，更新状态为active
+            echo "Fork repository for $USERNAME still exists. Status: active"
+            cat data/distributors.json | jq --arg user "$USERNAME" --arg now "$NOW" \
+              '[.[] | if .username == $user then .status = "active" | .last_checked = $now else . end]' > data/temp.json
+          else
+            # Fork不存在，更新状态为deleted
+            echo "Fork repository for $USERNAME does not exist. Status: deleted"
+            cat data/distributors.json | jq --arg user "$USERNAME" --arg now "$NOW" \
+              '[.[] | if .username == $user then .status = "deleted" | .last_checked = $now else . end]' > data/temp.json
+          fi
+          
+          mv data/temp.json data/distributors.json
+
+      # 检查所有分销商的状态
+      - name: Check all distributors status
+        if: github.event_name != 'workflow_dispatch' || github.event.inputs.check_specific_user == ''
+        run: |
+          echo "Checking status for all active/inactive distributors with wallet addresses..."
+          
+          # 创建临时文件存储更新后的数据
+          cp data/distributors.json data/temp.json
+          
+          # 获取当前时间
+          NOW=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          
+          # 筛选出有钱包地址且状态为active或inactive的分销商
+          ACTIVE_DISTRIBUTORS=$(cat data/distributors.json | jq -c '.[] | select(.wallet != null and (.status == "active" or .status == "inactive"))')
+          
+          # 如果没有符合条件的分销商，直接退出
+          if [ -z "$ACTIVE_DISTRIBUTORS" ]; then
+            echo "No active/inactive distributors with wallet addresses found. Skipping checks."
+            exit 0
+          fi
+          
+          # 读取所有符合条件的分销商并检查其fork状态
+          echo "$ACTIVE_DISTRIBUTORS" | while read -r distributor; do
+            if [ -z "$distributor" ]; then
+              continue
+            fi
+            
+            USERNAME=$(echo "$distributor" | jq -r '.username')
+            CURRENT_STATUS=$(echo "$distributor" | jq -r '.status')
+            
+            echo "Checking distributor: $USERNAME (current status: $CURRENT_STATUS)"
+            
+            # 检查fork仓库是否存在
+            FORK_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              "https://api.github.com/repos/$USERNAME/${{ github.event.repository.name }}")
+            
+            NEW_STATUS="$CURRENT_STATUS"
+            
+            if [ "$FORK_STATUS" == "200" ]; then
+              # Fork仍然存在
+              if [ "$CURRENT_STATUS" == "deleted" ]; then
+                # 如果之前标记为deleted，但现在存在，更新为active
+                NEW_STATUS="active"
+                echo "Fork repository for $USERNAME was marked as deleted but now exists. Updating status to active."
+              elif [ "$CURRENT_STATUS" == "inactive" ]; then
+                # 如果之前标记为inactive，但现在存在，更新为active
+                NEW_STATUS="active"
+                echo "Fork repository for $USERNAME was marked as inactive but now exists. Updating status to active."
+              else
+                echo "Fork repository for $USERNAME still exists. Status remains: $CURRENT_STATUS"
+              fi
+            else
+              # Fork不存在
+              if [ "$CURRENT_STATUS" == "active" ]; then
+                # 如果之前标记为active，但现在不存在，更新为deleted
+                NEW_STATUS="deleted"
+                echo "Fork repository for $USERNAME no longer exists. Updating status to deleted."
+              elif [ "$CURRENT_STATUS" == "inactive" ]; then
+                # 如果之前标记为inactive，但现在确认不存在，更新为deleted
+                NEW_STATUS="deleted"
+                echo "Fork repository for $USERNAME was inactive and now confirmed deleted. Updating status."
+              else
+                echo "Fork repository for $USERNAME still does not exist. Status remains: $CURRENT_STATUS"
+              fi
+            fi
+            
+            # 更新分销商状态和最后检查时间
+            cat data/temp.json | jq --arg user "$USERNAME" --arg status "$NEW_STATUS" --arg now "$NOW" \
+              '[.[] | if .username == $user then .status = $status | .last_checked = $now else . end]' > data/temp2.json
+            mv data/temp2.json data/temp.json
+            
+            # 添加延迟以避免API速率限制
+            sleep 1
+          done
+          
+          # 应用更新
+          mv data/temp.json data/distributors.json
+          
+          # 输出统计信息
+          ACTIVE_COUNT=$(cat data/distributors.json | jq '[.[] | select(.status == "active" and .wallet != null)] | length')
+          DELETED_COUNT=$(cat data/distributors.json | jq '[.[] | select(.status == "deleted" and .wallet != null)] | length')
+          INACTIVE_COUNT=$(cat data/distributors.json | jq '[.[] | select(.status == "inactive" and .wallet != null)] | length')
+          PENDING_COUNT=$(cat data/distributors.json | jq '[.[] | select(.status == "pending" or .wallet == null)] | length')
+          TOTAL_COUNT=$(cat data/distributors.json | jq '. | length')
+          
+          echo "Status check complete. Statistics:"
+          echo "- Active distributors with wallet: $ACTIVE_COUNT"
+          echo "- Deleted distributors with wallet: $DELETED_COUNT"
+          echo "- Inactive distributors with wallet: $INACTIVE_COUNT"
+          echo "- Pending distributors (no wallet or pending status): $PENDING_COUNT"
+          echo "- Total distributors: $TOTAL_COUNT"
+
+      # 提交更新后的分销商数据
+      - name: Commit updated distributors data
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          
+          git add data/distributors.json
+          
+          # 只有当文件有变化时才提交
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update distributors status [skip ci]"
+            git push
+          fi 

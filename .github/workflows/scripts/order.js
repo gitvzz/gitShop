@@ -86,7 +86,7 @@ class OrderAction extends base_action_1.BaseAction {
             await this.processOrder(issue, orderData);
             // 如果验证通过，保存原始内容并添加标签
             await this.saveOriginalContent(issue);
-            await this.addIssueToProject(issue.number, 5);
+            //await this.addIssueToProject(issue.number, 5);
             const chatid = process.env.CHAT_ID;
             if (!chatid)
                 return;
@@ -97,8 +97,13 @@ class OrderAction extends base_action_1.BaseAction {
                 text += `\n收货信息：${JSON.stringify(shippingData)}`
             } */
             //text += `\n钱包地址：\n- TRON:${walletResult.tron}\n- BSC:${walletResult.bsc}\n- 钱包路径:${walletResult.path}`
-            utils.send_message(process.env.TG_TOKEN_API, parseInt(chatid), text);
+            //this.sendMessage(parseInt(chatid), text);
         }
+    }
+    async sendMessage(chatid, text) {
+        if (!chatid)
+            return;
+        utils.send_message(process.env.TG_TOKEN_API, chatid, text);
     }
     /**
      * 处理编辑的Issue
@@ -375,13 +380,15 @@ class OrderAction extends base_action_1.BaseAction {
             // 1. 获取项目ID和Issue的Node ID (需要使用GraphQL API)
             const query = `
         query {
+            user(login: "${github.context.repo.owner}") {
+              projectV2(number: ${projectNumber}) {
+                id
+              }
+          }
           repository(owner: "${github.context.repo.owner}", name: "${github.context.repo.repo}") {
             issue(number: ${issueNumber}) {
               id
             }
-          }
-          projectV2(number: ${projectNumber}) {
-            id
           }
         }
       `;
@@ -506,7 +513,6 @@ class OrderAction extends base_action_1.BaseAction {
         replyBody += `- 收到付款后，我们将尽快处理您的订单\n`;
         replyBody += `- 如有任何问题，请在此Issue下留言`;
         await this.createComment(issue.number, { body: replyBody, labels: ['order-processing'] });
-        //await this.addIssueToProject(issue.number, 5);
     }
     /**
      * 处理评论逻辑

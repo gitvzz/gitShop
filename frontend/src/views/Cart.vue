@@ -516,7 +516,7 @@ const checkout = () => {
       subtotal: (item.price * item.quantity).toFixed(2),
       promotions: amount > 0 ? { type, amount: amount.toFixed(2), description } : {},
       merchant_id: item.merchant_id,
-      distributor_id: store.distributor_id
+      distribution_percent: item.distribution_percent
     }
   })
   const result = store.submitOrder(_products,summary,hasRequiresShipping.value ? shippingInfo.value : null)

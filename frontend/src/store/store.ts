@@ -103,7 +103,8 @@ export const useStore = defineStore('store', {
         orderId,
         timestamp: new Date().toISOString(),
         items,
-        summary
+        summary,
+        distributor_id: this.distributor_id
       }
       console.log('准备加密的订单数据:', orderData);
       const encryptedOrderData = encrypt(orderData, this.publicKey);

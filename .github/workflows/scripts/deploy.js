@@ -34,7 +34,6 @@ var __importStar = (this && this.__importStar) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DeployAction = void 0;
-// 部署 GitHub Pages
 const base_action_1 = require("./base/base-action");
 const fs_1 = require("fs");
 const child_process_1 = require("child_process");

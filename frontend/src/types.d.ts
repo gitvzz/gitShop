@@ -33,6 +33,7 @@ declare global {
     stock: number
     rating: number
     reviews: number
+    distribution_percent:number
     tags?: T[]
     related_products?: string[]
     promotions?: {
