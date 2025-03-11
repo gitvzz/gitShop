@@ -1,0 +1,14 @@
+# Order ORDER-20250311-IQTQF8
+Distributor ID: netferes
+
+## Products
+- [Telegram开发教学1](https://gitvzz.github.io/gitShop/#/product/telegram-dev?ref=netferes) x2
+
+## Order Data
+[ENCRYPTED_ORDER_DATA]
+NMarJjJuq1NG2UDF0r82OlR7+BtfWzIRlGAMKFOWlfpYbFn2DZGxVZUdwrHWlNeAYS7Ach+IV/+UsZQeDBZs+mzgVrmkx4xb/aabodfyK+otK5u4+GCWBzm+3MNLYOZr15kyrKappdtatlg7KyxbdlamRQ0PzrFm7syTbuZ+S6Zyazkbj0M3RyEIABb1ymIOhIIwiqHVna1BkihVuJnoU9KXiUzZA203xBDimmuaSVcwTCuHoPe+1UjbI4+N4qTtLZY2S4XcMmz0C+klRydph0hqnj/1bAUDU3PVHk3MBfEvp/mQWYlz90OAXpgw8BkqJz0fLYU92mu5SDoYwGYg5Q==.xL5cw44DOg4WP6FXzqWEIbDBkGaSRzz78qvHZMAzduu1G+vJLvkwixiX8c0Iys8Qj/B3VrESZ5YcaW4E5Wzsivf0dm2MqEyS5ClzavW9zPL8hfXydEzePMmsNxLB9em5+grXSfo2I25g+SV3/gbUfCAavJ9K+33wwufvhhrxPkdQ/XaxMZa1BkyBzMSMqgi4AWubEWjNlmcypsKebZBadOhEVKOgTSY1mjxvljQUhP8Nu537ihrCif2c4I2tyBXjFNDm5FaNU18fnRGkDrEjuJzO1RMw7mW/JmTyENfXDyCsReU5guT46G9A4Bu+i/8stEE7SOA4Z0s28/kS/uBeocKlUlMB7/4u0j5TQ3jWLbhStSVQyZ4y91M8BaiQya7FA0D86Bnr5IJ+xojBO9tXQ9/rCnkdi3SELG/zbwkzaWo+WE+V7VqRwje084LUe89d8jgXor8XR7t2SpIzMX3Wq7vuIVpO2R7Jt9AIVKm5bcZfkdLxLzKAKIeMz2QobKz0fyZHdUAvKuRwwepJsCjA2owi0kRyo50fxo7L+WHDK3equ7ZV056WOIamY7e12OMasLQRD42SeapFqagwrPFJYw==
+[/ENCRYPTED_ORDER_DATA]
+
+---
+*This order was generated automatically by GitShop. Please do not edit this issue manually.*
+MD5:81ab9c056ee836958a10ed184c290c14
